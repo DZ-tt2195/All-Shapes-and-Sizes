@@ -5,6 +5,8 @@ TagManager:
   serializedVersion: 2
   tags:
   - 1. Circle
+  - 2. Square
+  - 3. Capsule
   layers:
   - Default
   - TransparentFX
