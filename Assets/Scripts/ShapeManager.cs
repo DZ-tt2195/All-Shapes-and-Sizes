@@ -43,17 +43,15 @@ public class ShapeManager : MonoBehaviour
 
     void DropShape(Vector2 screenPosition)
     {
-        int randomNumber = UnityEngine.Random.Range(0, listOfShapes.Count-1);
-
         float xValue = GetWorldCoordinates(screenPosition).x;
-        if (xValue < -3.5f)
-            xValue = -3.5f;
-        else if (xValue > 3.5f)
-            xValue = 3.5f;
+        if (xValue < -2.5f)
+            xValue = -2.5f;
+        else if (xValue > 2.5f)
+            xValue = 2.5f;
 
         dropped++;
         dataText.text = $"Score: {score} \nDropped: {dropped}";
-        StartCoroutine(GenerateShape(randomNumber, new Vector2(xValue, 3.95f)));
+        StartCoroutine(GenerateShape(0, new Vector2(xValue, 1.9f)));
     }
 
     private void Update()

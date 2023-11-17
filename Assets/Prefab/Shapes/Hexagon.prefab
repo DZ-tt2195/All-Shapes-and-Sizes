@@ -186,7 +186,7 @@ GameObject:
   - component: {fileID: 8740596058595501419}
   - component: {fileID: 2585974766208824965}
   m_Layer: 0
-  m_Name: 4. Hexagon
+  m_Name: Hexagon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -331,12 +331,12 @@ PolygonCollider2D:
   m_AutoTiling: 0
   m_Points:
     m_Paths:
-    - - {x: 0, y: 0.45}
-      - {x: -0.4, y: 0.2}
-      - {x: -0.4, y: -0.2}
-      - {x: 0, y: -0.45}
-      - {x: 0.4, y: -0.2}
-      - {x: 0.4, y: 0.2}
+    - - {x: 0, y: 0.5}
+      - {x: -0.45, y: 0.25}
+      - {x: -0.45, y: -0.25}
+      - {x: 0, y: -0.5}
+      - {x: 0.45, y: -0.25}
+      - {x: 0.45, y: 0.25}
   m_UseDelaunayMesh: 0
 --- !u!60 &8740596058595501419
 PolygonCollider2D:
@@ -382,12 +382,12 @@ PolygonCollider2D:
   m_AutoTiling: 0
   m_Points:
     m_Paths:
-    - - {x: 0, y: 0.5}
-      - {x: -0.44, y: 0.25}
-      - {x: -0.44, y: -0.25}
-      - {x: 0, y: -0.5}
-      - {x: 0.44, y: -0.25}
-      - {x: 0.44, y: 0.25}
+    - - {x: 0, y: 0.52}
+      - {x: -0.47, y: 0.27}
+      - {x: -0.47, y: -0.27}
+      - {x: 0, y: -0.52}
+      - {x: 0.47, y: -0.27}
+      - {x: 0.47, y: 0.27}
   m_UseDelaunayMesh: 0
 --- !u!114 &2585974766208824965
 MonoBehaviour:

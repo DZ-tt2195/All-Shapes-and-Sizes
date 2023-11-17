@@ -10,7 +10,7 @@ public class Shape : MonoBehaviour
     Rigidbody2D rb;
     int value;
     TMP_Text textBox;
-    bool active = true;
+    bool active = false;
 
     private void Awake()
     {
@@ -27,20 +27,27 @@ public class Shape : MonoBehaviour
         this.name = $"{num}";
         value = num;
         textBox.text = $"{(num+1)*2}";
+        StartCoroutine(BecomeActive());
     }
 
-    private void Update()
+    IEnumerator BecomeActive()
     {
-        if (this.transform.position.y > 4f)
-            ShapeManager.instance.GameOver();
+        yield return new WaitForSeconds(0.2f);
+        active = true;
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerStay2D(Collider2D collision)
     {
-        if (active && this.name == collision.name && this.transform.position.y <= collision.transform.position.y)
+        if (active && this.name == collision.name && this.transform.position.y > collision.transform.position.y)
         {
             active = false;
             StartCoroutine(Merge(collision));
+        }
+
+        if (active && collision.CompareTag("Death Line"))
+        {
+            active = false;
+            ShapeManager.instance.GameOver();
         }
     }
 
