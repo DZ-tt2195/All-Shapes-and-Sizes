@@ -17,19 +17,27 @@ public class Shape : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         rb.useAutoMass = true;
         rb.gravityScale = 2;
+        rb.angularDrag = 10;
 
         textBox = transform.GetChild(0).GetComponent<TMP_Text>();
     }
 
     public void Setup(int num)
     {
+        this.name = $"{num}";
         value = num;
         textBox.text = $"{(num+1)*2}";
     }
 
+    private void Update()
+    {
+        if (this.transform.position.y > 4f)
+            ShapeManager.instance.GameOver();
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (active && collision.CompareTag(this.tag) && this.transform.position.y <= collision.transform.position.y)
+        if (active && this.name == collision.name && this.transform.position.y <= collision.transform.position.y)
         {
             active = false;
             StartCoroutine(Merge(collision));
@@ -38,8 +46,10 @@ public class Shape : MonoBehaviour
 
     IEnumerator Merge(Collider2D collision)
     {
-        yield return (Manager.instance.GenerateShape(value + 1, this.transform.position));
-        if (collision.gameObject != null)
+        yield return ShapeManager.instance.GenerateShape(value + 1, this.transform.position);
+        ShapeManager.instance.AddScore(int.Parse(textBox.text));
+
+        if (collision != null)
             Destroy(collision.gameObject);
         Destroy(this.gameObject);
     }

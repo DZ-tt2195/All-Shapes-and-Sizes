@@ -3,16 +3,23 @@ using System.Collections.Generic;
 using UnityEngine;
 using MyBox;
 using System;
+using TMPro;
 
-public class Manager : MonoBehaviour
+public class ShapeManager : MonoBehaviour
 {
-    public static Manager instance;
+    public static ShapeManager instance;
+
+    TMP_Text dataText;
+    int score = 0;
+    int dropped = 0;
+
     [ReadOnly] public Camera mainCam;
     [SerializeField] List<Shape> listOfShapes = new List<Shape>();
 
     private void Awake()
     {
         instance = this;
+        dataText = GameObject.Find("Data Text").GetComponent<TMP_Text>();
         mainCam = Camera.main;
     }
 
@@ -36,15 +43,24 @@ public class Manager : MonoBehaviour
 
     void DropShape(Vector2 screenPosition)
     {
-        int randomNumber = UnityEngine.Random.Range(0, listOfShapes.Count);
-        StartCoroutine(GenerateShape(randomNumber, new Vector2(GetWorldCoordinates(screenPosition).x, 4.5f)));
+        int randomNumber = UnityEngine.Random.Range(0, listOfShapes.Count-1);
+
+        float xValue = GetWorldCoordinates(screenPosition).x;
+        if (xValue < -3.5f)
+            xValue = -3.5f;
+        else if (xValue > 3.5f)
+            xValue = 3.5f;
+
+        dropped++;
+        dataText.text = $"Score: {score} \nDropped: {dropped}";
+        StartCoroutine(GenerateShape(randomNumber, new Vector2(xValue, 3.95f)));
     }
 
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            int randomNumber = UnityEngine.Random.Range(0, listOfShapes.Count);
+            int randomNumber = UnityEngine.Random.Range(0, listOfShapes.Count - 1);
             StartCoroutine(GenerateShape(randomNumber, new Vector2(UnityEngine.Random.Range(-7.25f, 7.25f), 4.5f)));
         }
     }
@@ -63,5 +79,16 @@ public class Manager : MonoBehaviour
         {
             //do nothing
         }
+    }
+
+    public void AddScore(int num)
+    {
+        score += num;
+        dataText.text = $"Score: {score} \nDropped: {dropped}";
+    }
+
+    public void GameOver()
+    {
+        Debug.Log("you lost");
     }
 }
