@@ -19,20 +19,34 @@ public class Shape : MonoBehaviour
         rb.gravityScale = 2;
         rb.angularDrag = 10;
 
-        textBox = transform.GetChild(0).GetComponent<TMP_Text>();
+        try
+        {
+            textBox = transform.GetChild(0).GetComponent<TMP_Text>();
+        }
+        catch (UnityException)
+        {
+            //do nothing
+        }
+    }
+
+    public void Bomb()
+    {
+        this.name = "Bomb";
+        StartCoroutine(BecomeActive());
     }
 
     public void Setup(int num)
     {
-        this.name = $"{num}";
         value = num;
-        textBox.text = $"{(num+1)*2}";
+        this.name = $"{value+1}";
+        int score = (int)Mathf.Pow(value+1, 2);
+        textBox.text = $"{score}";
         StartCoroutine(BecomeActive());
     }
 
     IEnumerator BecomeActive()
     {
-        yield return new WaitForSeconds(0.2f);
+        yield return new WaitForSeconds(0.25f);
         active = true;
     }
 
@@ -44,6 +58,13 @@ public class Shape : MonoBehaviour
             StartCoroutine(Merge(collision));
         }
 
+        if (active && collision.name == "Bomb")
+        {
+            active = false;
+            Destroy(collision.gameObject);
+            Destroy(this.gameObject);
+        }
+
         if (active && collision.CompareTag("Death Line"))
         {
             active = false;
@@ -53,7 +74,7 @@ public class Shape : MonoBehaviour
 
     IEnumerator Merge(Collider2D collision)
     {
-        yield return ShapeManager.instance.GenerateShape(value + 1, this.transform.position);
+        yield return ShapeManager.instance.GenerateShape(ShapeManager.instance.listOfShapes[value+1], this.transform.position);
         ShapeManager.instance.AddScore(int.Parse(textBox.text));
 
         if (collision != null)

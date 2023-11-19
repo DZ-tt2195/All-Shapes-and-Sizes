@@ -6,7 +6,7 @@ using UnityEngine.InputSystem.EnhancedTouch;
 [DefaultExecutionOrder(-1)]
 public class InputManager : MonoBehaviour
 {
-    public static InputManager Instance;
+    public static InputManager instance;
 
     public delegate void StartTouchEvent(Vector2 position);
     public event StartTouchEvent OnStartTouch;
@@ -19,9 +19,9 @@ public class InputManager : MonoBehaviour
 
     private void Awake()
     {
-        if(Instance == null)
+        if (instance == null)
         {
-            Instance = this;
+            instance = this;
         }
         else
         {
