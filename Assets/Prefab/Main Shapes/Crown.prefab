@@ -128,6 +128,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 931b8b4cf321941d7b84a618a1cc4d5f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spriterenderer: {fileID: 1493016017448104985}
 --- !u!60 &8418793654686855626
 PolygonCollider2D:
   m_ObjectHideFlags: 0

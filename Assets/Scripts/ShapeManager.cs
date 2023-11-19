@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using MyBox;
 using System;
+using UnityEngine.UI;
 using TMPro;
 
 public class ShapeManager : MonoBehaviour
@@ -10,7 +11,8 @@ public class ShapeManager : MonoBehaviour
     public static ShapeManager instance;
 
     TMP_Text dataText;
-    TMP_Text nextText;
+
+    Image nextImage;
     Shape nextShape;
 
     int score = 0;
@@ -18,20 +20,20 @@ public class ShapeManager : MonoBehaviour
     bool canPlay = false;
 
     public List<Shape> listOfShapes = new List<Shape>();
-    public List<Shape> otherShapes = new List<Shape>();
+    public List<Shape> droppedShapes = new List<Shape>();
 
     [ReadOnly] public Camera mainCam;
     [SerializeField] GameObject gameOverTransform;
-    Transform deathLine;
+    [ReadOnly] public Transform deathLine;
     Transform leftWall;
     Transform rightWall;
 
     private void Awake()
     {
+        nextImage = GameObject.Find("Next Image").GetComponent<Image>();
         gameOverTransform.SetActive(false);
         instance = this;
         dataText = GameObject.Find("Data Text").GetComponent<TMP_Text>();
-        nextText = GameObject.Find("Next Shape Text").GetComponent<TMP_Text>();
         mainCam = Camera.main;
         deathLine = GameObject.Find("Death Line").transform;
         leftWall = GameObject.Find("Left Wall").transform;
@@ -52,25 +54,27 @@ public class ShapeManager : MonoBehaviour
 
     private void Start()
     {
-        RollNextShape();
         StartCoroutine(DropRandomly());
     }
 
     IEnumerator DropRandomly()
     {
         dataText.transform.parent.gameObject.SetActive(false);
+        nextImage.transform.parent.gameObject.SetActive(false);
+
         for (int i = 0; i < 75; i++)
         {
-            yield return GenerateShape(listOfShapes[0], new Vector2(UnityEngine.Random.Range(leftWall.position.x + 0.5f, rightWall.position.x - 0.5f), deathLine.position.y - 0.1f));
+            yield return GenerateShape(listOfShapes[0], new Vector2(UnityEngine.Random.Range(leftWall.position.x + 0.6f, rightWall.position.x - 0.6f), deathLine.position.y - 0.15f));
         }
 
-        yield return new WaitForSeconds(2.5f);
+        yield return new WaitForSeconds(3f);
         canPlay = true;
 
         dataText.transform.parent.gameObject.SetActive(true);
         score = 0;
         dropped = 0;
         AddScore(0);
+        RollNextShape();
     }
 
     Vector2 GetWorldCoordinates(Vector2 screenPos)
@@ -85,30 +89,49 @@ public class ShapeManager : MonoBehaviour
         if (canPlay)
         {
             float xValue = GetWorldCoordinates(screenPosition).x;
-            if (xValue < leftWall.position.x + 0.5f)
-                xValue = leftWall.position.x + 0.5f;
-            else if (xValue > rightWall.position.x - 0.5f)
-                xValue = rightWall.position.x - 0.5f;
+            if (xValue < leftWall.position.x + 0.6f)
+                xValue = leftWall.position.x + 0.6f;
+            else if (xValue > rightWall.position.x - 0.6f)
+                xValue = rightWall.position.x - 0.6f;
 
             dropped++;
             dataText.text = $"Score: {score} \nDropped: {dropped}";
-            StartCoroutine(GenerateShape(nextShape, new Vector2(xValue, deathLine.position.y - 0.1f)));
+            StartCoroutine(GenerateShape(nextShape, new Vector2(xValue, deathLine.position.y - 0.15f)));
             RollNextShape();
         }
     }
 
     void RollNextShape()
     {
-        if (UnityEngine.Random.Range(0f, 1f) < 0.8f)
+        if (UnityEngine.Random.Range(0f, 1f) < 0.5f)
         {
             nextShape = listOfShapes[0];
         }
         else
         {
-            nextShape = otherShapes[UnityEngine.Random.Range(0, otherShapes.Count)];
+            nextShape = droppedShapes[UnityEngine.Random.Range(0, droppedShapes.Count)];
         }
 
-        nextText.text = $"Next: \n{nextShape.name}";
+        nextImage.transform.parent.gameObject.SetActive(true);
+        nextImage.sprite = nextShape.spriterenderer.sprite;
+        nextImage.color = nextShape.spriterenderer.color;
+
+        switch (nextShape.name)
+        {
+            case "Circle":
+                nextImage.rectTransform.sizeDelta = new Vector2(50, 50);
+                break;
+            case "Square":
+                nextImage.rectTransform.sizeDelta = new Vector2(65, 65);
+                break;
+            case "Rounded Square":
+                nextImage.rectTransform.sizeDelta = new Vector2(90, 90);
+                break;
+            case "Bomb":
+                nextImage.rectTransform.sizeDelta = new Vector2(50, 90);
+                break;
+        }
+
     }
 
     public IEnumerator GenerateShape(Shape shape, Vector2 spawn)
@@ -144,9 +167,17 @@ public class ShapeManager : MonoBehaviour
         }
     }
 
+    public void Victory()
+    {
+        InputManager.instance.enabled = false;
+        gameOverTransform.SetActive(true);
+        gameOverTransform.transform.GetChild(0).GetComponent<TMP_Text>().text = "You won!";
+    }
+
     public void GameOver()
     {
         InputManager.instance.enabled = false;
         gameOverTransform.SetActive(true);
+        gameOverTransform.transform.GetChild(0).GetComponent<TMP_Text>().text = "You lost.";
     }
 }

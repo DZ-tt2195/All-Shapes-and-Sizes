@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using MyBox;
 using TMPro;
+using UnityEngine.UI;
+using System;
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class Shape : MonoBehaviour
 {
+    public SpriteRenderer spriterenderer;
     Rigidbody2D rb;
     int value;
     TMP_Text textBox;
@@ -52,30 +55,41 @@ public class Shape : MonoBehaviour
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-        if (active && this.name == collision.name && this.transform.position.y > collision.transform.position.y)
+        if (active)
         {
-            active = false;
-            StartCoroutine(Merge(collision));
-        }
+            if (this.name == collision.name && this.transform.position.y > collision.transform.position.y)
+            {
+                active = false;
+                collision.gameObject.GetComponent<Shape>().active = false;
+                StartCoroutine(Merge(collision));
+            }
 
-        if (active && collision.name == "Bomb")
-        {
-            active = false;
-            Destroy(collision.gameObject);
-            Destroy(this.gameObject);
-        }
+            if (collision.name == "Bomb")
+            {
+                active = false;
+                Destroy(collision.gameObject);
+                Destroy(this.gameObject);
+            }
 
-        if (active && collision.CompareTag("Death Line"))
-        {
-            active = false;
-            ShapeManager.instance.GameOver();
+            if (collision.CompareTag("Death Line"))
+            {
+                active = false;
+                ShapeManager.instance.GameOver();
+            }
         }
     }
 
     IEnumerator Merge(Collider2D collision)
     {
-        yield return ShapeManager.instance.GenerateShape(ShapeManager.instance.listOfShapes[value+1], this.transform.position);
-        ShapeManager.instance.AddScore(int.Parse(textBox.text));
+        if (value + 1 >= ShapeManager.instance.listOfShapes.Count)
+        {
+            ShapeManager.instance.Victory();
+        }
+        else
+        {
+            yield return ShapeManager.instance.GenerateShape(ShapeManager.instance.listOfShapes[value + 1], this.transform.position);
+            ShapeManager.instance.AddScore(int.Parse(textBox.text));
+        }
 
         if (collision != null)
             Destroy(collision.gameObject);
