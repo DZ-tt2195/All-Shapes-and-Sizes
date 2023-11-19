@@ -74,7 +74,7 @@ public class Shape : MonoBehaviour
             if (collision.CompareTag("Death Line"))
             {
                 active = false;
-                ShapeManager.instance.GameOver();
+                ShapeManager.instance.GameOver("You Lost.");
             }
         }
     }
@@ -83,7 +83,7 @@ public class Shape : MonoBehaviour
     {
         if (value + 1 >= ShapeManager.instance.listOfShapes.Count)
         {
-            ShapeManager.instance.Victory();
+            ShapeManager.instance.GameOver("You Won!");
         }
         else
         {

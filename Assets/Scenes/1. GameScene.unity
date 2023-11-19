@@ -443,7 +443,7 @@ Transform:
   m_GameObject: {fileID: 236873046}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 4, z: 0}
+  m_LocalPosition: {x: 0, y: 3, z: 0}
   m_LocalScale: {x: 8.5, y: 0.2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -931,7 +931,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 580770670}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -940,8 +940,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.0014677, y: 0.000022888}
-  m_SizeDelta: {x: 193.35, y: 70}
+  m_AnchoredPosition: {x: 0.0016479492, y: 0}
+  m_SizeDelta: {x: 255.2864, y: 70}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &580770672
 MonoBehaviour:
@@ -965,7 +965,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: 'Score: 0
 
-    Dropped: 0'
+    Dropped: 400/400'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1295,8 +1295,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.0012207031, y: 0.0040740967}
-  m_SizeDelta: {x: 250.54, y: 293.9481}
+  m_AnchoredPosition: {x: 0, y: 3.8555}
+  m_SizeDelta: {x: 300, y: 392.2889}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1099199204
 MonoBehaviour:
@@ -1318,13 +1318,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Drop shapes down the tube. When a shape touches another of the same shape,
-    they combine into a larger shape.
-
-
-    The largest shape is a crown. Your goal
-    is to create 2 crowns, and then have them merge with each other. Also don''t
-    let any shapes go over the top.'
+  m_text: "Touch the screen to drop shapes down the tube. When a shape touches another
+    of the same shape, they merge into a larger one.\n\nThe largest shape is a crown.
+    Your goal is to merge 2 crowns with each other. \n\nIf you let any shapes go
+    above the top, or drop more than 400 shapes, you lose."
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1351,8 +1348,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 20
-  m_fontSizeBase: 20
+  m_fontSize: 23
+  m_fontSizeBase: 23
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 15.09
@@ -1619,8 +1616,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -565.8251, y: 290}
-  m_SizeDelta: {x: 193.3498, y: 70}
+  m_AnchoredPosition: {x: -534.86, y: 290}
+  m_SizeDelta: {x: 255.28, y: 70}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1190523863
 MonoBehaviour:
@@ -1851,6 +1848,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a7abc69d337d64f1bb794f8292ca6510, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dropLimit: 400
   listOfShapes:
   - {fileID: 7031427604454891696, guid: 0d698fb18ca044af5acbfa2da3f67acf, type: 3}
   - {fileID: 1932051135275018775, guid: 9a00e84a67bb14ce8a1ad0b4a5e824f4, type: 3}
@@ -2023,8 +2021,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -539.7277, y: -228.03}
-  m_SizeDelta: {x: 250.5446, y: 293.95}
+  m_AnchoredPosition: {x: -515, y: -172}
+  m_SizeDelta: {x: 300, y: 400}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1777251314
 MonoBehaviour:
@@ -2385,8 +2383,8 @@ Transform:
   m_GameObject: {fileID: 2018761201}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -4, y: -0.5336, z: 0}
-  m_LocalScale: {x: 0.5, y: 9, z: 1}
+  m_LocalPosition: {x: -4, y: -1.0505, z: 0}
+  m_LocalScale: {x: 0.5, y: 7.966694, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1979294475}
@@ -2543,8 +2541,8 @@ Transform:
   m_GameObject: {fileID: 2054629041}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 4, y: -0.5435, z: 0}
-  m_LocalScale: {x: 0.5, y: 9, z: 1}
+  m_LocalPosition: {x: 4, y: -1.0309, z: 0}
+  m_LocalScale: {x: 0.5, y: 8.025605, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1979294475}

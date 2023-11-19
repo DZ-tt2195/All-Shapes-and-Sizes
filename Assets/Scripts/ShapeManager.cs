@@ -17,6 +17,7 @@ public class ShapeManager : MonoBehaviour
 
     int score = 0;
     int dropped = 0;
+    [SerializeField] int dropLimit;
     bool canPlay = false;
 
     public List<Shape> listOfShapes = new List<Shape>();
@@ -95,15 +96,26 @@ public class ShapeManager : MonoBehaviour
                 xValue = rightWall.position.x - 0.6f;
 
             dropped++;
-            dataText.text = $"Score: {score} \nDropped: {dropped}";
+            dataText.text = $"Score: {score} \nDropped: {dropped}/{dropLimit}";
             StartCoroutine(GenerateShape(nextShape, new Vector2(xValue, deathLine.position.y - 0.15f)));
             RollNextShape();
+            StartCoroutine(OutOfShapes());
+        }
+    }
+
+    IEnumerator OutOfShapes()
+    {
+        if (dropped >= dropLimit)
+        {
+            canPlay = false;
+            yield return new WaitForSeconds(4f);
+            GameOver("You're Out Of Shape(s).");
         }
     }
 
     void RollNextShape()
     {
-        if (UnityEngine.Random.Range(0f, 1f) < 0.5f)
+        if (UnityEngine.Random.Range(0f, 1f) < 0.6f)
         {
             nextShape = listOfShapes[0];
         }
@@ -163,21 +175,18 @@ public class ShapeManager : MonoBehaviour
         if (canPlay)
         {
             score += num;
-            dataText.text = $"Score: {score} \nDropped: {dropped}";
+            dataText.text = $"Score: {score} \nDropped: {dropped}/{dropLimit}";
         }
     }
 
-    public void Victory()
+    public void GameOver(string message)
     {
-        InputManager.instance.enabled = false;
-        gameOverTransform.SetActive(true);
-        gameOverTransform.transform.GetChild(0).GetComponent<TMP_Text>().text = "You won!";
-    }
-
-    public void GameOver()
-    {
-        InputManager.instance.enabled = false;
-        gameOverTransform.SetActive(true);
-        gameOverTransform.transform.GetChild(0).GetComponent<TMP_Text>().text = "You lost.";
+        if (canPlay)
+        {
+            InputManager.instance.enabled = false;
+            gameOverTransform.SetActive(true);
+            gameOverTransform.transform.GetChild(0).GetComponent<TMP_Text>().text = message;
+            canPlay = false;
+        }
     }
 }
