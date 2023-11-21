@@ -6,6 +6,13 @@ using System;
 using UnityEngine.UI;
 using TMPro;
 
+[System.Serializable]
+public class ChanceOfDrop
+{
+    public Shape shape;
+    public int chance;
+}
+
 public class ShapeManager : MonoBehaviour
 {
     public static ShapeManager instance;
@@ -21,7 +28,8 @@ public class ShapeManager : MonoBehaviour
     bool canPlay = false;
 
     public List<Shape> listOfShapes = new List<Shape>();
-    public List<Shape> droppedShapes = new List<Shape>();
+    public List<ChanceOfDrop> droppedShapes = new List<ChanceOfDrop>();
+    List<Shape> toDrop = new List<Shape>();
 
     [ReadOnly] public Camera mainCam;
     [SerializeField] GameObject gameOverTransform;
@@ -56,6 +64,11 @@ public class ShapeManager : MonoBehaviour
     private void Start()
     {
         StartCoroutine(DropRandomly());
+        foreach(ChanceOfDrop next in droppedShapes)
+        {
+            for (int i = 0; i < next.chance; i++)
+                toDrop.Add(next.shape);
+        }
     }
 
     IEnumerator DropRandomly()
@@ -107,22 +120,15 @@ public class ShapeManager : MonoBehaviour
     {
         if (dropped >= dropLimit)
         {
-            canPlay = false;
-            yield return new WaitForSeconds(4f);
+            InputManager.instance.enabled = false;
+            yield return new WaitForSeconds(3f);
             GameOver("You're Out Of Shape(s).");
         }
     }
 
     void RollNextShape()
     {
-        if (UnityEngine.Random.Range(0f, 1f) < 0.6f)
-        {
-            nextShape = listOfShapes[0];
-        }
-        else
-        {
-            nextShape = droppedShapes[UnityEngine.Random.Range(0, droppedShapes.Count)];
-        }
+        nextShape = toDrop[UnityEngine.Random.Range(0, toDrop.Count)];
 
         nextImage.transform.parent.gameObject.SetActive(true);
         nextImage.sprite = nextShape.spriterenderer.sprite;
