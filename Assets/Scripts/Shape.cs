@@ -10,7 +10,7 @@ using System;
 public class Shape : MonoBehaviour
 {
     public SpriteRenderer spriterenderer;
-    Rigidbody2D rb;
+    [ReadOnly] public Rigidbody2D rb;
     int value;
     TMP_Text textBox;
     bool active = false;
@@ -19,7 +19,6 @@ public class Shape : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         rb.useAutoMass = true;
-        rb.gravityScale = 2;
         rb.angularDrag = 10;
 
         try
@@ -32,24 +31,26 @@ public class Shape : MonoBehaviour
         }
     }
 
-    public void Bomb()
+    public void AltShape(int gravity)
     {
-        this.name = "Bomb";
+        this.name = this.name.Replace("(Clone)", "");
+        rb.gravityScale = gravity;
         StartCoroutine(BecomeActive());
     }
 
-    public void Setup(int num)
+    public void Setup(int num, int gravity)
     {
         value = num;
         this.name = $"{value+1}";
         int score = (int)Mathf.Pow(value+1, 2);
         textBox.text = $"{score}";
+        rb.gravityScale = gravity;
         StartCoroutine(BecomeActive());
     }
 
     IEnumerator BecomeActive()
     {
-        yield return new WaitForSeconds(0.25f);
+        yield return new WaitForSeconds(0.33f);
         active = true;
     }
 
@@ -71,6 +72,12 @@ public class Shape : MonoBehaviour
                 Destroy(this.gameObject);
             }
 
+            if (collision.name == "Inversion" && ShapeManager.instance.canPlay)
+            {
+                Destroy(collision.gameObject);
+                ShapeManager.instance.SwitchGravity();
+            }
+
             if (collision.CompareTag("Death Line"))
             {
                 active = false;
@@ -89,10 +96,9 @@ public class Shape : MonoBehaviour
         {
             yield return ShapeManager.instance.GenerateShape(ShapeManager.instance.listOfShapes[value + 1], this.transform.position);
             ShapeManager.instance.AddScore(int.Parse(textBox.text));
+            if (collision != null)
+                Destroy(collision.gameObject);
+            Destroy(this.gameObject);
         }
-
-        if (collision != null)
-            Destroy(collision.gameObject);
-        Destroy(this.gameObject);
     }
 }

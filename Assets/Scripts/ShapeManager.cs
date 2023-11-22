@@ -25,7 +25,7 @@ public class ShapeManager : MonoBehaviour
     int score = 0;
     int dropped = 0;
     [SerializeField] int dropLimit;
-    bool canPlay = false;
+    [ReadOnly] public bool canPlay = false;
 
     public List<Shape> listOfShapes = new List<Shape>();
     public List<ChanceOfDrop> droppedShapes = new List<ChanceOfDrop>();
@@ -33,7 +33,12 @@ public class ShapeManager : MonoBehaviour
 
     [ReadOnly] public Camera mainCam;
     [SerializeField] GameObject gameOverTransform;
+
+    int currentGravity = 2;
+
     [ReadOnly] public Transform deathLine;
+    Transform floor;
+    Transform ceiling;
     Transform leftWall;
     Transform rightWall;
 
@@ -47,6 +52,8 @@ public class ShapeManager : MonoBehaviour
         deathLine = GameObject.Find("Death Line").transform;
         leftWall = GameObject.Find("Left Wall").transform;
         rightWall = GameObject.Find("Right Wall").transform;
+        floor = GameObject.Find("Floor").transform;
+        ceiling = GameObject.Find("Ceiling").transform;
     }
 
     private void OnEnable()
@@ -63,6 +70,9 @@ public class ShapeManager : MonoBehaviour
 
     private void Start()
     {
+        ceiling.gameObject.SetActive(false);
+        deathLine.transform.localPosition = new Vector3(0, ceiling.transform.localPosition.y + 0.15f, 0);
+
         StartCoroutine(DropRandomly());
         foreach(ChanceOfDrop next in droppedShapes)
         {
@@ -102,6 +112,7 @@ public class ShapeManager : MonoBehaviour
     {
         if (canPlay)
         {
+            float yValue = (currentGravity > 0) ? deathLine.position.y - 0.15f : deathLine.position.y + 0.15f;
             float xValue = GetWorldCoordinates(screenPosition).x;
             if (xValue < leftWall.position.x + 0.6f)
                 xValue = leftWall.position.x + 0.6f;
@@ -110,7 +121,7 @@ public class ShapeManager : MonoBehaviour
 
             dropped++;
             dataText.text = $"Score: {score} \nDropped: {dropped}/{dropLimit}";
-            StartCoroutine(GenerateShape(nextShape, new Vector2(xValue, deathLine.position.y - 0.15f)));
+            StartCoroutine(GenerateShape(nextShape, new Vector2(xValue, yValue)));
             RollNextShape();
             StartCoroutine(OutOfShapes());
         }
@@ -120,8 +131,9 @@ public class ShapeManager : MonoBehaviour
     {
         if (dropped >= dropLimit)
         {
+            dataText.transform.parent.gameObject.SetActive(false);
             InputManager.instance.enabled = false;
-            yield return new WaitForSeconds(3f);
+            yield return new WaitForSeconds(2.5f);
             GameOver("You're Out Of Shape(s).");
         }
     }
@@ -129,7 +141,6 @@ public class ShapeManager : MonoBehaviour
     void RollNextShape()
     {
         nextShape = toDrop[UnityEngine.Random.Range(0, toDrop.Count)];
-
         nextImage.transform.parent.gameObject.SetActive(true);
         nextImage.sprite = nextShape.spriterenderer.sprite;
         nextImage.color = nextShape.spriterenderer.color;
@@ -142,11 +153,17 @@ public class ShapeManager : MonoBehaviour
             case "Square":
                 nextImage.rectTransform.sizeDelta = new Vector2(65, 65);
                 break;
-            case "Rounded Square":
-                nextImage.rectTransform.sizeDelta = new Vector2(90, 90);
+            case "Arrow":
+                nextImage.rectTransform.sizeDelta = new Vector2(100, 100);
+                break;
+            case "Diamond":
+                nextImage.rectTransform.sizeDelta = new Vector2(120, 60);
                 break;
             case "Bomb":
                 nextImage.rectTransform.sizeDelta = new Vector2(50, 90);
+                break;
+            case "Inversion":
+                nextImage.rectTransform.sizeDelta = new Vector2(80, 80);
                 break;
         }
 
@@ -155,25 +172,54 @@ public class ShapeManager : MonoBehaviour
     public IEnumerator GenerateShape(Shape shape, Vector2 spawn)
     {
         yield return new WaitForSeconds(0.05f);
+        Shape newShape = Instantiate(shape);
+        newShape.transform.position = spawn;
 
-        try
+        if (listOfShapes.Contains(shape))
         {
-            Shape newShape = Instantiate(shape);
-            newShape.transform.position = spawn;
+            newShape.Setup(listOfShapes.IndexOf(shape), currentGravity);
+        }
+        else
+        {
+            newShape.AltShape(currentGravity);
+        }
+    }
 
-            if (listOfShapes.Contains(shape))
-            {
-                newShape.Setup(listOfShapes.IndexOf(shape));
-            }
-            else if (newShape.name == "Bomb(Clone)")
-            {
-                newShape.Bomb();
-            }
-        }
-        catch (ArgumentOutOfRangeException)
+    public void SwitchGravity()
+    {
+        canPlay = false;
+        nextImage.transform.parent.gameObject.SetActive(false);
+        floor.gameObject.SetActive(true);
+        ceiling.gameObject.SetActive(true);
+        deathLine.gameObject.SetActive(false);
+
+        currentGravity *= -1;
+        Shape[] allShapes = FindObjectsOfType<Shape>();
+        foreach (Shape shape in allShapes)
+            shape.rb.gravityScale = currentGravity;
+
+        StartCoroutine(UnPauseGame());
+    }
+
+    IEnumerator UnPauseGame()
+    {
+        yield return new WaitForSeconds(1.5f);
+        if (currentGravity < 0)
         {
-            //do nothing
+            deathLine.transform.localEulerAngles = new Vector3(0, 0, -180);
+            deathLine.transform.localPosition = new Vector3(0, floor.transform.localPosition.y - 0.15f, 0);
+            floor.gameObject.SetActive(false);
         }
+        else
+        {
+            deathLine.transform.localEulerAngles = new Vector3(0, 0, 0);
+            deathLine.transform.localPosition = new Vector3(0, ceiling.transform.localPosition.y + 0.15f, 0);
+            ceiling.gameObject.SetActive(false);
+        }
+
+        deathLine.gameObject.SetActive(true);
+        canPlay = true;
+        nextImage.transform.parent.gameObject.SetActive(true);
     }
 
     public void AddScore(int num)
