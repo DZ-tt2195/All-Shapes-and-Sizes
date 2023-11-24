@@ -60,9 +60,13 @@ public class Shape : MonoBehaviour
         {
             if (this.name == collision.name && this.transform.position.y > collision.transform.position.y)
             {
-                active = false;
-                collision.gameObject.GetComponent<Shape>().active = false;
-                StartCoroutine(Merge(collision));
+                Shape otherShape = collision.gameObject.GetComponent<Shape>();
+                if (otherShape.active)
+                {
+                    active = false;
+                    otherShape.active = false;
+                    StartCoroutine(Merge(collision));
+                }
             }
 
             if (collision.name == "Bomb")
