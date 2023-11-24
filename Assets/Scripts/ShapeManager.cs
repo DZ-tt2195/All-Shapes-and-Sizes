@@ -24,6 +24,7 @@ public class ShapeManager : MonoBehaviour
 
     int score = 0;
     int dropped = 0;
+    [SerializeField] int startingDrop;
     [SerializeField] int dropLimit;
     [ReadOnly] public bool canPlay = false;
 
@@ -86,7 +87,7 @@ public class ShapeManager : MonoBehaviour
         dataText.transform.parent.gameObject.SetActive(false);
         nextImage.transform.parent.gameObject.SetActive(false);
 
-        for (int i = 0; i < 75; i++)
+        for (int i = 0; i < startingDrop; i++)
         {
             yield return GenerateShape(listOfShapes[0], new Vector2(UnityEngine.Random.Range(leftWall.position.x + 0.6f, rightWall.position.x - 0.6f), deathLine.position.y - 0.15f));
         }
