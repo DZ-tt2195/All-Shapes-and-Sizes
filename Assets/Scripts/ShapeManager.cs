@@ -18,6 +18,7 @@ public class ShapeManager : MonoBehaviour
     public static ShapeManager instance;
 
     TMP_Text dataText;
+    TMP_Text tutorialText;
 
     Image nextImage;
     Shape nextShape;
@@ -35,7 +36,7 @@ public class ShapeManager : MonoBehaviour
     [ReadOnly] public Camera mainCam;
     [SerializeField] GameObject gameOverTransform;
 
-    int currentGravity = 2;
+    float currentGravity = 2.5f;
 
     [ReadOnly] public Transform deathLine;
     Transform floor;
@@ -49,6 +50,7 @@ public class ShapeManager : MonoBehaviour
         gameOverTransform.SetActive(false);
         instance = this;
         dataText = GameObject.Find("Data Text").GetComponent<TMP_Text>();
+        tutorialText = GameObject.Find("Tutorial Text").GetComponent<TMP_Text>();
         mainCam = Camera.main;
         deathLine = GameObject.Find("Death Line").transform;
         leftWall = GameObject.Find("Left Wall").transform;
@@ -71,6 +73,26 @@ public class ShapeManager : MonoBehaviour
     {
         ceiling.gameObject.SetActive(false);
         deathLine.transform.localPosition = new Vector3(0, ceiling.transform.localPosition.y + 0.15f, 0);
+
+        tutorialText.text =
+        "Touch the screen to drop shapes down the tube. When a shape touches another of the same shape, they merge into a larger one.";
+
+        switch (LevelSettings.instance.setting)
+        {
+            case LevelSettings.Setting.MergeCrown:
+                tutorialText.text += $"If you let any shapes go above the top, or drop more than {dropLimit} shapes you lose." +
+                "\n\nTo win, create 2 Crowns, and then have them merge with one another.";
+                break;
+            case LevelSettings.Setting.ReachScore:
+                tutorialText.text += $"If you let any shapes go above the top, or drop more than {dropLimit} shapes you lose." +
+                "\n\nTo win, get a score above 1500 by merging shapes together.";
+                break;
+            case LevelSettings.Setting.Endless:
+                tutorialText.text += "If you let any shapes go above the top, you lose." +
+                "\n\nPlay for as long as you are able to until you lose.";
+                break;
+        }
+
 
         StartCoroutine(DropRandomly());
         foreach(ChanceOfDrop next in droppedShapes)
@@ -102,9 +124,25 @@ public class ShapeManager : MonoBehaviour
 
     Vector2 GetWorldCoordinates(Vector2 screenPos)
     {
-        Vector2 screenCoord = new Vector2(screenPos.x, screenPos.y);
+        Vector2 screenCoord = new(screenPos.x, screenPos.y);
         Vector2 worldCoord = mainCam.ScreenToWorldPoint(screenCoord);
         return worldCoord;
+    }
+
+    void UpdateDataText()
+    {
+        if (LevelSettings.instance.setting == LevelSettings.Setting.Endless)
+        {
+            char infinitySymbol = '\u221E';
+            dataText.text = $"Score: {score} \nDropped: {dropped}/{infinitySymbol}";
+        }
+        else
+        {
+            dataText.text = $"Score: {score} \nDropped: {dropped}/{dropLimit}";
+
+            if (LevelSettings.instance.setting == LevelSettings.Setting.ReachScore && score >= 1500)
+                GameOver("You Won!");
+        }
     }
 
     void DropShape(Vector2 screenPosition)
@@ -118,8 +156,10 @@ public class ShapeManager : MonoBehaviour
             else if (xValue > rightWall.position.x - 0.6f)
                 xValue = rightWall.position.x - 0.6f;
 
-            dropped++;
-            dataText.text = $"Score: {score} \nDropped: {dropped}/{dropLimit}";
+            if (listOfShapes.Contains(nextShape))
+                dropped++;
+
+            UpdateDataText();
             StartCoroutine(GenerateShape(nextShape, new Vector2(xValue, yValue)));
             RollNextShape();
             StartCoroutine(OutOfShapes());
@@ -227,7 +267,7 @@ public class ShapeManager : MonoBehaviour
         if (canPlay)
         {
             score += num;
-            dataText.text = $"Score: {score} \nDropped: {dropped}/{dropLimit}";
+            UpdateDataText();
         }
     }
 

@@ -19,8 +19,7 @@ public class Shape : MonoBehaviour
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
-        rb.useAutoMass = true;
-        rb.angularDrag = 10;
+        rb.useAutoMass = false;
         rb.collisionDetectionMode = CollisionDetectionMode2D.Discrete;
         rb.interpolation = RigidbodyInterpolation2D.Interpolate;
 
@@ -34,20 +33,24 @@ public class Shape : MonoBehaviour
         }
     }
 
-    public void AltShape(int gravity)
+    public void AltShape(float gravity)
     {
         this.name = this.name.Replace("(Clone)", "");
         rb.gravityScale = gravity;
+        rb.mass = 2;
+        rb.angularDrag = 2;
         StartCoroutine(BecomeActive());
     }
 
-    public void Setup(int num, int gravity)
+    public void Setup(int num, float gravity)
     {
         value = num;
         this.name = $"{value+1}";
         int score = (int)Mathf.Pow(value+1, 2);
+        rb.mass = 2;
         textBox.text = $"{score}";
         rb.gravityScale = gravity;
+        rb.angularDrag = 2;
         StartCoroutine(BecomeActive());
     }
 
@@ -79,6 +82,11 @@ public class Shape : MonoBehaviour
                 Destroy(this.gameObject);
             }
 
+            else if (collision.CompareTag("Out of Bounds"))
+            {
+                Destroy(this.gameObject);
+            }
+
             else if (collision.CompareTag("Inversion") && ShapeManager.instance.canPlay)
             {
                 Destroy(collision.gameObject);
@@ -87,10 +95,10 @@ public class Shape : MonoBehaviour
 
             else if (collision.CompareTag("Death Line"))
             {
-                if (deathLineTouched < 1.5f)
+                if (deathLineTouched < 3f)
                 {
                     deathLineTouched += Time.deltaTime;
-                    Debug.Log($"{deathLineTouched:F2}");
+                    Debug.Log(deathLineTouched);
                 }
                 else
                 {
@@ -109,14 +117,16 @@ public class Shape : MonoBehaviour
 
     IEnumerator Merge(Collider2D collision)
     {
+        ShapeManager.instance.AddScore(int.Parse(textBox.text));
+
         if (value + 1 >= ShapeManager.instance.listOfShapes.Count)
         {
-            ShapeManager.instance.GameOver("You Won!");
+            if (LevelSettings.instance.setting == LevelSettings.Setting.MergeCrown)
+                ShapeManager.instance.GameOver("You Won!");
         }
         else
         {
             yield return ShapeManager.instance.GenerateShape(ShapeManager.instance.listOfShapes[value + 1], this.transform.position);
-            ShapeManager.instance.AddScore(int.Parse(textBox.text));
         }
 
         if (collision != null)

@@ -7,6 +7,9 @@ TagManager:
   - Death Line
   - Bomb
   - Inversion
+  - Left Wall
+  - Right Wall
+  - Out of Bounds
   layers:
   - Default
   - TransparentFX

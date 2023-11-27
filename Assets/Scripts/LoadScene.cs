@@ -20,6 +20,7 @@ public class LoadScene : MonoBehaviour
 
     public void NextScene()
     {
+        Destroy(LevelSettings.instance.gameObject);
         SceneManager.LoadScene(scene);
     }
 }

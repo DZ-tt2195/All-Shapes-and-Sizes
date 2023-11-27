@@ -265,7 +265,7 @@ GameObject:
   - component: {fileID: 145836531}
   - component: {fileID: 145836530}
   - component: {fileID: 145836529}
-  - component: {fileID: 145836528}
+  - component: {fileID: 145836532}
   m_Layer: 5
   m_Name: Button
   m_TagString: Untagged
@@ -293,19 +293,6 @@ RectTransform:
   m_AnchoredPosition: {x: 3, y: -139}
   m_SizeDelta: {x: 300, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &145836528
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 145836526}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 86b474d7fc0ed45f8860d7524515d0c2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  scene: 0. TitleScene
 --- !u!114 &145836529
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -388,6 +375,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 145836526}
   m_CullTransparentMesh: 1
+--- !u!114 &145836532
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 145836526}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86b474d7fc0ed45f8860d7524515d0c2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scene: 0. TitleScene
 --- !u!1 &162156482
 GameObject:
   m_ObjectHideFlags: 0
@@ -401,7 +401,7 @@ GameObject:
   - component: {fileID: 162156484}
   m_Layer: 0
   m_Name: Bottom
-  m_TagString: Death Line
+  m_TagString: Out of Bounds
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -635,7 +635,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 1}
+  m_Offset: {x: 0, y: 2}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -705,7 +705,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Restart
+  m_text: Title Screen
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -732,7 +732,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 72
+  m_fontSize: 56.6
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -795,7 +795,7 @@ GameObject:
   - component: {fileID: 383748806}
   m_Layer: 0
   m_Name: Right
-  m_TagString: Death Line
+  m_TagString: Out of Bounds
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1639,7 +1639,7 @@ GameObject:
   - component: {fileID: 1019151855}
   m_Layer: 0
   m_Name: Top
-  m_TagString: Death Line
+  m_TagString: Out of Bounds
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1768,7 +1768,7 @@ GameObject:
   - component: {fileID: 1099199205}
   - component: {fileID: 1099199204}
   m_Layer: 5
-  m_Name: TutorialText
+  m_Name: Tutorial Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2747,7 +2747,7 @@ GameObject:
   - component: {fileID: 1836280080}
   m_Layer: 0
   m_Name: Left
-  m_TagString: Death Line
+  m_TagString: Out of Bounds
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2893,7 +2893,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -3.5, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -3007,7 +3007,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 493639a74bc694734a9c6e0a126eed9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  travelTime: 1
+  travelTime: 5
   pauseTime: 0
   newLocation: {x: 3.5, y: 0}
 --- !u!1 &1939478349
@@ -3326,7 +3326,7 @@ GameObject:
   - component: {fileID: 2018761203}
   m_Layer: 0
   m_Name: Left Wall
-  m_TagString: Untagged
+  m_TagString: Left Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3374,7 +3374,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1.1, y: 1.1}
+  m_Size: {x: 1.5, y: 1}
   m_EdgeRadius: 0
 --- !u!212 &2018761204
 SpriteRenderer:
@@ -3456,7 +3456,7 @@ GameObject:
   - component: {fileID: 2054629043}
   m_Layer: 0
   m_Name: Right Wall
-  m_TagString: Untagged
+  m_TagString: Right Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3504,7 +3504,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1.1, y: 1.1}
+  m_Size: {x: 1.5, y: 1}
   m_EdgeRadius: 0
 --- !u!212 &2054629044
 SpriteRenderer:
