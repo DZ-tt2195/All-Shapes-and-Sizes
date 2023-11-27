@@ -14,12 +14,15 @@ public class Shape : MonoBehaviour
     int value;
     TMP_Text textBox;
     bool active = false;
+    float deathLineTouched = 0f;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         rb.useAutoMass = true;
         rb.angularDrag = 10;
+        rb.collisionDetectionMode = CollisionDetectionMode2D.Discrete;
+        rb.interpolation = RigidbodyInterpolation2D.Interpolate;
 
         try
         {
@@ -50,7 +53,7 @@ public class Shape : MonoBehaviour
 
     IEnumerator BecomeActive()
     {
-        yield return new WaitForSeconds(0.33f);
+        yield return new WaitForSeconds(0.2f);
         active = true;
     }
 
@@ -69,25 +72,39 @@ public class Shape : MonoBehaviour
                 }
             }
 
-            if (collision.name == "Bomb")
+            else if (collision.CompareTag("Bomb"))
             {
                 active = false;
                 Destroy(collision.gameObject);
                 Destroy(this.gameObject);
             }
 
-            if (collision.name == "Inversion" && ShapeManager.instance.canPlay)
+            else if (collision.CompareTag("Inversion") && ShapeManager.instance.canPlay)
             {
                 Destroy(collision.gameObject);
                 ShapeManager.instance.SwitchGravity();
             }
 
-            if (collision.CompareTag("Death Line"))
+            else if (collision.CompareTag("Death Line"))
             {
-                active = false;
-                ShapeManager.instance.GameOver("You Lost.");
+                if (deathLineTouched < 1.5f)
+                {
+                    deathLineTouched += Time.deltaTime;
+                    Debug.Log($"{deathLineTouched:F2}");
+                }
+                else
+                {
+                    active = false;
+                    ShapeManager.instance.GameOver("You Lost.");
+                }
             }
         }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Death Line"))
+            deathLineTouched = 0f;
     }
 
     IEnumerator Merge(Collider2D collision)
@@ -100,9 +117,10 @@ public class Shape : MonoBehaviour
         {
             yield return ShapeManager.instance.GenerateShape(ShapeManager.instance.listOfShapes[value + 1], this.transform.position);
             ShapeManager.instance.AddScore(int.Parse(textBox.text));
-            if (collision != null)
-                Destroy(collision.gameObject);
-            Destroy(this.gameObject);
         }
+
+        if (collision != null)
+            Destroy(collision.gameObject);
+        Destroy(this.gameObject);
     }
 }

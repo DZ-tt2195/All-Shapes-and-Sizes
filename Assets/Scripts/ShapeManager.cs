@@ -28,9 +28,9 @@ public class ShapeManager : MonoBehaviour
     [SerializeField] int dropLimit;
     [ReadOnly] public bool canPlay = false;
 
-    public List<Shape> listOfShapes = new List<Shape>();
-    public List<ChanceOfDrop> droppedShapes = new List<ChanceOfDrop>();
-    List<Shape> toDrop = new List<Shape>();
+    public List<Shape> listOfShapes = new();
+    public List<ChanceOfDrop> droppedShapes = new();
+    List<Shape> toDrop = new();
 
     [ReadOnly] public Camera mainCam;
     [SerializeField] GameObject gameOverTransform;
@@ -59,13 +59,11 @@ public class ShapeManager : MonoBehaviour
 
     private void OnEnable()
     {
-        Debug.Log("subscribed");
         InputManager.instance.OnStartTouch += DropShape;
     }
 
     private void OnDisable()
     {
-        Debug.Log("unsubscribed");
         InputManager.instance.OnStartTouch -= DropShape;
     }
 
@@ -132,6 +130,7 @@ public class ShapeManager : MonoBehaviour
     {
         if (dropped >= dropLimit)
         {
+            nextImage.transform.parent.gameObject.SetActive(false);
             dataText.transform.parent.gameObject.SetActive(false);
             InputManager.instance.enabled = false;
             yield return new WaitForSeconds(2.5f);
