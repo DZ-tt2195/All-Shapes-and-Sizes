@@ -9,6 +9,7 @@ using static TitleScreen;
 public class LevelSettings : MonoBehaviour
 {
     public static LevelSettings instance;
+    [ReadOnly] public int lastLevel;
     [ReadOnly] public Setting setting;
 
     private void Awake()

@@ -1,12 +1,11 @@
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
-public class EditorTest : EditorWindow
+public class TakeScreenshot : EditorWindow
 {
     [MenuItem("Tools/Take Screenshot")]
-    static void TakeScreenshot()
+    static void Picture()
     {
         string sceneName = EditorSceneManager.GetActiveScene().name;
         Debug.Log(sceneName);

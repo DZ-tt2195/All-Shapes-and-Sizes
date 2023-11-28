@@ -557,6 +557,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4fdf78138c9d42fcb23b70840b7662b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  lastLevel: 0
   setting: 0
 --- !u!1 &783243457
 GameObject:
@@ -909,7 +910,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Level 1
+  m_text: 1. Level 1
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -2143,19 +2144,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   listOfLevels:
-  - name: 1. Lv1
-    sprite: {fileID: 21300000, guid: 381ccef235cca45ea9e8cfe2bd09ea23, type: 3}
-  - name: 2. Lv2
-    sprite: {fileID: 21300000, guid: 02efd5841110143369cf7eaf7f842f8b, type: 3}
+  - name: 1. Basics
+    sprite: {fileID: 21300000, guid: a5c34304594fa4a44b80206c8595616e, type: 3}
+  - name: 2. Moving
+    sprite: {fileID: 21300000, guid: cf10e0ec72d294c13960fb671b34af32, type: 3}
   levelImage: {fileID: 151170502}
   levelText: {fileID: 1162476073}
   leftArrow: {fileID: 2135433052}
   rightArrow: {fileID: 1563920991}
   endlessHighScore: {fileID: 1451676597}
   buttonSettings:
-  - {fileID: 783243460}
-  - {fileID: 300831803}
-  - {fileID: 1402197386}
+  - button: {fileID: 783243460}
+    image: {fileID: 783243461}
+  - button: {fileID: 300831803}
+    image: {fileID: 300831804}
+  - button: {fileID: 1402197386}
+    image: {fileID: 1402197387}
 --- !u!4 &2068508004
 Transform:
   m_ObjectHideFlags: 0

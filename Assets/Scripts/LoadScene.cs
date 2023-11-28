@@ -16,11 +16,14 @@ public class LoadScene : MonoBehaviour
     {
         button = GetComponent<Button>();
         button.onClick.AddListener(NextScene);
+        Debug.Log(scene);
     }
 
     public void NextScene()
     {
-        Destroy(LevelSettings.instance.gameObject);
-        SceneManager.LoadScene(scene);
+        if (scene.Trim() == "")
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        else
+            SceneManager.LoadScene(scene);
     }
 }

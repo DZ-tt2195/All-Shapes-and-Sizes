@@ -5,6 +5,7 @@ using MyBox;
 using System;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 [System.Serializable]
 public class ChanceOfDrop
@@ -84,7 +85,7 @@ public class ShapeManager : MonoBehaviour
                 "\n\nTo win, create 2 Crowns, and then have them merge with one another.";
                 break;
             case TitleScreen.Setting.ReachScore:
-                dropLimit *= 2;
+                dropLimit += 100;
                 tutorialText.text += $"If you let any shapes go above the top, or drop more than {dropLimit} shapes you lose." +
                 "\n\nTo win, get a score above 2000 by merging shapes together.";
                 break;
@@ -142,7 +143,7 @@ public class ShapeManager : MonoBehaviour
             dataText.text = $"Score: {score} \nDropped: {dropped}/{dropLimit}";
 
             if (LevelSettings.instance.setting == TitleScreen.Setting.ReachScore && score >= 2000)
-                GameOver("You Won!");
+                GameOver("You Won!", true);
         }
     }
 
@@ -177,7 +178,7 @@ public class ShapeManager : MonoBehaviour
             dataText.transform.parent.gameObject.SetActive(false);
             InputManager.instance.enabled = false;
             yield return new WaitForSeconds(2.5f);
-            GameOver("You're Out Of Shape(s).");
+            GameOver("You're Out Of Shape(s).", false);
         }
     }
 
@@ -274,7 +275,7 @@ public class ShapeManager : MonoBehaviour
         }
     }
 
-    public void GameOver(string message)
+    public void GameOver(string message, bool won)
     {
         if (canPlay)
         {
@@ -282,6 +283,13 @@ public class ShapeManager : MonoBehaviour
             gameOverTransform.SetActive(true);
             gameOverTransform.transform.GetChild(0).GetComponent<TMP_Text>().text = message;
             canPlay = false;
+
+            if (LevelSettings.instance.setting == TitleScreen.Setting.Endless && PlayerPrefs.GetInt($"{SceneManager.GetActiveScene().name} - Endless") < score)
+                PlayerPrefs.SetInt($"{SceneManager.GetActiveScene().name} - Endless", score);
+            else if (won && LevelSettings.instance.setting == TitleScreen.Setting.MergeCrown)
+                PlayerPrefs.SetInt($"{SceneManager.GetActiveScene().name} - Merge", 1);
+            else if (won && LevelSettings.instance.setting == TitleScreen.Setting.ReachScore)
+                PlayerPrefs.SetInt($"{SceneManager.GetActiveScene().name} - Score", 1);
         }
     }
 }

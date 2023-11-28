@@ -13,6 +13,14 @@ public struct LevelInfo
     public Sprite sprite;
 }
 
+[System.Serializable]
+public struct ButtonInfo
+{
+    public Button button;
+    public Image image;
+}
+
+
 public class TitleScreen : MonoBehaviour
 {
     int levelToLoad = 0;
@@ -25,50 +33,49 @@ public class TitleScreen : MonoBehaviour
 
     [SerializeField] TMP_Text endlessHighScore;
     public enum Setting { MergeCrown, ReachScore, Endless };
-    [SerializeField] List<Button> buttonSettings;
+    [SerializeField] List<ButtonInfo> buttonSettings;
 
     private void Start()
     {
+        levelToLoad = LevelSettings.instance.lastLevel;
         for (int i = 0; i < buttonSettings.Count; i++)
         {
             Setting enumValue = (Setting)i;
-            buttonSettings[i].onClick.AddListener(() => LoadWithSetting(enumValue));
+            buttonSettings[i].button.onClick.AddListener(() => LoadWithSetting(enumValue));
         }
 
         leftArrow.onClick.AddListener(Decrement);
         rightArrow.onClick.AddListener(Increment);
-
+        levelToLoad = LevelSettings.instance.lastLevel;
         DisplayLevel();
     }
 
     void Increment()
     {
-        if (levelToLoad == listOfLevels.Count - 1)
-            levelToLoad = 0;
-        else
-            levelToLoad++;
+        levelToLoad = (levelToLoad == listOfLevels.Count - 1) ? 0 : levelToLoad + 1;
         DisplayLevel();
     }
 
-
     void Decrement()
     {
-        if (levelToLoad <= 0)
-            levelToLoad = listOfLevels.Count - 1;
-        else
-            levelToLoad--;
+        levelToLoad = (levelToLoad <= 0 ) ? listOfLevels.Count - 1 : levelToLoad - 1;
         DisplayLevel();
     }
 
     void LoadWithSetting(Setting setting)
     {
         LevelSettings.instance.setting = setting;
-        SceneManager.LoadScene(levelToLoad+1);
+        LevelSettings.instance.lastLevel = levelToLoad;
+        SceneManager.LoadScene(listOfLevels[levelToLoad].name);
     }
 
     void DisplayLevel()
     {
         levelText.text = listOfLevels[levelToLoad].name;
         levelImage.sprite = listOfLevels[levelToLoad].sprite;
+
+        buttonSettings[0].image.color = (PlayerPrefs.GetInt($"{listOfLevels[levelToLoad].name} - Merge") == 1) ? Color.yellow : Color.white;
+        buttonSettings[1].image.color = (PlayerPrefs.GetInt($"{listOfLevels[levelToLoad].name} - Score") == 1) ? Color.yellow : Color.white;
+        endlessHighScore.text = $"High Score: {PlayerPrefs.GetInt($"{listOfLevels[levelToLoad].name} - Endless")}";
     }
 }
