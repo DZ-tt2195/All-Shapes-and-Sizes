@@ -79,16 +79,16 @@ public class ShapeManager : MonoBehaviour
 
         switch (LevelSettings.instance.setting)
         {
-            case LevelSettings.Setting.MergeCrown:
+            case TitleScreen.Setting.MergeCrown:
                 tutorialText.text += $"If you let any shapes go above the top, or drop more than {dropLimit} shapes you lose." +
                 "\n\nTo win, create 2 Crowns, and then have them merge with one another.";
                 break;
-            case LevelSettings.Setting.ReachScore:
+            case TitleScreen.Setting.ReachScore:
                 dropLimit *= 2;
                 tutorialText.text += $"If you let any shapes go above the top, or drop more than {dropLimit} shapes you lose." +
                 "\n\nTo win, get a score above 2000 by merging shapes together.";
                 break;
-            case LevelSettings.Setting.Endless:
+            case TitleScreen.Setting.Endless:
                 tutorialText.text += "If you let any shapes go above the top, you lose." +
                 "\n\nPlay for as long as you are able to until you lose.";
                 break;
@@ -132,7 +132,7 @@ public class ShapeManager : MonoBehaviour
 
     void UpdateDataText()
     {
-        if (LevelSettings.instance.setting == LevelSettings.Setting.Endless)
+        if (LevelSettings.instance.setting == TitleScreen.Setting.Endless)
         {
             char infinitySymbol = '\u221E';
             dataText.text = $"Score: {score} \nDropped: {dropped}/{infinitySymbol}";
@@ -141,7 +141,7 @@ public class ShapeManager : MonoBehaviour
         {
             dataText.text = $"Score: {score} \nDropped: {dropped}/{dropLimit}";
 
-            if (LevelSettings.instance.setting == LevelSettings.Setting.ReachScore && score >= 2000)
+            if (LevelSettings.instance.setting == TitleScreen.Setting.ReachScore && score >= 2000)
                 GameOver("You Won!");
         }
     }
@@ -164,7 +164,7 @@ public class ShapeManager : MonoBehaviour
             StartCoroutine(GenerateShape(nextShape, new Vector2(xValue, yValue)));
             RollNextShape();
 
-	    if (LevelSettings.instance.setting != LevelSettings.Setting.Endless)
+	    if (LevelSettings.instance.setting != TitleScreen.Setting.Endless)
             StartCoroutine(OutOfShapes());
         }
     }

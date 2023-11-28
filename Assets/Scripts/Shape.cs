@@ -120,7 +120,7 @@ public class Shape : MonoBehaviour
 
         if (value + 1 >= ShapeManager.instance.listOfShapes.Count)
         {
-            if (LevelSettings.instance.setting == LevelSettings.Setting.MergeCrown)
+            if (LevelSettings.instance.setting == TitleScreen.Setting.MergeCrown)
                 ShapeManager.instance.GameOver("You Won!");
         }
         else
