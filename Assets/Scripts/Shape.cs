@@ -98,7 +98,6 @@ public class Shape : MonoBehaviour
                 if (deathLineTouched < 3f)
                 {
                     deathLineTouched += Time.deltaTime;
-                    Debug.Log(deathLineTouched);
                 }
                 else
                 {

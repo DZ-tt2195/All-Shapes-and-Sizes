@@ -2380,7 +2380,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   startingDrop: 60
-  dropLimit: 200
+  dropLimit: 150
   canPlay: 0
   listOfShapes:
   - {fileID: 7031427604454891696, guid: 0d698fb18ca044af5acbfa2da3f67acf, type: 3}

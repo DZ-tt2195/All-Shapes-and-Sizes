@@ -75,7 +75,7 @@ public class ShapeManager : MonoBehaviour
         deathLine.transform.localPosition = new Vector3(0, ceiling.transform.localPosition.y + 0.15f, 0);
 
         tutorialText.text =
-        "Touch the screen to drop shapes down the tube. When a shape touches another of the same shape, they merge into a larger one.";
+        "Touch the screen to drop shapes down the tube. When a shape touches another of the same shape, they merge into a larger one. ";
 
         switch (LevelSettings.instance.setting)
         {
@@ -84,8 +84,9 @@ public class ShapeManager : MonoBehaviour
                 "\n\nTo win, create 2 Crowns, and then have them merge with one another.";
                 break;
             case LevelSettings.Setting.ReachScore:
+                dropLimit *= 2;
                 tutorialText.text += $"If you let any shapes go above the top, or drop more than {dropLimit} shapes you lose." +
-                "\n\nTo win, get a score above 1500 by merging shapes together.";
+                "\n\nTo win, get a score above 2000 by merging shapes together.";
                 break;
             case LevelSettings.Setting.Endless:
                 tutorialText.text += "If you let any shapes go above the top, you lose." +
@@ -140,7 +141,7 @@ public class ShapeManager : MonoBehaviour
         {
             dataText.text = $"Score: {score} \nDropped: {dropped}/{dropLimit}";
 
-            if (LevelSettings.instance.setting == LevelSettings.Setting.ReachScore && score >= 1500)
+            if (LevelSettings.instance.setting == LevelSettings.Setting.ReachScore && score >= 2000)
                 GameOver("You Won!");
         }
     }
@@ -162,6 +163,8 @@ public class ShapeManager : MonoBehaviour
             UpdateDataText();
             StartCoroutine(GenerateShape(nextShape, new Vector2(xValue, yValue)));
             RollNextShape();
+
+	    if (LevelSettings.instance.setting != LevelSettings.Setting.Endless)
             StartCoroutine(OutOfShapes());
         }
     }
