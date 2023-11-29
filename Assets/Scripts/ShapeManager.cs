@@ -21,8 +21,10 @@ public class ShapeManager : MonoBehaviour
     TMP_Text dataText;
     TMP_Text tutorialText;
 
-    Image nextImage;
-    Shape nextShape;
+    Image nextImage1;
+    Shape nextShape1;
+    Image nextImage2;
+    Shape nextShape2;
 
     int score = 0;
     int dropped = 0;
@@ -47,7 +49,8 @@ public class ShapeManager : MonoBehaviour
 
     private void Awake()
     {
-        nextImage = GameObject.Find("Next Image").GetComponent<Image>();
+        nextImage1 = GameObject.Find("Next Image 1").GetComponent<Image>();
+        nextImage2 = GameObject.Find("Next Image 2").GetComponent<Image>();
         gameOverTransform.SetActive(false);
         instance = this;
         dataText = GameObject.Find("Data Text").GetComponent<TMP_Text>();
@@ -95,19 +98,27 @@ public class ShapeManager : MonoBehaviour
                 break;
         }
 
-
         StartCoroutine(DropRandomly());
         foreach(ChanceOfDrop next in droppedShapes)
         {
             for (int i = 0; i < next.chance; i++)
                 toDrop.Add(next.shape);
         }
+
+        nextShape1 = toDrop[UnityEngine.Random.Range(0, toDrop.Count)];
+        nextImage1.sprite = nextShape1.spriterenderer.sprite;
+        nextImage1.color = nextShape1.spriterenderer.color;
+
+        nextShape2 = toDrop[UnityEngine.Random.Range(0, toDrop.Count)];
+        nextImage2.sprite = nextShape2.spriterenderer.sprite;
+        nextImage2.color = nextShape2.spriterenderer.color;
     }
 
     IEnumerator DropRandomly()
     {
         dataText.transform.parent.gameObject.SetActive(false);
-        nextImage.transform.parent.gameObject.SetActive(false);
+        nextImage1.transform.parent.gameObject.SetActive(false);
+        nextImage2.transform.parent.gameObject.SetActive(false);
 
         for (int i = 0; i < startingDrop; i++)
         {
@@ -158,11 +169,11 @@ public class ShapeManager : MonoBehaviour
             else if (xValue > rightWall.position.x - 0.6f)
                 xValue = rightWall.position.x - 0.6f;
 
-            if (listOfShapes.Contains(nextShape))
+            if (listOfShapes.Contains(nextShape1))
                 dropped++;
 
             UpdateDataText();
-            StartCoroutine(GenerateShape(nextShape, new Vector2(xValue, yValue)));
+            StartCoroutine(GenerateShape(nextShape1, new Vector2(xValue, yValue)));
             RollNextShape();
 
 	    if (LevelSettings.instance.setting != TitleScreen.Setting.Endless)
@@ -174,7 +185,8 @@ public class ShapeManager : MonoBehaviour
     {
         if (dropped >= dropLimit)
         {
-            nextImage.transform.parent.gameObject.SetActive(false);
+            nextImage1.transform.parent.gameObject.SetActive(false);
+            nextImage2.transform.parent.gameObject.SetActive(false);
             dataText.transform.parent.gameObject.SetActive(false);
             InputManager.instance.enabled = false;
             yield return new WaitForSeconds(2.5f);
@@ -184,33 +196,62 @@ public class ShapeManager : MonoBehaviour
 
     void RollNextShape()
     {
-        nextShape = toDrop[UnityEngine.Random.Range(0, toDrop.Count)];
-        nextImage.transform.parent.gameObject.SetActive(true);
-        nextImage.sprite = nextShape.spriterenderer.sprite;
-        nextImage.color = nextShape.spriterenderer.color;
+        nextShape1 = nextShape2;
+        nextImage1.transform.parent.gameObject.SetActive(true);
+        nextImage1.sprite = nextShape2.spriterenderer.sprite;
+        nextImage1.color = nextShape2.spriterenderer.color;
 
-        switch (nextShape.name)
+        do{
+            nextShape2 = toDrop[UnityEngine.Random.Range(0, toDrop.Count)];
+        } while (nextShape1.name == "Inversion" && nextShape2.name == "Inversion");
+
+        nextImage2.transform.parent.gameObject.SetActive(true);
+        nextImage2.sprite = nextShape2.spriterenderer.sprite;
+        nextImage2.color = nextShape2.spriterenderer.color;
+
+        switch (nextShape1.name)
         {
             case "Circle":
-                nextImage.rectTransform.sizeDelta = new Vector2(50, 50);
+                nextImage1.rectTransform.sizeDelta = new Vector2(50, 50);
                 break;
             case "Square":
-                nextImage.rectTransform.sizeDelta = new Vector2(65, 65);
+                nextImage1.rectTransform.sizeDelta = new Vector2(65, 65);
                 break;
             case "Arrow":
-                nextImage.rectTransform.sizeDelta = new Vector2(100, 100);
+                nextImage1.rectTransform.sizeDelta = new Vector2(100, 100);
                 break;
             case "Diamond":
-                nextImage.rectTransform.sizeDelta = new Vector2(120, 60);
+                nextImage1.rectTransform.sizeDelta = new Vector2(110, 60);
                 break;
             case "Bomb":
-                nextImage.rectTransform.sizeDelta = new Vector2(50, 90);
+                nextImage1.rectTransform.sizeDelta = new Vector2(50, 90);
                 break;
             case "Inversion":
-                nextImage.rectTransform.sizeDelta = new Vector2(80, 80);
+                nextImage1.rectTransform.sizeDelta = new Vector2(90, 90);
                 break;
         }
 
+        switch (nextShape2.name)
+        {
+            case "Circle":
+                nextImage2.rectTransform.sizeDelta = new Vector2(40, 40);
+                break;
+            case "Square":
+                nextImage2.rectTransform.sizeDelta = new Vector2(50, 50);
+                break;
+            case "Arrow":
+                nextImage2.rectTransform.sizeDelta = new Vector2(70, 70);
+                break;
+            case "Diamond":
+                nextImage2.rectTransform.sizeDelta = new Vector2(80, 50);
+                break;
+            case "Bomb":
+                nextImage2.rectTransform.sizeDelta = new Vector2(40, 80);
+                break;
+            case "Inversion":
+                nextImage2.rectTransform.sizeDelta = new Vector2(60, 60);
+                break;
+        }
     }
 
     public IEnumerator GenerateShape(Shape shape, Vector2 spawn)
@@ -232,7 +273,8 @@ public class ShapeManager : MonoBehaviour
     public void SwitchGravity()
     {
         canPlay = false;
-        nextImage.transform.parent.gameObject.SetActive(false);
+        nextImage1.transform.parent.gameObject.SetActive(false);
+        nextImage2.transform.parent.gameObject.SetActive(false);
         floor.gameObject.SetActive(true);
         ceiling.gameObject.SetActive(true);
         deathLine.gameObject.SetActive(false);
@@ -263,7 +305,8 @@ public class ShapeManager : MonoBehaviour
 
         deathLine.gameObject.SetActive(true);
         canPlay = true;
-        nextImage.transform.parent.gameObject.SetActive(true);
+        nextImage1.transform.parent.gameObject.SetActive(true);
+        nextImage2.transform.parent.gameObject.SetActive(true);
     }
 
     public void AddScore(int num)
