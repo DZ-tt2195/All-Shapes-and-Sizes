@@ -47,6 +47,7 @@ public class ShapeManager : MonoBehaviour
     Transform ceiling;
     Transform leftWall;
     Transform rightWall;
+    [SerializeField] PointsVisual pv;
 
 #region Setup
 
@@ -79,6 +80,7 @@ public class ShapeManager : MonoBehaviour
 
     private void Start()
     {
+        InputManager.instance.enabled = false;
         resign.onClick.AddListener(() => GameOver("You gave up.", false));
         ceiling.gameObject.SetActive(false);
         deathLine.transform.localPosition = new Vector3(0, ceiling.transform.localPosition.y + 0.15f, 0);
@@ -134,9 +136,10 @@ public class ShapeManager : MonoBehaviour
         canPlay = true;
 
         dataText.transform.parent.gameObject.SetActive(true);
+        InputManager.instance.enabled = true;
         score = 0;
         dropped = 0;
-        AddScore(0);
+        AddScore(0, null);
         RollNextShape();
     }
 
@@ -315,11 +318,13 @@ public class ShapeManager : MonoBehaviour
         nextImage2.transform.parent.gameObject.SetActive(true);
     }
 
-    public void AddScore(int num)
+    public void AddScore(int score, Shape shape)
     {
-        if (canPlay)
+        if (dataText.transform.parent.gameObject.activeSelf)
         {
-            score += num;
+            this.score += score;
+            if (shape != null)
+                CreateVisual(shape, score);
             UpdateDataText();
         }
     }
@@ -340,6 +345,12 @@ public class ShapeManager : MonoBehaviour
             else if (won && LevelSettings.instance.setting == TitleScreen.Setting.ReachScore)
                 PlayerPrefs.SetInt($"{SceneManager.GetActiveScene().name} - Score", 1);
         }
+    }
+
+    public void CreateVisual(Shape shape, int score)
+    {
+        PointsVisual newPV = Instantiate(pv);
+        newPV.Setup(score, shape);
     }
 
     #endregion

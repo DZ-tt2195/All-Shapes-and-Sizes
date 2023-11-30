@@ -1517,6 +1517,7 @@ MonoBehaviour:
   mainCam: {fileID: 0}
   gameOverTransform: {fileID: 2547424515917784487}
   deathLine: {fileID: 0}
+  pv: {fileID: 5700913299117066173, guid: d817be641f2464bdaa47d0a4e0b6d381, type: 3}
 --- !u!1 &4776239155847795226
 GameObject:
   m_ObjectHideFlags: 0

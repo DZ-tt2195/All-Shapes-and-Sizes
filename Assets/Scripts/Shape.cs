@@ -11,7 +11,7 @@ public class Shape : MonoBehaviour
 {
     public SpriteRenderer spriterenderer;
     [ReadOnly] public Rigidbody2D rb;
-    int value;
+    [ReadOnly] public int value;
     TMP_Text textBox;
     bool active = false;
     float deathLineTouched = 0f;
@@ -116,7 +116,7 @@ public class Shape : MonoBehaviour
 
     IEnumerator Merge(Collider2D collision)
     {
-        ShapeManager.instance.AddScore(int.Parse(textBox.text));
+        ShapeManager.instance.AddScore(int.Parse(textBox.text), this);
 
         if (value + 1 >= ShapeManager.instance.listOfShapes.Count)
         {
