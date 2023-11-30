@@ -48,6 +48,8 @@ public class ShapeManager : MonoBehaviour
     Transform leftWall;
     Transform rightWall;
 
+#region Setup
+
     private void Awake()
     {
         resign = GameObject.Find("Resign").GetComponent<Button>();
@@ -77,7 +79,7 @@ public class ShapeManager : MonoBehaviour
 
     private void Start()
     {
-        resign.onClick.AddListener(() => GameOver("You Resigned.", false));
+        resign.onClick.AddListener(() => GameOver("You gave up.", false));
         ceiling.gameObject.SetActive(false);
         deathLine.transform.localPosition = new Vector3(0, ceiling.transform.localPosition.y + 0.15f, 0);
 
@@ -138,6 +140,10 @@ public class ShapeManager : MonoBehaviour
         RollNextShape();
     }
 
+    #endregion
+
+#region Gameplay
+
     Vector2 GetWorldCoordinates(Vector2 screenPos)
     {
         Vector2 screenCoord = new(screenPos.x, screenPos.y);
@@ -165,28 +171,25 @@ public class ShapeManager : MonoBehaviour
     {
         if (canPlay)
         {
-            float yValue = (currentGravity > 0) ? deathLine.position.y - 0.15f : deathLine.position.y + 0.15f;
+            float yValue = (currentGravity > 0) ? deathLine.position.y - 0.2f : deathLine.position.y + 0.2f;
             float xValue = GetWorldCoordinates(screenPosition).x;
-            if (xValue < leftWall.position.x + 0.6f)
-                xValue = leftWall.position.x + 0.6f;
-            else if (xValue > rightWall.position.x - 0.6f)
-                xValue = rightWall.position.x - 0.6f;
 
-            if (listOfShapes.Contains(nextShape1))
-                dropped++;
+            if (xValue > leftWall.position.x + 0.15f && xValue < rightWall.position.x + 0.15f)
+            {
+                if (listOfShapes.Contains(nextShape1))
+                    dropped++;
 
-            UpdateDataText();
-            StartCoroutine(GenerateShape(nextShape1, new Vector2(xValue, yValue)));
-            RollNextShape();
-
-	    if (LevelSettings.instance.setting != TitleScreen.Setting.Endless)
-            StartCoroutine(OutOfShapes());
+                UpdateDataText();
+                StartCoroutine(GenerateShape(nextShape1, new Vector2(xValue, yValue)));
+                RollNextShape();
+                StartCoroutine(OutOfShapes());
+            }
         }
     }
 
     IEnumerator OutOfShapes()
     {
-        if (dropped >= dropLimit)
+        if (LevelSettings.instance.setting != TitleScreen.Setting.Endless && dropped >= dropLimit)
         {
             nextImage1.transform.parent.gameObject.SetActive(false);
             nextImage2.transform.parent.gameObject.SetActive(false);
@@ -338,4 +341,6 @@ public class ShapeManager : MonoBehaviour
                 PlayerPrefs.SetInt($"{SceneManager.GetActiveScene().name} - Score", 1);
         }
     }
+
+    #endregion
 }

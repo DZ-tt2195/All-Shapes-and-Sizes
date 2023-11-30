@@ -1222,7 +1222,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 4.15, z: 0}
-  m_LocalScale: {x: 9, y: 0.2, z: 1}
+  m_LocalScale: {x: 8.5, y: 0.2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6214422578746791783}
@@ -1489,7 +1489,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a7abc69d337d64f1bb794f8292ca6510, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startingDrop: 60
+  startingDrop: 75
   dropLimit: 150
   canPlay: 0
   listOfShapes:
@@ -1503,7 +1503,7 @@ MonoBehaviour:
   - {fileID: 6795132352071457203, guid: c3bfaa17383304012a42622255a1e3d4, type: 3}
   droppedShapes:
   - shape: {fileID: 7031427604454891696, guid: 0d698fb18ca044af5acbfa2da3f67acf, type: 3}
-    chance: 10
+    chance: 8
   - shape: {fileID: 1932051135275018775, guid: 9a00e84a67bb14ce8a1ad0b4a5e824f4, type: 3}
     chance: 6
   - shape: {fileID: 2175767774175878959, guid: dd85d487a775d458eb300ca447948b58, type: 3}
@@ -1511,9 +1511,9 @@ MonoBehaviour:
   - shape: {fileID: 4720192475247843558, guid: a6b4a62a1bd584fab8d8a34a36d3093a, type: 3}
     chance: 2
   - shape: {fileID: 8693503666184399859, guid: 0d3bf015433194f56868b0d5da55252a, type: 3}
-    chance: 2
+    chance: 3
   - shape: {fileID: 8295550733241061694, guid: 62dd3b0f01c33438ea6360a85edff74f, type: 3}
-    chance: 1
+    chance: 2
   mainCam: {fileID: 0}
   gameOverTransform: {fileID: 2547424515917784487}
   deathLine: {fileID: 0}
@@ -2173,7 +2173,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -10, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 20, z: 1}
+  m_LocalScale: {x: 1, y: 17, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6095652723895263478}
@@ -2708,7 +2708,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 10, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 20, z: 1}
+  m_LocalScale: {x: 1, y: 17, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6095652723895263478}
@@ -3461,7 +3461,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Resign
+  m_text: Give Up
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
