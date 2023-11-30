@@ -40,6 +40,7 @@ public class ShapeManager : MonoBehaviour
     [SerializeField] GameObject gameOverTransform;
 
     float currentGravity = 2.5f;
+    Button resign;
 
     [ReadOnly] public Transform deathLine;
     Transform floor;
@@ -49,6 +50,7 @@ public class ShapeManager : MonoBehaviour
 
     private void Awake()
     {
+        resign = GameObject.Find("Resign").GetComponent<Button>();
         nextImage1 = GameObject.Find("Next Image 1").GetComponent<Image>();
         nextImage2 = GameObject.Find("Next Image 2").GetComponent<Image>();
         gameOverTransform.SetActive(false);
@@ -75,6 +77,7 @@ public class ShapeManager : MonoBehaviour
 
     private void Start()
     {
+        resign.onClick.AddListener(() => GameOver("You Resigned.", false));
         ceiling.gameObject.SetActive(false);
         deathLine.transform.localPosition = new Vector3(0, ceiling.transform.localPosition.y + 0.15f, 0);
 

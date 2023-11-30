@@ -2148,6 +2148,8 @@ MonoBehaviour:
     sprite: {fileID: 21300000, guid: a5c34304594fa4a44b80206c8595616e, type: 3}
   - name: 2. Moving
     sprite: {fileID: 21300000, guid: cf10e0ec72d294c13960fb671b34af32, type: 3}
+  - name: 3. Bottleneck
+    sprite: {fileID: 21300000, guid: 0e6dc361e5d904aedaa88a4c73e07634, type: 3}
   levelImage: {fileID: 151170502}
   levelText: {fileID: 1162476073}
   leftArrow: {fileID: 2135433052}

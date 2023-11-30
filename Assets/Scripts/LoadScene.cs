@@ -16,7 +16,6 @@ public class LoadScene : MonoBehaviour
     {
         button = GetComponent<Button>();
         button.onClick.AddListener(NextScene);
-        Debug.Log(scene);
     }
 
     public void NextScene()
