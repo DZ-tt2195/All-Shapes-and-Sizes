@@ -1491,7 +1491,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   startingDrop: 75
   dropLimit: 150
-  canPlay: 0
   listOfShapes:
   - {fileID: 7031427604454891696, guid: 0d698fb18ca044af5acbfa2da3f67acf, type: 3}
   - {fileID: 1932051135275018775, guid: 9a00e84a67bb14ce8a1ad0b4a5e824f4, type: 3}

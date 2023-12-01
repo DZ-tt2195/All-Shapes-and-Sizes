@@ -301,6 +301,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spriterenderer: {fileID: 8268095989316848262}
   rb: {fileID: 0}
+  value: 0
+  textBox: {fileID: 4721848477734835989}
 --- !u!60 &4296324239344241142
 PolygonCollider2D:
   m_ObjectHideFlags: 0

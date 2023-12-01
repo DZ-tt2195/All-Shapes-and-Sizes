@@ -30,7 +30,6 @@ public class ShapeManager : MonoBehaviour
     int dropped = 0;
     [SerializeField] int startingDrop;
     [SerializeField] int dropLimit;
-    [ReadOnly] public bool canPlay = false;
 
     public List<Shape> listOfShapes = new();
     public List<ChanceOfDrop> droppedShapes = new();
@@ -41,6 +40,7 @@ public class ShapeManager : MonoBehaviour
 
     float currentGravity = 2.5f;
     Button resign;
+    bool hasEnded = false;
 
     [ReadOnly] public Transform deathLine;
     Transform floor;
@@ -133,7 +133,6 @@ public class ShapeManager : MonoBehaviour
         }
 
         yield return new WaitForSeconds(3f);
-        canPlay = true;
 
         dataText.transform.parent.gameObject.SetActive(true);
         InputManager.instance.enabled = true;
@@ -143,9 +142,9 @@ public class ShapeManager : MonoBehaviour
         RollNextShape();
     }
 
-    #endregion
+#endregion
 
-#region Gameplay
+#region Dropping Shapes
 
     Vector2 GetWorldCoordinates(Vector2 screenPos)
     {
@@ -154,40 +153,22 @@ public class ShapeManager : MonoBehaviour
         return worldCoord;
     }
 
-    void UpdateDataText()
-    {
-        if (LevelSettings.instance.setting == TitleScreen.Setting.Endless)
-        {
-            char infinitySymbol = '\u221E';
-            dataText.text = $"Score: {score} \nDropped: {dropped}/{infinitySymbol}";
-        }
-        else
-        {
-            dataText.text = $"Score: {score} \nDropped: {dropped}/{dropLimit}";
-
-            if (LevelSettings.instance.setting == TitleScreen.Setting.ReachScore && score >= 2000)
-                GameOver("You Won!", true);
-        }
-    }
-
     void DropShape(Vector2 screenPosition)
     {
-        if (canPlay)
+        float yValue = (currentGravity > 0) ? deathLine.position.y - 0.6f : deathLine.position.y + 0.6f;
+        float xValue = GetWorldCoordinates(screenPosition).x;
+
+        if (xValue > (leftWall.position.x + 0.3f) && xValue < (rightWall.position.x - 0.3f))
         {
-            float yValue = (currentGravity > 0) ? deathLine.position.y - 0.2f : deathLine.position.y + 0.2f;
-            float xValue = GetWorldCoordinates(screenPosition).x;
+            if (nextShape1.textBox != null)
+                dropped++;
 
-            if (xValue > leftWall.position.x + 0.15f && xValue < rightWall.position.x + 0.15f)
-            {
-                if (listOfShapes.Contains(nextShape1))
-                    dropped++;
-
-                UpdateDataText();
-                StartCoroutine(GenerateShape(nextShape1, new Vector2(xValue, yValue)));
-                RollNextShape();
-                StartCoroutine(OutOfShapes());
-            }
+            UpdateDataText();
+            StartCoroutine(GenerateShape(nextShape1, new Vector2(xValue, yValue)));
+            RollNextShape();
+            StartCoroutine(OutOfShapes());
         }
+
     }
 
     IEnumerator OutOfShapes()
@@ -199,7 +180,7 @@ public class ShapeManager : MonoBehaviour
             dataText.transform.parent.gameObject.SetActive(false);
             InputManager.instance.enabled = false;
             yield return new WaitForSeconds(2.5f);
-            GameOver("You're Out Of Shape(s).", false);
+            GameOver("You're Out Of Shapes.", false);
         }
     }
 
@@ -210,8 +191,7 @@ public class ShapeManager : MonoBehaviour
         nextImage1.sprite = nextShape2.spriterenderer.sprite;
         nextImage1.color = nextShape2.spriterenderer.color;
 
-        do{
-            nextShape2 = toDrop[UnityEngine.Random.Range(0, toDrop.Count)];
+        do{nextShape2 = toDrop[UnityEngine.Random.Range(0, toDrop.Count)];
         } while (nextShape1.name == "Inversion" && nextShape2.name == "Inversion");
 
         nextImage2.transform.parent.gameObject.SetActive(true);
@@ -269,7 +249,7 @@ public class ShapeManager : MonoBehaviour
         Shape newShape = Instantiate(shape);
         newShape.transform.position = spawn;
 
-        if (listOfShapes.Contains(shape))
+        if (shape.textBox != null)
         {
             newShape.Setup(listOfShapes.IndexOf(shape), currentGravity);
         }
@@ -279,21 +259,45 @@ public class ShapeManager : MonoBehaviour
         }
     }
 
+#endregion
+
+#region Other
+
+    void UpdateDataText()
+    {
+        if (LevelSettings.instance.setting == TitleScreen.Setting.Endless)
+        {
+            char infinitySymbol = '\u221E';
+            dataText.text = $"Score: {score} \nDropped: {dropped}/{infinitySymbol}";
+        }
+        else
+        {
+            dataText.text = $"Score: {score} \nDropped: {dropped}/{dropLimit}";
+
+            if (LevelSettings.instance.setting == TitleScreen.Setting.ReachScore && score >= 2000)
+                GameOver("You Won!", true);
+        }
+    }
+
     public void SwitchGravity()
     {
-        canPlay = false;
-        nextImage1.transform.parent.gameObject.SetActive(false);
-        nextImage2.transform.parent.gameObject.SetActive(false);
-        floor.gameObject.SetActive(true);
-        ceiling.gameObject.SetActive(true);
-        deathLine.gameObject.SetActive(false);
+        if (InputManager.instance.enabled)
+        {
+            InputManager.instance.enabled = false;
+            nextImage1.transform.parent.gameObject.SetActive(false);
+            nextImage2.transform.parent.gameObject.SetActive(false);
 
-        currentGravity *= -1;
-        Shape[] allShapes = FindObjectsOfType<Shape>();
-        foreach (Shape shape in allShapes)
-            shape.rb.gravityScale = currentGravity;
+            floor.gameObject.SetActive(true);
+            ceiling.gameObject.SetActive(true);
+            deathLine.gameObject.SetActive(false);
 
-        StartCoroutine(UnPauseGame());
+            currentGravity *= -1;
+            Shape[] allShapes = FindObjectsOfType<Shape>();
+            foreach (Shape shape in allShapes)
+                shape.rb.gravityScale = currentGravity;
+
+            StartCoroutine(UnPauseGame());
+        }
     }
 
     IEnumerator UnPauseGame()
@@ -312,8 +316,8 @@ public class ShapeManager : MonoBehaviour
             ceiling.gameObject.SetActive(false);
         }
 
+        InputManager.instance.enabled = true;
         deathLine.gameObject.SetActive(true);
-        canPlay = true;
         nextImage1.transform.parent.gameObject.SetActive(true);
         nextImage2.transform.parent.gameObject.SetActive(true);
     }
@@ -324,19 +328,22 @@ public class ShapeManager : MonoBehaviour
         {
             this.score += score;
             if (shape != null)
-                CreateVisual(shape, score);
+            {
+                PointsVisual newPV = Instantiate(pv);
+                newPV.Setup(score, shape);
+            }
             UpdateDataText();
         }
     }
 
     public void GameOver(string message, bool won)
     {
-        if (canPlay)
+        if (!hasEnded)
         {
             InputManager.instance.enabled = false;
             gameOverTransform.SetActive(true);
             gameOverTransform.transform.GetChild(0).GetComponent<TMP_Text>().text = message;
-            canPlay = false;
+            hasEnded = true;
 
             if (LevelSettings.instance.setting == TitleScreen.Setting.Endless && PlayerPrefs.GetInt($"{SceneManager.GetActiveScene().name} - Endless") < score)
                 PlayerPrefs.SetInt($"{SceneManager.GetActiveScene().name} - Endless", score);
@@ -347,11 +354,6 @@ public class ShapeManager : MonoBehaviour
         }
     }
 
-    public void CreateVisual(Shape shape, int score)
-    {
-        PointsVisual newPV = Instantiate(pv);
-        newPV.Setup(score, shape);
-    }
+#endregion
 
-    #endregion
 }

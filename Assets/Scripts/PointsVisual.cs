@@ -21,6 +21,7 @@ public class PointsVisual : MonoBehaviour
         this.transform.localPosition = shape.transform.localPosition;
         this.value = shape.value;
         textbox.text = $"+{score}";
+        textbox.color = shape.spriterenderer.color;
         StartCoroutine(ExpandContract());
     }
 

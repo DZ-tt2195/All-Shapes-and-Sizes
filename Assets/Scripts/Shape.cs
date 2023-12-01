@@ -11,8 +11,10 @@ public class Shape : MonoBehaviour
 {
     public SpriteRenderer spriterenderer;
     [ReadOnly] public Rigidbody2D rb;
+
     [ReadOnly] public int value;
-    TMP_Text textBox;
+    public TMP_Text textBox;
+
     bool active = false;
     float deathLineTouched = 0f;
 
@@ -22,15 +24,6 @@ public class Shape : MonoBehaviour
         rb.useAutoMass = false;
         rb.collisionDetectionMode = CollisionDetectionMode2D.Discrete;
         rb.interpolation = RigidbodyInterpolation2D.Interpolate;
-
-        try
-        {
-            textBox = transform.GetChild(0).GetComponent<TMP_Text>();
-        }
-        catch (UnityException)
-        {
-            //do nothing
-        }
     }
 
     public void AltShape(float gravity)
@@ -87,7 +80,7 @@ public class Shape : MonoBehaviour
                 Destroy(this.gameObject);
             }
 
-            else if (collision.CompareTag("Inversion") && ShapeManager.instance.canPlay)
+            else if (collision.CompareTag("Inversion"))
             {
                 Destroy(collision.gameObject);
                 ShapeManager.instance.SwitchGravity();

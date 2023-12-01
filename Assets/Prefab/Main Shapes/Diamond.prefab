@@ -399,3 +399,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spriterenderer: {fileID: 6220482175659235991}
   rb: {fileID: 0}
+  value: 0
+  textBox: {fileID: 4906960107042611533}
