@@ -1512,7 +1512,7 @@ MonoBehaviour:
   - shape: {fileID: 8693503666184399859, guid: 0d3bf015433194f56868b0d5da55252a, type: 3}
     chance: 3
   - shape: {fileID: 8295550733241061694, guid: 62dd3b0f01c33438ea6360a85edff74f, type: 3}
-    chance: 2
+    chance: 1
   mainCam: {fileID: 0}
   gameOverTransform: {fileID: 2547424515917784487}
   deathLine: {fileID: 0}

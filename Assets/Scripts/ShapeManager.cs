@@ -81,7 +81,7 @@ public class ShapeManager : MonoBehaviour
     private void Start()
     {
         InputManager.instance.enabled = false;
-        resign.onClick.AddListener(() => GameOver("You gave up.", false));
+        resign.onClick.AddListener(() => GameOver("You're out of shape(s).", false));
         ceiling.gameObject.SetActive(false);
         deathLine.transform.localPosition = new Vector3(0, ceiling.transform.localPosition.y + 0.15f, 0);
 

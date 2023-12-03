@@ -17,4 +17,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/3. Bottleneck.unity
     guid: ea6309797539a4bf5b97c4874ccef30f
+  - enabled: 1
+    path: Assets/Scenes/4. Cliff.unity
+    guid: 60024e8e742d54d04b28880c0015e8d4
   m_configObjects: {}

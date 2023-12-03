@@ -20,7 +20,6 @@ public struct ButtonInfo
     public Image image;
 }
 
-
 public class TitleScreen : MonoBehaviour
 {
     int levelToLoad = 0;
@@ -28,6 +27,7 @@ public class TitleScreen : MonoBehaviour
 
     [SerializeField] Image levelImage;
     [SerializeField] TMP_Text levelText;
+    [SerializeField] Button clearData;
     [SerializeField] Button leftArrow;
     [SerializeField] Button rightArrow;
 
@@ -46,6 +46,7 @@ public class TitleScreen : MonoBehaviour
 
         leftArrow.onClick.AddListener(Decrement);
         rightArrow.onClick.AddListener(Increment);
+        clearData.onClick.AddListener(ResetData);
         levelToLoad = LevelSettings.instance.lastLevel;
         DisplayLevel();
     }
@@ -77,5 +78,17 @@ public class TitleScreen : MonoBehaviour
         buttonSettings[0].image.color = (PlayerPrefs.GetInt($"{listOfLevels[levelToLoad].name} - Merge") == 1) ? Color.yellow : Color.white;
         buttonSettings[1].image.color = (PlayerPrefs.GetInt($"{listOfLevels[levelToLoad].name} - Score") == 1) ? Color.yellow : Color.white;
         endlessHighScore.text = $"High Score: {PlayerPrefs.GetInt($"{listOfLevels[levelToLoad].name} - Endless")}";
+    }
+
+    void ResetData()
+    {
+        for (int i = 0; i < listOfLevels.Count; i++)
+        {
+            PlayerPrefs.SetInt($"{listOfLevels[i].name} - Merge", 0);
+            PlayerPrefs.SetInt($"{listOfLevels[i].name} - Score", 0);
+            PlayerPrefs.SetInt($"{listOfLevels[i].name} - Endless", 0);
+        }
+
+        DisplayLevel();
     }
 }
