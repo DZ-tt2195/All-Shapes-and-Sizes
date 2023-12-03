@@ -91,12 +91,12 @@ public class ShapeManager : MonoBehaviour
         switch (LevelSettings.instance.setting)
         {
             case TitleScreen.Setting.MergeCrown:
-                tutorialText.text += $"If you let any shapes go above the top, or drop more than {dropLimit} shapes you lose." +
+                tutorialText.text += $"If you let any shapes go above the top, or drop more than {dropLimit} shapes, you lose." +
                 "\n\nTo win, create 2 Crowns, and then have them merge with one another.";
                 break;
             case TitleScreen.Setting.ReachScore:
                 dropLimit += 100;
-                tutorialText.text += $"If you let any shapes go above the top, or drop more than {dropLimit} shapes you lose." +
+                tutorialText.text += $"If you let any shapes go above the top, or drop more than {dropLimit} shapes, you lose." +
                 "\n\nTo win, get a score above 2000 by merging shapes together.";
                 break;
             case TitleScreen.Setting.Endless:
