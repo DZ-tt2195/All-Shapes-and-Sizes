@@ -18,7 +18,7 @@ public class PointsVisual : MonoBehaviour
 
     public void Setup(int score, Shape shape)
     {
-        this.transform.localPosition = shape.transform.localPosition;
+        this.transform.localPosition = shape.transform.localPosition + new Vector3(0, 0, -1);
         this.value = shape.value;
         textbox.text = $"+{score}";
         textbox.color = shape.spriterenderer.color;
@@ -35,6 +35,7 @@ public class PointsVisual : MonoBehaviour
         {
             transform.localScale = Vector3.Lerp(zeroSize, maxSize, elapsedTime / waitTime);
             elapsedTime += Time.deltaTime;
+            transform.SetAsFirstSibling();
             yield return null;
         }
 
@@ -44,6 +45,7 @@ public class PointsVisual : MonoBehaviour
         {
             transform.localScale = Vector3.Lerp(maxSize, zeroSize, elapsedTime / waitTime);
             elapsedTime += Time.deltaTime;
+            transform.SetAsFirstSibling();
             yield return null;
         }
 

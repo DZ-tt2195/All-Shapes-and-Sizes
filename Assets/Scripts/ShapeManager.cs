@@ -39,6 +39,8 @@ public class ShapeManager : MonoBehaviour
     [SerializeField] GameObject gameOverTransform;
 
     float currentGravity = 2.5f;
+    [SerializeField] Transform gravityArrow;
+
     Button resign;
     bool hasEnded = false;
 
@@ -81,6 +83,8 @@ public class ShapeManager : MonoBehaviour
     private void Start()
     {
         InputManager.instance.enabled = false;
+        gravityArrow.transform.localScale = new Vector2(0, 0);
+        gravityArrow.transform.localEulerAngles = new Vector3(0, 0, 90);
         resign.onClick.AddListener(() => GameOver("You're out of shape(s).", false));
         ceiling.gameObject.SetActive(false);
         deathLine.transform.localPosition = new Vector3(0, ceiling.transform.localPosition.y + 0.15f, 0);
@@ -296,8 +300,48 @@ public class ShapeManager : MonoBehaviour
             foreach (Shape shape in allShapes)
                 shape.rb.gravityScale = currentGravity;
 
+            StartCoroutine(ArrowAnimation());
             StartCoroutine(UnPauseGame());
         }
+    }
+
+    IEnumerator ArrowAnimation()
+    {
+        Vector2 zeroSize = new(0, 0);
+        Vector2 maxSize = new(4, 4);
+
+        Vector3 currRot = gravityArrow.localEulerAngles;
+        Vector3 newRot = gravityArrow.localEulerAngles + new Vector3(0, 0, 180);
+
+        gravityArrow.localScale = zeroSize;
+
+        float elapsedTime = 0f;
+        float waitTime = 0.5f;
+        while (elapsedTime < waitTime)
+        {
+            gravityArrow.localScale = Vector3.Lerp(zeroSize, maxSize, elapsedTime / waitTime);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+        gravityArrow.localScale = maxSize;
+
+        elapsedTime = 0f;
+        while (elapsedTime < waitTime)
+        {
+            gravityArrow.localEulerAngles = Vector3.Lerp(currRot, newRot, elapsedTime / waitTime);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+        gravityArrow.localEulerAngles = newRot;
+
+        elapsedTime = 0f;
+        while (elapsedTime < waitTime)
+        {
+            gravityArrow.localScale = Vector3.Lerp(maxSize, zeroSize, elapsedTime / waitTime);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+        gravityArrow.localScale = zeroSize;
     }
 
     IEnumerator UnPauseGame()
