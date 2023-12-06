@@ -9,6 +9,7 @@ public class PointsVisual : MonoBehaviour
 {
     [SerializeField] TMP_Text textbox;
     Vector2 zeroSize = new(0, 0);
+    float duration;
     int value;
 
     private void Start()
@@ -16,10 +17,20 @@ public class PointsVisual : MonoBehaviour
         transform.localScale = zeroSize;
     }
 
-    public void Setup(int score, Shape shape)
+    public void Setup(string text, Vector3 position, float duration)
+    {
+        this.transform.localPosition = position + new Vector3(0, 0, -1);
+        this.duration = duration;
+        textbox.text = text;
+        value = 3;
+        StartCoroutine(ExpandContract());
+    }
+
+    public void Setup(int score, Shape shape, float duration)
     {
         this.transform.localPosition = shape.transform.localPosition + new Vector3(0, 0, -1);
         this.value = shape.value;
+        this.duration = duration;
         textbox.text = $"+{score}";
         textbox.color = shape.spriterenderer.color;
         StartCoroutine(ExpandContract());
@@ -29,7 +40,7 @@ public class PointsVisual : MonoBehaviour
     {
         Vector2 maxSize = (value <= 2) ? new(2, 2): new(value, value);
         float elapsedTime = 0f;
-        float waitTime = 0.5f;
+        float waitTime = duration / 2;
 
         while (elapsedTime < waitTime)
         {

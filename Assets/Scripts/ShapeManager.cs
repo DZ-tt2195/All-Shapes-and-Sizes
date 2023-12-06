@@ -72,12 +72,19 @@ public class ShapeManager : MonoBehaviour
 
     private void OnEnable()
     {
-        InputManager.instance.OnStartTouch += DropShape;
+        if (Application.isMobilePlatform)
+        {
+            InputManager.instance.OnStartTouch += DropShape;
+            Debug.Log("playing on phone");
+        }
+        else
+            Debug.Log("playing on computer");
     }
 
     private void OnDisable()
     {
-        InputManager.instance.OnStartTouch -= DropShape;
+        if (Application.isMobilePlatform)
+            InputManager.instance.OnStartTouch -= DropShape;
     }
 
     private void Start()
@@ -136,7 +143,12 @@ public class ShapeManager : MonoBehaviour
             yield return GenerateShape(listOfShapes[0], new Vector2(UnityEngine.Random.Range(leftWall.position.x + 0.6f, rightWall.position.x - 0.6f), deathLine.position.y - 0.15f));
         }
 
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(2.5f);
+
+        PointsVisual newPV = Instantiate(pv);
+        newPV.Setup("Begin!", new Vector3(0, 0, -1), 1f);
+
+        yield return new WaitForSeconds(0.5f);
 
         dataText.transform.parent.gameObject.SetActive(true);
         InputManager.instance.enabled = true;
@@ -149,6 +161,15 @@ public class ShapeManager : MonoBehaviour
 #endregion
 
 #region Dropping Shapes
+
+    private void Update()
+    {
+        if (InputManager.instance.enabled && !Application.isMobilePlatform)
+        {
+            if (Input.GetMouseButtonDown(0))
+                DropShape(Input.mousePosition);
+        }
+    }
 
     Vector2 GetWorldCoordinates(Vector2 screenPos)
     {
@@ -380,7 +401,7 @@ public class ShapeManager : MonoBehaviour
             if (shape != null)
             {
                 PointsVisual newPV = Instantiate(pv);
-                newPV.Setup(score, shape);
+                newPV.Setup(score, shape, 0.75f);
             }
             UpdateDataText();
         }
