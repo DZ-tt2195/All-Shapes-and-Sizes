@@ -57,7 +57,7 @@ public class Shape : MonoBehaviour
     {
         if (active)
         {
-            if (this.name == collision.name && this.transform.position.y > collision.transform.position.y)
+            if (this.textBox != null && this.name == collision.name && this.transform.position.y > collision.transform.position.y)
             {
                 Shape otherShape = collision.gameObject.GetComponent<Shape>();
                 if (otherShape.active)
@@ -86,7 +86,7 @@ public class Shape : MonoBehaviour
                 ShapeManager.instance.SwitchGravity();
             }
 
-            else if (collision.CompareTag("Death Line"))
+            else if (textBox != null && collision.CompareTag("Death Line"))
             {
                 if (deathLineTouched < 3f)
                 {
@@ -109,20 +109,23 @@ public class Shape : MonoBehaviour
 
     IEnumerator Merge(Collider2D collision)
     {
-        ShapeManager.instance.AddScore(int.Parse(textBox.text), this);
-
-        if (value + 1 >= ShapeManager.instance.listOfShapes.Count)
+        if (textBox != null)
         {
-            if (LevelSettings.instance.setting == TitleScreen.Setting.MergeCrown)
-                ShapeManager.instance.GameOver("You Won!", true);
-        }
-        else
-        {
-            yield return ShapeManager.instance.GenerateShape(ShapeManager.instance.listOfShapes[value + 1], this.transform.position);
-        }
+            ShapeManager.instance.AddScore(int.Parse(textBox.text), this);
 
-        if (collision != null)
-            Destroy(collision.gameObject);
-        Destroy(this.gameObject);
+            if (value + 1 >= ShapeManager.instance.listOfShapes.Count)
+            {
+                if (LevelSettings.instance.setting == TitleScreen.Setting.MergeCrown)
+                    ShapeManager.instance.GameOver("You Won!", true);
+            }
+            else
+            {
+                yield return ShapeManager.instance.GenerateShape(ShapeManager.instance.listOfShapes[value + 1], this.transform.position);
+            }
+
+            if (collision != null)
+                Destroy(collision.gameObject);
+            Destroy(this.gameObject);
+        }
     }
 }

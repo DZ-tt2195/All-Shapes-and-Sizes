@@ -222,6 +222,9 @@ public class ShapeManager : MonoBehaviour
             case "Inversion":
                 nextImage1.rectTransform.sizeDelta = new Vector2(90, 90);
                 break;
+            case "Wall":
+                nextImage1.rectTransform.sizeDelta = new Vector2(110, 50);
+                break;
         }
 
         switch (nextShape2.name)
@@ -243,6 +246,9 @@ public class ShapeManager : MonoBehaviour
                 break;
             case "Inversion":
                 nextImage2.rectTransform.sizeDelta = new Vector2(60, 60);
+                break;
+            case "Wall":
+                nextImage2.rectTransform.sizeDelta = new Vector2(65, 25);
                 break;
         }
     }
@@ -308,7 +314,7 @@ public class ShapeManager : MonoBehaviour
     IEnumerator ArrowAnimation()
     {
         Vector2 zeroSize = new(0, 0);
-        Vector2 maxSize = new(4, 4);
+        Vector2 maxSize = new(3, 3);
 
         Vector3 currRot = gravityArrow.localEulerAngles;
         Vector3 newRot = gravityArrow.localEulerAngles + new Vector3(0, 0, 180);

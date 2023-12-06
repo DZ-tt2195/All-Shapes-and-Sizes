@@ -512,7 +512,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &8939584752243348143
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1304,7 +1304,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 60, y: 60}
+  m_SizeDelta: {x: 65, y: 25}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5954134502753457476
 CanvasRenderer:
@@ -1334,7 +1334,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: d501f2de02a4b4be1bb1036baa6cd1f5, type: 3}
+  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1662,6 +1662,8 @@ MonoBehaviour:
   - shape: {fileID: 8693503666184399859, guid: 0d3bf015433194f56868b0d5da55252a, type: 3}
     chance: 3
   - shape: {fileID: 8295550733241061694, guid: 62dd3b0f01c33438ea6360a85edff74f, type: 3}
+    chance: 2
+  - shape: {fileID: 8432302721300003302, guid: 93ba6f37a332b49328a97d1b5a274709, type: 3}
     chance: 1
   mainCam: {fileID: 0}
   gameOverTransform: {fileID: 2547424515917784487}
@@ -3001,7 +3003,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: -15}
-  m_SizeDelta: {x: 90, y: 90}
+  m_SizeDelta: {x: 110, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1173700587306544147
 CanvasRenderer:
@@ -3031,7 +3033,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: d501f2de02a4b4be1bb1036baa6cd1f5, type: 3}
+  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
