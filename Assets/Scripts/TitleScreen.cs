@@ -18,6 +18,7 @@ public struct ButtonInfo
 {
     public Button button;
     public Image image;
+    public GameObject achievement;
 }
 
 public class TitleScreen : MonoBehaviour
@@ -75,8 +76,12 @@ public class TitleScreen : MonoBehaviour
         levelText.text = listOfLevels[levelToLoad].name;
         levelImage.sprite = listOfLevels[levelToLoad].sprite;
 
-        buttonSettings[0].image.color = (PlayerPrefs.GetInt($"{listOfLevels[levelToLoad].name} - Merge") == 1) ? Color.yellow : Color.white;
-        buttonSettings[1].image.color = (PlayerPrefs.GetInt($"{listOfLevels[levelToLoad].name} - Score") == 1) ? Color.yellow : Color.white;
+        buttonSettings[0].image.color = (PlayerPrefs.GetInt($"{listOfLevels[levelToLoad].name} - Merge") >= 1) ? Color.yellow : Color.white;
+        buttonSettings[0].achievement.SetActive(PlayerPrefs.GetInt($"{listOfLevels[levelToLoad].name} - Merge") >= 50);
+
+        buttonSettings[1].image.color = (PlayerPrefs.GetInt($"{listOfLevels[levelToLoad].name} - Score") >= 1) ? Color.yellow : Color.white;
+        buttonSettings[1].achievement.SetActive(PlayerPrefs.GetInt($"{listOfLevels[levelToLoad].name} - Score") >= 50);
+
         endlessHighScore.text = $"High Score: {PlayerPrefs.GetInt($"{listOfLevels[levelToLoad].name} - Endless")}";
     }
 

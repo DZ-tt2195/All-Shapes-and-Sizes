@@ -92,7 +92,7 @@ public class ShapeManager : MonoBehaviour
         InputManager.instance.enabled = false;
         gravityArrow.transform.localScale = new Vector2(0, 0);
         gravityArrow.transform.localEulerAngles = new Vector3(0, 0, 90);
-        resign.onClick.AddListener(() => GameOver("You're out of shape(s).", false));
+        resign.onClick.AddListener(() => GameOver("You gave up.", false));
         ceiling.gameObject.SetActive(false);
         deathLine.transform.localPosition = new Vector3(0, ceiling.transform.localPosition.y + 0.15f, 0);
 
@@ -418,10 +418,10 @@ public class ShapeManager : MonoBehaviour
 
             if (LevelSettings.instance.setting == TitleScreen.Setting.Endless && PlayerPrefs.GetInt($"{SceneManager.GetActiveScene().name} - Endless") < score)
                 PlayerPrefs.SetInt($"{SceneManager.GetActiveScene().name} - Endless", score);
-            else if (won && LevelSettings.instance.setting == TitleScreen.Setting.MergeCrown)
-                PlayerPrefs.SetInt($"{SceneManager.GetActiveScene().name} - Merge", 1);
-            else if (won && LevelSettings.instance.setting == TitleScreen.Setting.ReachScore)
-                PlayerPrefs.SetInt($"{SceneManager.GetActiveScene().name} - Score", 1);
+            else if (won && LevelSettings.instance.setting == TitleScreen.Setting.MergeCrown && PlayerPrefs.GetInt($"{SceneManager.GetActiveScene().name} - Merge") < dropLimit-dropped)
+                PlayerPrefs.SetInt($"{SceneManager.GetActiveScene().name} - Merge", dropLimit-dropped);
+            else if (won && LevelSettings.instance.setting == TitleScreen.Setting.ReachScore && PlayerPrefs.GetInt($"{SceneManager.GetActiveScene().name} - Score") < dropLimit - dropped)
+                PlayerPrefs.SetInt($"{SceneManager.GetActiveScene().name} - Score", dropLimit-dropped);
         }
     }
 
