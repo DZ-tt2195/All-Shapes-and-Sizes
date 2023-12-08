@@ -40,6 +40,7 @@ public class ShapeManager : MonoBehaviour
 
     float currentGravity = 2.5f;
     [SerializeField] Transform gravityArrow;
+    [SerializeField] TMP_Text warningText;
 
     Button resign;
     bool hasEnded = false;
@@ -89,6 +90,7 @@ public class ShapeManager : MonoBehaviour
 
     private void Start()
     {
+        warningText.transform.localScale = new Vector2(0, 0);
         InputManager.instance.enabled = false;
         gravityArrow.transform.localScale = new Vector2(0, 0);
         gravityArrow.transform.localEulerAngles = new Vector3(0, 0, 90);
@@ -199,7 +201,14 @@ public class ShapeManager : MonoBehaviour
         if (xValue > (leftWall.position.x + 0.3f) && xValue < (rightWall.position.x - 0.3f))
         {
             if (nextShape1.textBox != null)
+            {
                 dropped++;
+                if (LevelSettings.instance.setting != TitleScreen.Setting.Endless)
+                {
+                    StopCoroutine(FlashWarning());
+                    StartCoroutine(FlashWarning());
+                }
+            }
 
             UpdateDataText();
             StartCoroutine(GenerateShape(nextShape1, new Vector2(xValue, yValue)));
@@ -211,14 +220,39 @@ public class ShapeManager : MonoBehaviour
 
     IEnumerator OutOfShapes()
     {
-        if (LevelSettings.instance.setting != TitleScreen.Setting.Endless && dropped >= dropLimit)
+        if (LevelSettings.instance.setting != TitleScreen.Setting.Endless)
         {
-            nextImage1.transform.parent.gameObject.SetActive(false);
-            nextImage2.transform.parent.gameObject.SetActive(false);
-            dataText.transform.parent.gameObject.SetActive(false);
-            InputManager.instance.enabled = false;
-            yield return new WaitForSeconds(2.5f);
-            GameOver("You're Out Of Shapes.", false);
+            if (dropped >= dropLimit)
+            {
+                nextImage1.transform.parent.gameObject.SetActive(false);
+                nextImage2.transform.parent.gameObject.SetActive(false);
+                dataText.transform.parent.gameObject.SetActive(false);
+                InputManager.instance.enabled = false;
+                yield return new WaitForSeconds(2.5f);
+                GameOver("You're Out Of Shapes.", false);
+            }
+        }
+    }
+
+    IEnumerator FlashWarning()
+    {
+        if (dropLimit - dropped <= 50)
+        {
+            Vector2 zeroSize = new(0, 0);
+            Vector2 maxSize = new(1, 1);
+
+            warningText.transform.localScale = zeroSize;
+            warningText.text = $"{dropLimit - dropped}";
+
+            float elapsedTime = 0f;
+            float waitTime = 0.5f;
+            while (elapsedTime < waitTime)
+            {
+                warningText.transform.localScale = Vector3.Lerp(zeroSize, maxSize, elapsedTime / waitTime);
+                elapsedTime += Time.deltaTime;
+                yield return null;
+            }
+            warningText.transform.localScale = maxSize;
         }
     }
 
@@ -340,6 +374,7 @@ public class ShapeManager : MonoBehaviour
             InputManager.instance.enabled = false;
             nextImage1.transform.parent.gameObject.SetActive(false);
             nextImage2.transform.parent.gameObject.SetActive(false);
+            warningText.gameObject.SetActive(false);
 
             floor.gameObject.SetActive(true);
             ceiling.gameObject.SetActive(true);
@@ -392,6 +427,7 @@ public class ShapeManager : MonoBehaviour
             yield return null;
         }
         gravityArrow.localScale = zeroSize;
+        warningText.gameObject.SetActive(true);
     }
 
     IEnumerator UnPauseGame()

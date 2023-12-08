@@ -26,6 +26,7 @@ public class TitleScreen : MonoBehaviour
     int levelToLoad = 0;
     [SerializeField] List<LevelInfo> listOfLevels = new();
 
+    [SerializeField] TMP_Dropdown fpsSetting;
     [SerializeField] Image levelImage;
     [SerializeField] TMP_Text levelText;
     [SerializeField] Button clearData;
@@ -39,6 +40,8 @@ public class TitleScreen : MonoBehaviour
     private void Start()
     {
         levelToLoad = LevelSettings.instance.lastLevel;
+        fpsSetting.value = (Application.targetFrameRate == 60) ? 0 : 1;
+
         for (int i = 0; i < buttonSettings.Count; i++)
         {
             Setting enumValue = (Setting)i;
@@ -66,6 +69,7 @@ public class TitleScreen : MonoBehaviour
 
     void LoadWithSetting(Setting setting)
     {
+        Application.targetFrameRate = fpsSetting.value == 0 ? 60 : 30;
         LevelSettings.instance.setting = setting;
         LevelSettings.instance.lastLevel = levelToLoad;
         SceneManager.LoadScene(listOfLevels[levelToLoad].name);

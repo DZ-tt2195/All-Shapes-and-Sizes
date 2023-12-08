@@ -17,6 +17,7 @@ public class LevelSettings : MonoBehaviour
         if (instance == null)
         {
             instance = this;
+            Application.targetFrameRate = 60;
             DontDestroyOnLoad(this.gameObject);
         }
         else

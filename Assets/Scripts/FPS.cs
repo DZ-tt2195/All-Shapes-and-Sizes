@@ -15,12 +15,6 @@ public class FPS : MonoBehaviour
         textbox = GetComponent<TMP_Text>();
     }
 
-    private void Start()
-    {
-        Application.targetFrameRate = 60;
-    }
-
-    // Update is called once per frame
     void Update()
     {
         textbox.text = $"FPS: {CalculateFrames()}";
@@ -39,6 +33,6 @@ public class FPS : MonoBehaviour
             lastupdate = (int)(framearray.Length / total);
             return lastupdate;
         }
-        return (lastupdate > 60) ? 60 : lastupdate;
+        return (lastupdate > Application.targetFrameRate) ? Application.targetFrameRate : lastupdate;
     }
 }
