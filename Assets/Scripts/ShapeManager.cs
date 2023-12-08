@@ -96,8 +96,17 @@ public class ShapeManager : MonoBehaviour
         ceiling.gameObject.SetActive(false);
         deathLine.transform.localPosition = new Vector3(0, ceiling.transform.localPosition.y + 0.15f, 0);
 
-        tutorialText.text =
-        "Touch the screen to drop shapes down the tube. When a shape touches another of the same shape, they merge into a larger one. ";
+        if (Application.isMobilePlatform)
+        {
+            tutorialText.text =
+            "Touch the screen to drop shapes down the tube. When a shape touches another of the same shape, they merge into a larger one. ";
+        }
+        else
+        {
+            tutorialText.text =
+            "Click on the screen to drop shapes down the tube. When a shape touches another of the same shape, they merge into a larger one. ";
+
+        }
 
         switch (LevelSettings.instance.setting)
         {
@@ -123,11 +132,15 @@ public class ShapeManager : MonoBehaviour
                 toDrop.Add(next.shape);
         }
 
-        nextShape1 = toDrop[UnityEngine.Random.Range(0, toDrop.Count)];
+        int randRemoval = UnityEngine.Random.Range(0, toDrop.Count);
+        nextShape1 = toDrop[randRemoval];
+        toDrop.RemoveAt(randRemoval);
         nextImage1.sprite = nextShape1.spriterenderer.sprite;
         nextImage1.color = nextShape1.spriterenderer.color;
 
-        nextShape2 = toDrop[UnityEngine.Random.Range(0, toDrop.Count)];
+        randRemoval = UnityEngine.Random.Range(0, toDrop.Count);
+        nextShape2 = toDrop[randRemoval];
+        toDrop.RemoveAt(randRemoval);
         nextImage2.sprite = nextShape2.spriterenderer.sprite;
         nextImage2.color = nextShape2.spriterenderer.color;
     }
@@ -216,8 +229,18 @@ public class ShapeManager : MonoBehaviour
         nextImage1.sprite = nextShape2.spriterenderer.sprite;
         nextImage1.color = nextShape2.spriterenderer.color;
 
-        do{nextShape2 = toDrop[UnityEngine.Random.Range(0, toDrop.Count)];
-        } while (nextShape1.name == "Inversion" && nextShape2.name == "Inversion");
+        if (toDrop.Count == 0)
+        {
+            foreach (ChanceOfDrop next in droppedShapes)
+            {
+                for (int i = 0; i < next.chance; i++)
+                    toDrop.Add(next.shape);
+            }
+        }
+
+        int randRemoval = UnityEngine.Random.Range(0, toDrop.Count);
+        nextShape2 = toDrop[randRemoval];
+        toDrop.RemoveAt(randRemoval);
 
         nextImage2.transform.parent.gameObject.SetActive(true);
         nextImage2.sprite = nextShape2.spriterenderer.sprite;

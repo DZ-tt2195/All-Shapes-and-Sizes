@@ -1660,7 +1660,7 @@ MonoBehaviour:
   - shape: {fileID: 4720192475247843558, guid: a6b4a62a1bd584fab8d8a34a36d3093a, type: 3}
     chance: 2
   - shape: {fileID: 8693503666184399859, guid: 0d3bf015433194f56868b0d5da55252a, type: 3}
-    chance: 3
+    chance: 2
   - shape: {fileID: 8295550733241061694, guid: 62dd3b0f01c33438ea6360a85edff74f, type: 3}
     chance: 2
   - shape: {fileID: 8432302721300003302, guid: 93ba6f37a332b49328a97d1b5a274709, type: 3}
