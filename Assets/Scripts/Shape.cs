@@ -71,6 +71,7 @@ public class Shape : MonoBehaviour
             else if (collision.CompareTag("Bomb"))
             {
                 active = false;
+                AudioManager.instance.PlaySound(ShapeManager.instance.bombSound, 0.4f);
                 Destroy(collision.gameObject);
                 Destroy(this.gameObject);
             }
@@ -112,6 +113,7 @@ public class Shape : MonoBehaviour
         if (textBox != null)
         {
             ShapeManager.instance.AddScore(int.Parse(textBox.text), this);
+            AudioManager.instance.PlaySound(ShapeManager.instance.scoreSound, 0.2f);
 
             if (value + 1 >= ShapeManager.instance.listOfShapes.Count)
             {

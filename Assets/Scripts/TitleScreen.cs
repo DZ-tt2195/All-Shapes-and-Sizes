@@ -24,23 +24,33 @@ public struct ButtonInfo
 public class TitleScreen : MonoBehaviour
 {
     int levelToLoad = 0;
-    [SerializeField] List<LevelInfo> listOfLevels = new();
 
-    [SerializeField] TMP_Dropdown fpsSetting;
-    [SerializeField] Image levelImage;
-    [SerializeField] TMP_Text levelText;
-    [SerializeField] Button clearData;
-    [SerializeField] Button leftArrow;
-    [SerializeField] Button rightArrow;
+    [Foldout("Sound effects", true)]
+        [SerializeField] AudioClip menuSound;
 
-    [SerializeField] TMP_Text endlessHighScore;
-    public enum Setting { MergeCrown, ReachScore, Endless };
-    [SerializeField] List<ButtonInfo> buttonSettings;
+    [Foldout("Levels", true)]
+        [SerializeField] List<LevelInfo> listOfLevels = new();
+        [SerializeField] List<ButtonInfo> buttonSettings;
+
+    [Foldout("Buttons", true)]
+        [SerializeField] TMP_Dropdown fpsSetting;
+        [SerializeField] Button sfxButton;
+        [SerializeField] Button clearData;
+        [SerializeField] Button leftArrow;
+        [SerializeField] Button rightArrow;
+
+    [Foldout("Text and images", true)]
+        [SerializeField] GameObject sfxCredits;
+        [SerializeField] Image levelImage;
+        [SerializeField] TMP_Text levelText;
+        [SerializeField] TMP_Text endlessHighScore;
+        public enum Setting { MergeCrown, ReachScore, Endless };
 
     private void Start()
     {
         levelToLoad = LevelSettings.instance.lastLevel;
         fpsSetting.value = (Application.targetFrameRate == 60) ? 0 : 1;
+        fpsSetting.onValueChanged.AddListener(PlaySound);
 
         for (int i = 0; i < buttonSettings.Count; i++)
         {
@@ -51,20 +61,29 @@ public class TitleScreen : MonoBehaviour
         leftArrow.onClick.AddListener(Decrement);
         rightArrow.onClick.AddListener(Increment);
         clearData.onClick.AddListener(ResetData);
+        sfxButton.onClick.AddListener(Credits);
+        sfxCredits.SetActive(false);
         levelToLoad = LevelSettings.instance.lastLevel;
         DisplayLevel();
     }
 
     void Increment()
     {
+        PlaySound(0);
         levelToLoad = (levelToLoad == listOfLevels.Count - 1) ? 0 : levelToLoad + 1;
         DisplayLevel();
     }
 
     void Decrement()
     {
+        PlaySound(0);
         levelToLoad = (levelToLoad <= 0 ) ? listOfLevels.Count - 1 : levelToLoad - 1;
         DisplayLevel();
+    }
+
+    void PlaySound(int index)
+    {
+        AudioManager.instance.PlaySound(menuSound, 0.4f);
     }
 
     void LoadWithSetting(Setting setting)
@@ -98,6 +117,16 @@ public class TitleScreen : MonoBehaviour
             PlayerPrefs.SetInt($"{listOfLevels[i].name} - Endless", 0);
         }
 
+        PlaySound(0);
         DisplayLevel();
+    }
+
+    void Credits()
+    {
+        PlaySound(0);
+        if (sfxCredits.activeSelf)
+            sfxCredits.SetActive(false);
+        else
+            sfxCredits.SetActive(true);
     }
 }

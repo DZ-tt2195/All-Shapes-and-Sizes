@@ -17,52 +17,60 @@ public class ChanceOfDrop
 public class ShapeManager : MonoBehaviour
 {
     public static ShapeManager instance;
-
-    TMP_Text dataText;
-    TMP_Text tutorialText;
-
-    Image nextImage1;
-    Shape nextShape1;
-    Image nextImage2;
-    Shape nextShape2;
-
-    int score = 0;
-    int dropped = 0;
-    [SerializeField] int startingDrop;
-    [SerializeField] int dropLimit;
-
-    public List<Shape> listOfShapes = new();
-    public List<ChanceOfDrop> droppedShapes = new();
-    List<Shape> toDrop = new();
-
     [ReadOnly] public Camera mainCam;
-    [SerializeField] GameObject gameOverTransform;
 
-    float currentGravity = 2.5f;
-    [SerializeField] Transform gravityArrow;
-    [SerializeField] TMP_Text warningText;
+    [Foldout("Audio", true)]
+        public AudioClip scoreSound;
+        [SerializeField] AudioClip dropSound;
+        [SerializeField] AudioClip timerSound;
+        [SerializeField] AudioClip gravitySound;
+        public AudioClip bombSound;
+        [SerializeField] AudioClip winSound;
+        [SerializeField] AudioClip loseSound;
 
-    Button resign;
-    bool hasEnded = false;
+    [Foldout("Text", true)]
+        [SerializeField] TMP_Text dataText;
+        [SerializeField] TMP_Text tutorialText;
+        [SerializeField] TMP_Text warningText;
 
-    [ReadOnly] public Transform deathLine;
-    Transform floor;
-    Transform ceiling;
-    Transform leftWall;
-    Transform rightWall;
-    [SerializeField] PointsVisual pv;
+    [Foldout("Next shapes", true)]
+        [SerializeField] Image nextImage1;
+        Shape nextShape1;
+        [SerializeField] Image nextImage2;
+        Shape nextShape2;
+
+    [Foldout("To drop", true)]
+        public List<Shape> listOfShapes = new();
+        public List<ChanceOfDrop> droppedShapes = new();
+        List<Shape> toDrop = new();
+        [SerializeField] Transform gravityArrow;
+        float currentGravity = 2.5f;
+
+    [Foldout("Score", true)]
+        int score = 0;
+        int dropped = 0;
+        [SerializeField] int startingDrop;
+        [SerializeField] int dropLimit;
+        [SerializeField] PointsVisual pv;
+
+    [Foldout("Game end", true)]
+        [SerializeField] GameObject gameOverTransform;
+        [SerializeField] Button resign;
+        bool hasEnded = false;
+
+    [Foldout("Level geometry", true)]
+        [ReadOnly] public Transform deathLine;
+        Transform floor;
+        Transform ceiling;
+        Transform leftWall;
+        Transform rightWall;
 
 #region Setup
 
     private void Awake()
     {
-        resign = GameObject.Find("Resign").GetComponent<Button>();
-        nextImage1 = GameObject.Find("Next Image 1").GetComponent<Image>();
-        nextImage2 = GameObject.Find("Next Image 2").GetComponent<Image>();
         gameOverTransform.SetActive(false);
         instance = this;
-        dataText = GameObject.Find("Data Text").GetComponent<TMP_Text>();
-        tutorialText = GameObject.Find("Tutorial Text").GetComponent<TMP_Text>();
         mainCam = Camera.main;
         deathLine = GameObject.Find("Death Line").transform;
         leftWall = GameObject.Find("Left Wall").transform;
@@ -155,15 +163,17 @@ public class ShapeManager : MonoBehaviour
 
         for (int i = 0; i < startingDrop; i++)
         {
+            AudioManager.instance.PlaySound(dropSound, 0.2f);
             yield return GenerateShape(listOfShapes[0], new Vector2(UnityEngine.Random.Range(leftWall.position.x + 0.6f, rightWall.position.x - 0.6f), deathLine.position.y - 0.15f));
         }
 
-        yield return new WaitForSeconds(2.5f);
+        yield return new WaitForSeconds(2f);
 
         PointsVisual newPV = Instantiate(pv);
         newPV.Setup("Begin!", new Vector3(0, 0, -1), 1f);
+        AudioManager.instance.PlaySound(winSound, 0.5f);
 
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(1f);
 
         dataText.transform.parent.gameObject.SetActive(true);
         InputManager.instance.enabled = true;
@@ -210,6 +220,7 @@ public class ShapeManager : MonoBehaviour
                 }
             }
 
+            AudioManager.instance.PlaySound(dropSound, 0.5f);
             UpdateDataText();
             StartCoroutine(GenerateShape(nextShape1, new Vector2(xValue, yValue)));
             RollNextShape();
@@ -238,6 +249,7 @@ public class ShapeManager : MonoBehaviour
     {
         if (dropLimit - dropped <= 50)
         {
+            AudioManager.instance.PlaySound(timerSound, 0.5f);
             Vector2 zeroSize = new(0, 0);
             Vector2 maxSize = new(1, 1);
 
@@ -295,7 +307,7 @@ public class ShapeManager : MonoBehaviour
                 nextImage1.rectTransform.sizeDelta = new Vector2(110, 60);
                 break;
             case "Bomb":
-                nextImage1.rectTransform.sizeDelta = new Vector2(50, 90);
+                nextImage1.rectTransform.sizeDelta = new Vector2(55, 95);
                 break;
             case "Inversion":
                 nextImage1.rectTransform.sizeDelta = new Vector2(90, 90);
@@ -320,7 +332,7 @@ public class ShapeManager : MonoBehaviour
                 nextImage2.rectTransform.sizeDelta = new Vector2(80, 50);
                 break;
             case "Bomb":
-                nextImage2.rectTransform.sizeDelta = new Vector2(40, 80);
+                nextImage2.rectTransform.sizeDelta = new Vector2(45, 80);
                 break;
             case "Inversion":
                 nextImage2.rectTransform.sizeDelta = new Vector2(60, 60);
@@ -371,6 +383,7 @@ public class ShapeManager : MonoBehaviour
     {
         if (InputManager.instance.enabled)
         {
+            AudioManager.instance.PlaySound(gravitySound, 0.5f);
             InputManager.instance.enabled = false;
             nextImage1.transform.parent.gameObject.SetActive(false);
             nextImage2.transform.parent.gameObject.SetActive(false);
@@ -474,6 +487,11 @@ public class ShapeManager : MonoBehaviour
             gameOverTransform.SetActive(true);
             gameOverTransform.transform.GetChild(0).GetComponent<TMP_Text>().text = message;
             hasEnded = true;
+
+            if (won)
+                AudioManager.instance.PlaySound(winSound, 0.5f);
+            else
+                AudioManager.instance.PlaySound(loseSound, 0.5f);
 
             if (LevelSettings.instance.setting == TitleScreen.Setting.Endless && PlayerPrefs.GetInt($"{SceneManager.GetActiveScene().name} - Endless") < score)
                 PlayerPrefs.SetInt($"{SceneManager.GetActiveScene().name} - Endless", score);

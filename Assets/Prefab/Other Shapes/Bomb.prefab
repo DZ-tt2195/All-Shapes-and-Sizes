@@ -82,7 +82,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 6.51, y: 11.17}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -120,9 +120,9 @@ CircleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: -0.625}
+  m_Offset: {x: 0, y: -0.67}
   serializedVersion: 2
-  m_Radius: 0.8
+  m_Radius: 0.87
 --- !u!58 &1518980042909637446
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -155,9 +155,9 @@ CircleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: -0.625}
+  m_Offset: {x: 0, y: -0.67}
   serializedVersion: 2
-  m_Radius: 0.85
+  m_Radius: 0.95
 --- !u!50 &5260934991364768130
 Rigidbody2D:
   serializedVersion: 4
@@ -170,7 +170,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 1
-  m_Mass: 0.3216991
+  m_Mass: 0.3804595
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 1
@@ -199,3 +199,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spriterenderer: {fileID: 5035034588412458990}
   rb: {fileID: 0}
+  value: 0
+  textBox: {fileID: 0}
