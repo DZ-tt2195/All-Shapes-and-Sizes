@@ -100,6 +100,12 @@ public class TitleScreen : MonoBehaviour
         levelText.text = listOfLevels[levelToLoad].name;
         levelImage.sprite = listOfLevels[levelToLoad].sprite;
 
+        foreach (ButtonInfo BI in buttonSettings)
+        {
+            BI.button.enabled = true;
+            BI.image.color = Color.white;
+        }
+
         buttonSettings[0].image.color = (PlayerPrefs.GetInt($"{listOfLevels[levelToLoad].name} - Merge") >= 1) ? Color.yellow : Color.white;
         buttonSettings[0].achievement.SetActive(PlayerPrefs.GetInt($"{listOfLevels[levelToLoad].name} - Merge") >= 50);
 
@@ -108,6 +114,13 @@ public class TitleScreen : MonoBehaviour
 
         maxDropScore.text = $"High Score: {PlayerPrefs.GetInt($"{listOfLevels[levelToLoad].name} - MaxDrop")}";
         endlessHighScore.text = $"High Score: {PlayerPrefs.GetInt($"{listOfLevels[levelToLoad].name} - Endless")}";
+
+        if (levelToLoad == 3)
+        {
+            maxDropScore.text = "";
+            buttonSettings[2].button.enabled = false;
+            buttonSettings[2].image.color = Color.gray;
+        }
     }
 
     void ResetData()

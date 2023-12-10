@@ -119,7 +119,7 @@ public class ShapeManager : MonoBehaviour
         else
         {
             tutorialText.text =
-            "Click on the screen to drop shapes down the tube. When a shape touches another of the same shape, they merge into a larger one. ";
+            "Click on the screen to drop shapes down the tube. When a shape touches another of the same shape, they merge into a larger one.\n\n";
         }
 
         switch (LevelSettings.instance.setting)
@@ -134,8 +134,8 @@ public class ShapeManager : MonoBehaviour
                 "\n\nTo win, get a score above 2000 by merging shapes together.";
                 break;
             case TitleScreen.Setting.MaxDrop:
-                tutorialText.text += "If you let any shapes go above the top, or go above 1000 points, you lose." +
-                "\n\nPlay for as long as you are able to until you lose. Your score is the number of shapes you dropped.";
+                tutorialText.text += "If you let any shapes go above the top, or go above 500 points, you lose." +
+                "\n\nPlay for as long as you are able to until you lose.";
                 break;
             case TitleScreen.Setting.Endless:
                 tutorialText.text += "If you let any shapes go above the top, you lose." +
@@ -389,8 +389,8 @@ public class ShapeManager : MonoBehaviour
 
         if (LevelSettings.instance.setting == TitleScreen.Setting.ReachScore && score >= 2000)
             GameOver("You Won!", true);
-        else if (LevelSettings.instance.setting == TitleScreen.Setting.MaxDrop && score >= 1000)
-            GameOver("Your Run Has Ended", true);
+        else if (LevelSettings.instance.setting == TitleScreen.Setting.MaxDrop && score >= 500)
+            GameOver("You Lost.", true);
     }
 
     public void SwitchGravity()
