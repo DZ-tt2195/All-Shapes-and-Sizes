@@ -43,8 +43,9 @@ public class TitleScreen : MonoBehaviour
         [SerializeField] GameObject sfxCredits;
         [SerializeField] Image levelImage;
         [SerializeField] TMP_Text levelText;
+        [SerializeField] TMP_Text maxDropScore;
         [SerializeField] TMP_Text endlessHighScore;
-        public enum Setting { MergeCrown, ReachScore, Endless };
+        public enum Setting { MergeCrown, ReachScore, MaxDrop, Endless };
 
     private void Start()
     {
@@ -105,6 +106,7 @@ public class TitleScreen : MonoBehaviour
         buttonSettings[1].image.color = (PlayerPrefs.GetInt($"{listOfLevels[levelToLoad].name} - Score") >= 1) ? Color.yellow : Color.white;
         buttonSettings[1].achievement.SetActive(PlayerPrefs.GetInt($"{listOfLevels[levelToLoad].name} - Score") >= 50);
 
+        maxDropScore.text = $"High Score: {PlayerPrefs.GetInt($"{listOfLevels[levelToLoad].name} - MaxDrop")}";
         endlessHighScore.text = $"High Score: {PlayerPrefs.GetInt($"{listOfLevels[levelToLoad].name} - Endless")}";
     }
 
@@ -114,6 +116,7 @@ public class TitleScreen : MonoBehaviour
         {
             PlayerPrefs.SetInt($"{listOfLevels[i].name} - Merge", 0);
             PlayerPrefs.SetInt($"{listOfLevels[i].name} - Score", 0);
+            PlayerPrefs.SetInt($"{listOfLevels[i].name} - MaxDrop", 0);
             PlayerPrefs.SetInt($"{listOfLevels[i].name} - Endless", 0);
         }
 

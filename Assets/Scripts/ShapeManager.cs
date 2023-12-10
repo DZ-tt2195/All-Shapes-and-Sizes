@@ -16,6 +16,9 @@ public class ChanceOfDrop
 
 public class ShapeManager : MonoBehaviour
 {
+
+#region Variables
+
     public static ShapeManager instance;
     [ReadOnly] public Camera mainCam;
 
@@ -64,6 +67,8 @@ public class ShapeManager : MonoBehaviour
         Transform ceiling;
         Transform leftWall;
         Transform rightWall;
+
+    #endregion
 
 #region Setup
 
@@ -115,7 +120,6 @@ public class ShapeManager : MonoBehaviour
         {
             tutorialText.text =
             "Click on the screen to drop shapes down the tube. When a shape touches another of the same shape, they merge into a larger one. ";
-
         }
 
         switch (LevelSettings.instance.setting)
@@ -128,6 +132,10 @@ public class ShapeManager : MonoBehaviour
                 dropLimit += 100;
                 tutorialText.text += $"If you let any shapes go above the top, or drop more than {dropLimit} shapes, you lose." +
                 "\n\nTo win, get a score above 2000 by merging shapes together.";
+                break;
+            case TitleScreen.Setting.MaxDrop:
+                tutorialText.text += "If you let any shapes go above the top, or go above 1000 points, you lose." +
+                "\n\nPlay for as long as you are able to until you lose. Your score is the number of shapes you dropped.";
                 break;
             case TitleScreen.Setting.Endless:
                 tutorialText.text += "If you let any shapes go above the top, you lose." +
@@ -213,7 +221,7 @@ public class ShapeManager : MonoBehaviour
             if (nextShape1.textBox != null)
             {
                 dropped++;
-                if (LevelSettings.instance.setting != TitleScreen.Setting.Endless)
+                if (LevelSettings.instance.setting != TitleScreen.Setting.Endless && LevelSettings.instance.setting != TitleScreen.Setting.MaxDrop)
                 {
                     StopCoroutine(FlashWarning());
                     StartCoroutine(FlashWarning());
@@ -226,12 +234,11 @@ public class ShapeManager : MonoBehaviour
             RollNextShape();
             StartCoroutine(OutOfShapes());
         }
-
     }
 
     IEnumerator OutOfShapes()
     {
-        if (LevelSettings.instance.setting != TitleScreen.Setting.Endless)
+        if (LevelSettings.instance.setting != TitleScreen.Setting.Endless || LevelSettings.instance.setting != TitleScreen.Setting.MaxDrop)
         {
             if (dropped >= dropLimit)
             {
@@ -370,13 +377,20 @@ public class ShapeManager : MonoBehaviour
             char infinitySymbol = '\u221E';
             dataText.text = $"Score: {score} \nDropped: {dropped}/{infinitySymbol}";
         }
+        else if (LevelSettings.instance.setting == TitleScreen.Setting.MaxDrop)
+        {
+            char infinitySymbol = '\u221E';
+            dataText.text = $"Score: {score}/1000 \nDropped: {dropped}/{infinitySymbol}";
+        }
         else
         {
             dataText.text = $"Score: {score} \nDropped: {dropped}/{dropLimit}";
-
-            if (LevelSettings.instance.setting == TitleScreen.Setting.ReachScore && score >= 2000)
-                GameOver("You Won!", true);
         }
+
+        if (LevelSettings.instance.setting == TitleScreen.Setting.ReachScore && score >= 2000)
+            GameOver("You Won!", true);
+        else if (LevelSettings.instance.setting == TitleScreen.Setting.MaxDrop && score >= 1000)
+            GameOver("Your Run Has Ended", true);
     }
 
     public void SwitchGravity()
@@ -495,8 +509,13 @@ public class ShapeManager : MonoBehaviour
 
             if (LevelSettings.instance.setting == TitleScreen.Setting.Endless && PlayerPrefs.GetInt($"{SceneManager.GetActiveScene().name} - Endless") < score)
                 PlayerPrefs.SetInt($"{SceneManager.GetActiveScene().name} - Endless", score);
+
+            else if (LevelSettings.instance.setting == TitleScreen.Setting.MaxDrop && PlayerPrefs.GetInt($"{SceneManager.GetActiveScene().name} - MaxDrop") < dropped)
+                PlayerPrefs.SetInt($"{SceneManager.GetActiveScene().name} - MaxDrop", dropped);
+
             else if (won && LevelSettings.instance.setting == TitleScreen.Setting.MergeCrown && PlayerPrefs.GetInt($"{SceneManager.GetActiveScene().name} - Merge") < dropLimit-dropped)
                 PlayerPrefs.SetInt($"{SceneManager.GetActiveScene().name} - Merge", dropLimit-dropped);
+
             else if (won && LevelSettings.instance.setting == TitleScreen.Setting.ReachScore && PlayerPrefs.GetInt($"{SceneManager.GetActiveScene().name} - Score") < dropLimit - dropped)
                 PlayerPrefs.SetInt($"{SceneManager.GetActiveScene().name} - Score", dropLimit-dropped);
         }
