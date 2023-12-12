@@ -4927,7 +4927,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: 'A puzzle game by Thomas Tang (DZ)
 
-    Inspired by Alladin X''s Suika
+    Inspired by Aladdin X''s Suika
     Game'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8c64c47af7c1c4fb5b88d184433c6c44, type: 2}

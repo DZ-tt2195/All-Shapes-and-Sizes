@@ -106,7 +106,7 @@ public class ShapeManager : MonoBehaviour
         warningText.transform.localScale = new Vector2(0, 0);
         InputManager.instance.enabled = false;
         gravityArrow.transform.localScale = new Vector2(0, 0);
-        gravityArrow.transform.localEulerAngles = new Vector3(0, 0, 90);
+        gravityArrow.transform.localEulerAngles = new Vector3(0, 0, -90);
         resign.onClick.AddListener(() => GameOver("You gave up.", false));
         ceiling.gameObject.SetActive(false);
         deathLine.transform.localPosition = new Vector3(0, ceiling.transform.localPosition.y + 0.15f, 0);
