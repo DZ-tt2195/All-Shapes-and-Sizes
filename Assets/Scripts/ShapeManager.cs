@@ -225,6 +225,7 @@ public class ShapeManager : MonoBehaviour
                 {
                     StopCoroutine(FlashWarning());
                     StartCoroutine(FlashWarning());
+                    StartCoroutine(OutOfShapes());
                 }
             }
 
@@ -232,23 +233,19 @@ public class ShapeManager : MonoBehaviour
             UpdateDataText();
             StartCoroutine(GenerateShape(nextShape1, new Vector2(xValue, yValue)));
             RollNextShape();
-            StartCoroutine(OutOfShapes());
         }
     }
 
     IEnumerator OutOfShapes()
     {
-        if (LevelSettings.instance.setting != TitleScreen.Setting.Endless || LevelSettings.instance.setting != TitleScreen.Setting.MaxDrop)
+        if (dropped >= dropLimit)
         {
-            if (dropped >= dropLimit)
-            {
-                nextImage1.transform.parent.gameObject.SetActive(false);
-                nextImage2.transform.parent.gameObject.SetActive(false);
-                dataText.transform.parent.gameObject.SetActive(false);
-                InputManager.instance.enabled = false;
-                yield return new WaitForSeconds(2.5f);
-                GameOver("You're Out Of Shapes.", false);
-            }
+            nextImage1.transform.parent.gameObject.SetActive(false);
+            nextImage2.transform.parent.gameObject.SetActive(false);
+            dataText.transform.parent.gameObject.SetActive(false);
+            InputManager.instance.enabled = false;
+            yield return new WaitForSeconds(2.5f);
+            GameOver("You're Out Of Shapes.", false);
         }
     }
 
