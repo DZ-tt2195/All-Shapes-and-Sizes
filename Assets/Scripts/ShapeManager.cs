@@ -52,8 +52,6 @@ public class ShapeManager : MonoBehaviour
     [Foldout("Score", true)]
         int score = 0;
         int dropped = 0;
-        [SerializeField] int startingDrop;
-        [SerializeField] int dropLimit;
         [SerializeField] PointsVisual pv;
 
     [Foldout("Game end", true)]
@@ -125,16 +123,15 @@ public class ShapeManager : MonoBehaviour
         switch (LevelSettings.instance.setting)
         {
             case TitleScreen.Setting.MergeCrown:
-                tutorialText.text += $"If you let any shapes go above the top, or drop more than {dropLimit} shapes, you lose." +
+                tutorialText.text += $"If you let any shapes go above the top, or drop more than 150 shapes, you lose." +
                 "\n\nTo win, create 2 Crowns, and then have them merge with one another.";
                 break;
-            case TitleScreen.Setting.ReachScore:
-                dropLimit += 100;
-                tutorialText.text += $"If you let any shapes go above the top, or drop more than {dropLimit} shapes, you lose." +
-                "\n\nTo win, get a score above 2000 by merging shapes together.";
+            case TitleScreen.Setting.Drops:
+                tutorialText.text += $"If you let any shapes go above the top, or go above 600 points, you lose." +
+                "\n\nTo win, drop 75 shapes.";
                 break;
             case TitleScreen.Setting.MaxDrop:
-                tutorialText.text += "If you let any shapes go above the top, or go above 500 points, you lose." +
+                tutorialText.text += "If you let any shapes go above the top, or go above 1500 points, you lose." +
                 "\n\nPlay for as long as you are able to until you lose.";
                 break;
             case TitleScreen.Setting.Endless:
@@ -169,7 +166,7 @@ public class ShapeManager : MonoBehaviour
         nextImage1.transform.parent.gameObject.SetActive(false);
         nextImage2.transform.parent.gameObject.SetActive(false);
 
-        for (int i = 0; i < startingDrop; i++)
+        for (int i = 0; i < 75; i++)
         {
             AudioManager.instance.PlaySound(dropSound, 0.2f);
             yield return GenerateShape(listOfShapes[0], new Vector2(UnityEngine.Random.Range(leftWall.position.x + 0.6f, rightWall.position.x - 0.6f), deathLine.position.y - 0.15f));
@@ -221,11 +218,19 @@ public class ShapeManager : MonoBehaviour
             if (nextShape1.textBox != null)
             {
                 dropped++;
-                if (LevelSettings.instance.setting != TitleScreen.Setting.Endless && LevelSettings.instance.setting != TitleScreen.Setting.MaxDrop)
+                if (LevelSettings.instance.setting == TitleScreen.Setting.MergeCrown && 150-dropped <= 50)
                 {
-                    StopCoroutine(FlashWarning());
-                    StartCoroutine(FlashWarning());
-                    StartCoroutine(OutOfShapes());
+                    StopCoroutine(FlashWarning(150-dropped));
+                    StartCoroutine(FlashWarning(150-dropped));
+                    if (150-dropped <= 0)
+                        StartCoroutine(OutOfShapes());
+                }
+                if (LevelSettings.instance.setting == TitleScreen.Setting.Drops && 75-dropped <= 15)
+                {
+                    StopCoroutine(FlashWarning(75 - dropped));
+                    StartCoroutine(FlashWarning(75 - dropped));
+                    if (75-dropped <= 0)
+                        StartCoroutine(OutOfDrops());
                 }
             }
 
@@ -238,38 +243,42 @@ public class ShapeManager : MonoBehaviour
 
     IEnumerator OutOfShapes()
     {
-        if (dropped >= dropLimit)
-        {
-            nextImage1.transform.parent.gameObject.SetActive(false);
-            nextImage2.transform.parent.gameObject.SetActive(false);
-            dataText.transform.parent.gameObject.SetActive(false);
-            InputManager.instance.enabled = false;
-            yield return new WaitForSeconds(2.5f);
-            GameOver("You're Out Of Shapes.", false);
-        }
+        nextImage1.transform.parent.gameObject.SetActive(false);
+        nextImage2.transform.parent.gameObject.SetActive(false);
+        dataText.transform.parent.gameObject.SetActive(false);
+        InputManager.instance.enabled = false;
+        yield return new WaitForSeconds(2.5f);
+        GameOver("You're Out Of Shapes.", false);
     }
 
-    IEnumerator FlashWarning()
+    IEnumerator OutOfDrops()
     {
-        if (dropLimit - dropped <= 50)
+        nextImage1.transform.parent.gameObject.SetActive(false);
+        nextImage2.transform.parent.gameObject.SetActive(false);
+        dataText.transform.parent.gameObject.SetActive(false);
+        InputManager.instance.enabled = false;
+        yield return new WaitForSeconds(2.5f);
+        GameOver("You Won!", true);
+    }
+
+    IEnumerator FlashWarning(int number)
+    {
+        AudioManager.instance.PlaySound(timerSound, 0.5f);
+        Vector2 zeroSize = new(0, 0);
+        Vector2 maxSize = new(1, 1);
+
+        warningText.transform.localScale = zeroSize;
+        warningText.text = $"{number}";
+
+        float elapsedTime = 0f;
+        float waitTime = 0.5f;
+        while (elapsedTime < waitTime)
         {
-            AudioManager.instance.PlaySound(timerSound, 0.5f);
-            Vector2 zeroSize = new(0, 0);
-            Vector2 maxSize = new(1, 1);
-
-            warningText.transform.localScale = zeroSize;
-            warningText.text = $"{dropLimit - dropped}";
-
-            float elapsedTime = 0f;
-            float waitTime = 0.5f;
-            while (elapsedTime < waitTime)
-            {
-                warningText.transform.localScale = Vector3.Lerp(zeroSize, maxSize, elapsedTime / waitTime);
-                elapsedTime += Time.deltaTime;
-                yield return null;
-            }
-            warningText.transform.localScale = maxSize;
+            warningText.transform.localScale = Vector3.Lerp(zeroSize, maxSize, elapsedTime / waitTime);
+            elapsedTime += Time.deltaTime;
+            yield return null;
         }
+        warningText.transform.localScale = maxSize;
     }
 
     void RollNextShape()
@@ -377,17 +386,25 @@ public class ShapeManager : MonoBehaviour
         else if (LevelSettings.instance.setting == TitleScreen.Setting.MaxDrop)
         {
             char infinitySymbol = '\u221E';
-            dataText.text = $"Score: {score}/1000 \nDropped: {dropped}/{infinitySymbol}";
+            dataText.text = $"Score: {score}/1500 \nDropped: {dropped}/{infinitySymbol}";
         }
-        else
+        else if (LevelSettings.instance.setting == TitleScreen.Setting.MergeCrown)
         {
-            dataText.text = $"Score: {score} \nDropped: {dropped}/{dropLimit}";
+            dataText.text = $"Score: {score} \nDropped: {dropped}/150";
+        }
+        else if (LevelSettings.instance.setting == TitleScreen.Setting.Drops)
+        {
+            dataText.text = $"Score: {score}/600 \nDropped: {dropped}/75";
         }
 
-        if (LevelSettings.instance.setting == TitleScreen.Setting.ReachScore && score >= 2000)
-            GameOver("You Won!", true);
-        else if (LevelSettings.instance.setting == TitleScreen.Setting.MaxDrop && score >= 500)
+        if (LevelSettings.instance.setting == TitleScreen.Setting.MaxDrop && score >= 1500)
+        {
             GameOver("You Lost.", true);
+        }
+        else if (LevelSettings.instance.setting == TitleScreen.Setting.Drops && score >= 600)
+        {
+            GameOver("You Lost.", true);
+        }
     }
 
     public void SwitchGravity()
@@ -510,11 +527,11 @@ public class ShapeManager : MonoBehaviour
             else if (LevelSettings.instance.setting == TitleScreen.Setting.MaxDrop && PlayerPrefs.GetInt($"{SceneManager.GetActiveScene().name} - MaxDrop") < dropped)
                 PlayerPrefs.SetInt($"{SceneManager.GetActiveScene().name} - MaxDrop", dropped);
 
-            else if (won && LevelSettings.instance.setting == TitleScreen.Setting.MergeCrown && PlayerPrefs.GetInt($"{SceneManager.GetActiveScene().name} - Merge") < dropLimit-dropped)
-                PlayerPrefs.SetInt($"{SceneManager.GetActiveScene().name} - Merge", dropLimit-dropped);
+            else if (won && LevelSettings.instance.setting == TitleScreen.Setting.MergeCrown && PlayerPrefs.GetInt($"{SceneManager.GetActiveScene().name} - Merge") < 150-dropped)
+                PlayerPrefs.SetInt($"{SceneManager.GetActiveScene().name} - Merge", 150-dropped);
 
-            else if (won && LevelSettings.instance.setting == TitleScreen.Setting.ReachScore && PlayerPrefs.GetInt($"{SceneManager.GetActiveScene().name} - Score") < dropLimit - dropped)
-                PlayerPrefs.SetInt($"{SceneManager.GetActiveScene().name} - Score", dropLimit-dropped);
+            else if (won && LevelSettings.instance.setting == TitleScreen.Setting.Drops && PlayerPrefs.GetInt($"{SceneManager.GetActiveScene().name} - Drops") > score)
+                PlayerPrefs.SetInt($"{SceneManager.GetActiveScene().name} - Drops", score);
         }
     }
 

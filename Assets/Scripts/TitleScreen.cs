@@ -45,10 +45,12 @@ public class TitleScreen : MonoBehaviour
         [SerializeField] TMP_Text levelText;
         [SerializeField] TMP_Text maxDropScore;
         [SerializeField] TMP_Text endlessHighScore;
-        public enum Setting { MergeCrown, ReachScore, MaxDrop, Endless };
+        public enum Setting { MergeCrown, Drops, MaxDrop, Endless };
 
     private void Start()
     {
+        Debug.Log(Screen.currentResolution);
+
         levelToLoad = LevelSettings.instance.lastLevel;
         fpsSetting.value = (Application.targetFrameRate == 60) ? 0 : 1;
         fpsSetting.onValueChanged.AddListener(PlaySound);
@@ -106,21 +108,21 @@ public class TitleScreen : MonoBehaviour
             BI.image.color = Color.white;
         }
 
-        buttonSettings[0].image.color = (PlayerPrefs.GetInt($"{listOfLevels[levelToLoad].name} - Merge") >= 1) ? Color.yellow : Color.white;
-        buttonSettings[0].achievement.SetActive(PlayerPrefs.GetInt($"{listOfLevels[levelToLoad].name} - Merge") >= 50);
+        int score = PlayerPrefs.GetInt($"{listOfLevels[levelToLoad].name} - Merge");
+        buttonSettings[0].image.color = (score >= 1) ? Color.yellow : Color.white;
+        buttonSettings[0].achievement.SetActive(score >= 50);
 
-        buttonSettings[1].image.color = (PlayerPrefs.GetInt($"{listOfLevels[levelToLoad].name} - Score") >= 1) ? Color.yellow : Color.white;
-        buttonSettings[1].achievement.SetActive(PlayerPrefs.GetInt($"{listOfLevels[levelToLoad].name} - Score") >= 50);
+        if (!PlayerPrefs.HasKey($"{listOfLevels[levelToLoad].name} - Drops"))
+            PlayerPrefs.SetInt($"{listOfLevels[levelToLoad].name} - Drops", 1000);
+        score = PlayerPrefs.GetInt($"{listOfLevels[levelToLoad].name} - Drops");
+        buttonSettings[1].image.color = (score <= 450) ? Color.yellow : Color.white;
+        buttonSettings[1].achievement.SetActive(score <= 450);
 
-        maxDropScore.text = $"High Score: {PlayerPrefs.GetInt($"{listOfLevels[levelToLoad].name} - MaxDrop")}";
-        endlessHighScore.text = $"High Score: {PlayerPrefs.GetInt($"{listOfLevels[levelToLoad].name} - Endless")}";
+        score = PlayerPrefs.GetInt($"{listOfLevels[levelToLoad].name} - MaxDrop");
+        maxDropScore.text = $"High Score:\nDropped {score}";
 
-        if (levelToLoad == 3)
-        {
-            maxDropScore.text = "";
-            buttonSettings[2].button.enabled = false;
-            buttonSettings[2].image.color = Color.gray;
-        }
+        score = PlayerPrefs.GetInt($"{listOfLevels[levelToLoad].name} - Endless");
+        endlessHighScore.text = $"High Score:\n{score} Points";
     }
 
     void ResetData()
@@ -128,7 +130,7 @@ public class TitleScreen : MonoBehaviour
         for (int i = 0; i < listOfLevels.Count; i++)
         {
             PlayerPrefs.SetInt($"{listOfLevels[i].name} - Merge", 0);
-            PlayerPrefs.SetInt($"{listOfLevels[i].name} - Score", 0);
+            PlayerPrefs.SetInt($"{listOfLevels[i].name} - Drops", 1000);
             PlayerPrefs.SetInt($"{listOfLevels[i].name} - MaxDrop", 0);
             PlayerPrefs.SetInt($"{listOfLevels[i].name} - Endless", 0);
         }

@@ -1675,7 +1675,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &5817260221200733455
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1850,8 +1850,6 @@ MonoBehaviour:
   - shape: {fileID: 8432302721300003302, guid: 93ba6f37a332b49328a97d1b5a274709, type: 3}
     chance: 1
   gravityArrow: {fileID: 2618610796815020630}
-  startingDrop: 75
-  dropLimit: 150
   pv: {fileID: 5700913299117066173, guid: d817be641f2464bdaa47d0a4e0b6d381, type: 3}
   gameOverTransform: {fileID: 2644165489988059071}
   resign: {fileID: 3947910739599837090}
@@ -3552,6 +3550,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6214422578746791783}
+  - component: {fileID: 1711009995124427730}
   m_Layer: 0
   m_Name: Base Level
   m_TagString: Untagged
@@ -3582,6 +3581,20 @@ Transform:
   - {fileID: 8633939438499971154}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1711009995124427730
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7959796158159544028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed62496e85434631a8ce8752f246de34, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Active: 1
+  Target: {fileID: 4547846655706326493}
 --- !u!1 &8043712047892034758
 GameObject:
   m_ObjectHideFlags: 0
