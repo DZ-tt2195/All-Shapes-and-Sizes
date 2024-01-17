@@ -53,6 +53,7 @@ public class ShapeManager : MonoBehaviour
         int score = 0;
         int dropped = 0;
         [SerializeField] PointsVisual pv;
+        [SerializeField] Button hideUI;
 
     [Foldout("Game end", true)]
         [SerializeField] GameObject gameOverTransform;
@@ -106,6 +107,7 @@ public class ShapeManager : MonoBehaviour
         gravityArrow.transform.localScale = new Vector2(0, 0);
         gravityArrow.transform.localEulerAngles = new Vector3(0, 0, -90);
         resign.onClick.AddListener(() => GameOver("You gave up.", false));
+        hideUI.onClick.AddListener(ToggleUI);
         ceiling.gameObject.SetActive(false);
         deathLine.transform.localPosition = new Vector3(0, ceiling.transform.localPosition.y + 0.15f, 0);
 
@@ -533,6 +535,11 @@ public class ShapeManager : MonoBehaviour
             else if (won && LevelSettings.instance.setting == TitleScreen.Setting.Drops && PlayerPrefs.GetInt($"{SceneManager.GetActiveScene().name} - Drops") > score)
                 PlayerPrefs.SetInt($"{SceneManager.GetActiveScene().name} - Drops", score);
         }
+    }
+
+    void ToggleUI()
+    {
+        tutorialText.transform.parent.gameObject.SetActive(!tutorialText.transform.parent.gameObject.activeSelf);
     }
 
 #endregion

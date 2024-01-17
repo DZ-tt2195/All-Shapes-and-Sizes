@@ -49,8 +49,6 @@ public class TitleScreen : MonoBehaviour
 
     private void Start()
     {
-        Debug.Log(Screen.currentResolution);
-
         levelToLoad = LevelSettings.instance.lastLevel;
         fpsSetting.value = (Application.targetFrameRate == 60) ? 0 : 1;
         fpsSetting.onValueChanged.AddListener(PlaySound);
@@ -115,8 +113,8 @@ public class TitleScreen : MonoBehaviour
         if (!PlayerPrefs.HasKey($"{listOfLevels[levelToLoad].name} - Drops"))
             PlayerPrefs.SetInt($"{listOfLevels[levelToLoad].name} - Drops", 1000);
         score = PlayerPrefs.GetInt($"{listOfLevels[levelToLoad].name} - Drops");
-        buttonSettings[1].image.color = (score <= 450) ? Color.yellow : Color.white;
-        buttonSettings[1].achievement.SetActive(score <= 450);
+        buttonSettings[1].image.color = (score <= 999) ? Color.yellow : Color.white;
+        buttonSettings[1].achievement.SetActive(score <= 500);
 
         score = PlayerPrefs.GetInt($"{listOfLevels[levelToLoad].name} - MaxDrop");
         maxDropScore.text = $"High Score:\nDropped {score}";
