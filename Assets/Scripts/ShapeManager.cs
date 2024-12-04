@@ -129,7 +129,7 @@ public class ShapeManager : MonoBehaviour
                 "\n\nTo win, create 2 Crowns, and then have them merge with one another.";
                 break;
             case TitleScreen.Setting.Drops:
-                tutorialText.text += $"If you let any shapes go above the top, or go above 600 points, you lose." +
+                tutorialText.text += $"If you let any shapes go above the top, or go above 500 points, you lose." +
                 "\n\nTo win, drop 75 shapes.";
                 break;
             case TitleScreen.Setting.MaxDrop:
@@ -396,14 +396,14 @@ public class ShapeManager : MonoBehaviour
         }
         else if (LevelSettings.instance.setting == TitleScreen.Setting.Drops)
         {
-            dataText.text = $"Score: {score}/600 \nDropped: {dropped}/75";
+            dataText.text = $"Score: {score}/500 \nDropped: {dropped}/75";
         }
 
         if (LevelSettings.instance.setting == TitleScreen.Setting.MaxDrop && score >= 1500)
         {
             GameOver("You Lost.", true);
         }
-        else if (LevelSettings.instance.setting == TitleScreen.Setting.Drops && score >= 600)
+        else if (LevelSettings.instance.setting == TitleScreen.Setting.Drops && score >= 500)
         {
             GameOver("You Lost.", true);
         }
@@ -424,7 +424,7 @@ public class ShapeManager : MonoBehaviour
             deathLine.gameObject.SetActive(false);
 
             currentGravity *= -1;
-            Shape[] allShapes = FindObjectsOfType<Shape>();
+            Shape[] allShapes = FindObjectsByType<Shape>(FindObjectsSortMode.None);
             foreach (Shape shape in allShapes)
                 shape.rb.gravityScale = currentGravity;
 

@@ -114,7 +114,7 @@ public class TitleScreen : MonoBehaviour
             PlayerPrefs.SetInt($"{listOfLevels[levelToLoad].name} - Drops", 1000);
         score = PlayerPrefs.GetInt($"{listOfLevels[levelToLoad].name} - Drops");
         buttonSettings[1].image.color = (score <= 999) ? Color.yellow : Color.white;
-        buttonSettings[1].achievement.SetActive(score <= 500);
+        buttonSettings[1].achievement.SetActive(score <= 400);
 
         score = PlayerPrefs.GetInt($"{listOfLevels[levelToLoad].name} - MaxDrop");
         maxDropScore.text = $"High Score:\nDropped {score}";
