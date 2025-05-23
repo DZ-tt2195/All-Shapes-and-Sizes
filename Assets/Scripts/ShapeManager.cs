@@ -6,8 +6,9 @@ using System;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
+using static TitleScreen;
 
-[System.Serializable]
+[Serializable]
 public class ChanceOfDrop
 {
     public Shape shape;
@@ -44,7 +45,7 @@ public class ShapeManager : MonoBehaviour
 
     [Foldout("To drop", true)]
         public List<Shape> listOfShapes = new();
-        public List<ChanceOfDrop> droppedShapes = new();
+        [SerializeField] List<ChanceOfDrop> shapesToDrop = new();
         List<Shape> toDrop = new();
         [SerializeField] Transform gravityArrow;
         float currentGravity = 2.5f;
@@ -55,7 +56,14 @@ public class ShapeManager : MonoBehaviour
         [SerializeField] PointsVisual pv;
         [SerializeField] Button hideUI;
 
+    [Foldout("Numbers", true)]
+        int mergeDeath = 150;
+        int dropDeath = 250;
+        int dropCreate = 50;
+        int permaDeath = 1500;
+
     [Foldout("Game end", true)]
+        [ReadOnly] public bool mergedCrowns = false;
         [SerializeField] GameObject gameOverTransform;
         [SerializeField] Button resign;
         bool hasEnded = false;
@@ -86,12 +94,7 @@ public class ShapeManager : MonoBehaviour
     private void OnEnable()
     {
         if (Application.isMobilePlatform)
-        {
             InputManager.instance.OnStartTouch += DropShape;
-            Debug.Log("playing on phone");
-        }
-        else
-            Debug.Log("playing on computer");
     }
 
     private void OnDisable()
@@ -106,7 +109,8 @@ public class ShapeManager : MonoBehaviour
         InputManager.instance.enabled = false;
         gravityArrow.transform.localScale = new Vector2(0, 0);
         gravityArrow.transform.localEulerAngles = new Vector3(0, 0, -90);
-        resign.onClick.AddListener(() => GameOver("You gave up.", false));
+
+        resign.onClick.AddListener(() => GameOver("You gave up."));
         hideUI.onClick.AddListener(ToggleUI);
         ceiling.gameObject.SetActive(false);
         deathLine.transform.localPosition = new Vector3(0, ceiling.transform.localPosition.y + 0.15f, 0);
@@ -124,42 +128,44 @@ public class ShapeManager : MonoBehaviour
 
         switch (LevelSettings.instance.setting)
         {
-            case TitleScreen.Setting.MergeCrown:
-                tutorialText.text += $"If you let any shapes go above the top, or drop more than 150 shapes, you lose." +
+            case Setting.MergeCrown:
+                tutorialText.text += $"If you let any shapes go above the top, or drop more than {mergeDeath} shapes, you lose." +
                 "\n\nTo win, create 2 Crowns, and then have them merge with one another.";
                 break;
-            case TitleScreen.Setting.Drops:
-                tutorialText.text += $"If you let any shapes go above the top, or go above 500 points, you lose." +
-                "\n\nTo win, drop 75 shapes.";
+            case Setting.DropShape:
+                tutorialText.text += $"If you let any shapes go above the top, or go above {dropDeath} points, you lose." +
+                $"\n\nTo win, drop {dropCreate} shapes.";
                 break;
-            case TitleScreen.Setting.MaxDrop:
-                tutorialText.text += "If you let any shapes go above the top, or go above 1500 points, you lose." +
+            case Setting.DropEndless:
+                tutorialText.text += $"If you let any shapes go above the top, or go above {permaDeath} points, you lose." +
                 "\n\nPlay for as long as you are able to until you lose.";
                 break;
-            case TitleScreen.Setting.Endless:
+            case Setting.MergeEndless:
                 tutorialText.text += "If you let any shapes go above the top, you lose." +
                 "\n\nPlay for as long as you are able to until you lose.";
                 break;
         }
 
         StartCoroutine(DropRandomly());
-        foreach(ChanceOfDrop next in droppedShapes)
+        foreach(ChanceOfDrop next in shapesToDrop)
         {
             for (int i = 0; i < next.chance; i++)
                 toDrop.Add(next.shape);
         }
 
-        int randRemoval = UnityEngine.Random.Range(0, toDrop.Count);
-        nextShape1 = toDrop[randRemoval];
-        toDrop.RemoveAt(randRemoval);
-        nextImage1.sprite = nextShape1.spriterenderer.sprite;
-        nextImage1.color = nextShape1.spriterenderer.color;
+        Shape AssignRandomShape(Image targetImage)
+        {
+            int randIndex = UnityEngine.Random.Range(0, toDrop.Count);
+            Shape shape = toDrop[randIndex];
+            toDrop.RemoveAt(randIndex);
 
-        randRemoval = UnityEngine.Random.Range(0, toDrop.Count);
-        nextShape2 = toDrop[randRemoval];
-        toDrop.RemoveAt(randRemoval);
-        nextImage2.sprite = nextShape2.spriterenderer.sprite;
-        nextImage2.color = nextShape2.spriterenderer.color;
+            targetImage.sprite = shape.spriterenderer.sprite;
+            targetImage.color = shape.spriterenderer.color;
+            return shape;
+        }
+
+        nextShape1 = AssignRandomShape(nextImage1);
+        nextShape2 = AssignRandomShape(nextImage2);
     }
 
     IEnumerator DropRandomly()
@@ -182,23 +188,26 @@ public class ShapeManager : MonoBehaviour
 
         yield return new WaitForSeconds(1f);
 
-        dataText.transform.parent.gameObject.SetActive(true);
-        InputManager.instance.enabled = true;
-        score = 0;
-        dropped = 0;
-        AddScore(0, null);
-        RollNextShape();
+        if (!hasEnded)
+        {
+            dataText.transform.parent.gameObject.SetActive(true);
+            InputManager.instance.enabled = true;
+            score = 0;
+            dropped = 0;
+            AddScore(0, null);
+            RollNextShape();
+        }
     }
 
 #endregion
 
-#region Dropping Shapes
+#region Shapes
 
     private void Update()
     {
         if (InputManager.instance.enabled && !Application.isMobilePlatform)
         {
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(0) && !hasEnded)
                 DropShape(Input.mousePosition);
         }
     }
@@ -220,19 +229,19 @@ public class ShapeManager : MonoBehaviour
             if (nextShape1.textBox != null)
             {
                 dropped++;
-                if (LevelSettings.instance.setting == TitleScreen.Setting.MergeCrown && 150-dropped <= 50)
+                if (LevelSettings.instance.setting == Setting.MergeCrown && mergeDeath-dropped <= 50)
                 {
-                    StopCoroutine(FlashWarning(150-dropped));
-                    StartCoroutine(FlashWarning(150-dropped));
-                    if (150-dropped <= 0)
-                        StartCoroutine(OutOfShapes());
+                    StopCoroutine(FlashWarning(mergeDeath - dropped));
+                    StartCoroutine(FlashWarning(mergeDeath - dropped));
+                    if (mergeDeath - dropped <= 0)
+                        StartCoroutine(WaitForEnd("You're out of shapes."));
                 }
-                if (LevelSettings.instance.setting == TitleScreen.Setting.Drops && 75-dropped <= 15)
+                else if (LevelSettings.instance.setting == Setting.DropShape && dropCreate-dropped <= 15)
                 {
-                    StopCoroutine(FlashWarning(75 - dropped));
-                    StartCoroutine(FlashWarning(75 - dropped));
-                    if (75-dropped <= 0)
-                        StartCoroutine(OutOfDrops());
+                    StopCoroutine(FlashWarning(dropCreate - dropped));
+                    StartCoroutine(FlashWarning(dropCreate - dropped));
+                    if (dropCreate - dropped <= 0)
+                        StartCoroutine(WaitForEnd(""));
                 }
             }
 
@@ -243,24 +252,13 @@ public class ShapeManager : MonoBehaviour
         }
     }
 
-    IEnumerator OutOfShapes()
+    IEnumerator WaitForEnd(string message)
     {
         nextImage1.transform.parent.gameObject.SetActive(false);
         nextImage2.transform.parent.gameObject.SetActive(false);
-        dataText.transform.parent.gameObject.SetActive(false);
         InputManager.instance.enabled = false;
         yield return new WaitForSeconds(2.5f);
-        GameOver("You're Out Of Shapes.", false);
-    }
-
-    IEnumerator OutOfDrops()
-    {
-        nextImage1.transform.parent.gameObject.SetActive(false);
-        nextImage2.transform.parent.gameObject.SetActive(false);
-        dataText.transform.parent.gameObject.SetActive(false);
-        InputManager.instance.enabled = false;
-        yield return new WaitForSeconds(2.5f);
-        GameOver("You Won!", true);
+        GameOver(message);
     }
 
     IEnumerator FlashWarning(int number)
@@ -292,7 +290,7 @@ public class ShapeManager : MonoBehaviour
 
         if (toDrop.Count == 0)
         {
-            foreach (ChanceOfDrop next in droppedShapes)
+            foreach (ChanceOfDrop next in shapesToDrop)
             {
                 for (int i = 0; i < next.chance; i++)
                     toDrop.Add(next.shape);
@@ -365,13 +363,9 @@ public class ShapeManager : MonoBehaviour
         newShape.transform.position = spawn;
 
         if (shape.textBox != null)
-        {
             newShape.Setup(listOfShapes.IndexOf(shape), currentGravity);
-        }
         else
-        {
             newShape.AltShape(currentGravity);
-        }
     }
 
 #endregion
@@ -380,32 +374,27 @@ public class ShapeManager : MonoBehaviour
 
     void UpdateDataText()
     {
-        if (LevelSettings.instance.setting == TitleScreen.Setting.Endless)
+        if (LevelSettings.instance.setting == Setting.MergeEndless)
         {
             char infinitySymbol = '\u221E';
             dataText.text = $"Score: {score} \nDropped: {dropped}/{infinitySymbol}";
         }
-        else if (LevelSettings.instance.setting == TitleScreen.Setting.MaxDrop)
+        else if (LevelSettings.instance.setting == Setting.DropEndless)
         {
             char infinitySymbol = '\u221E';
-            dataText.text = $"Score: {score}/1500 \nDropped: {dropped}/{infinitySymbol}";
+            dataText.text = $"Score: {score}/{permaDeath} \nDropped: {dropped}/{infinitySymbol}";
+            if (score >= permaDeath)
+                GameOver("You Lost.");
         }
-        else if (LevelSettings.instance.setting == TitleScreen.Setting.MergeCrown)
+        else if (LevelSettings.instance.setting == Setting.MergeCrown)
         {
-            dataText.text = $"Score: {score} \nDropped: {dropped}/150";
+            dataText.text = $"Score: {score} \nDropped: {dropped}/{mergeDeath}";
         }
-        else if (LevelSettings.instance.setting == TitleScreen.Setting.Drops)
+        else if (LevelSettings.instance.setting == Setting.DropShape)
         {
-            dataText.text = $"Score: {score}/500 \nDropped: {dropped}/75";
-        }
-
-        if (LevelSettings.instance.setting == TitleScreen.Setting.MaxDrop && score >= 1500)
-        {
-            GameOver("You Lost.", true);
-        }
-        else if (LevelSettings.instance.setting == TitleScreen.Setting.Drops && score >= 500)
-        {
-            GameOver("You Lost.", true);
+            dataText.text = $"Score: {score}/{dropDeath} \nDropped: {dropped}/{dropCreate}";
+            if (score >= dropDeath)
+                GameOver("You Lost.");
         }
     }
 
@@ -489,10 +478,13 @@ public class ShapeManager : MonoBehaviour
             ceiling.gameObject.SetActive(false);
         }
 
-        InputManager.instance.enabled = true;
-        deathLine.gameObject.SetActive(true);
-        nextImage1.transform.parent.gameObject.SetActive(true);
-        nextImage2.transform.parent.gameObject.SetActive(true);
+        if (!hasEnded)
+        {
+            InputManager.instance.enabled = true;
+            deathLine.gameObject.SetActive(true);
+            nextImage1.transform.parent.gameObject.SetActive(true);
+            nextImage2.transform.parent.gameObject.SetActive(true);
+        }
     }
 
     public void AddScore(int score, Shape shape)
@@ -509,31 +501,49 @@ public class ShapeManager : MonoBehaviour
         }
     }
 
-    public void GameOver(string message, bool won)
+    public void GameOver(string loseMessage)
     {
         if (!hasEnded)
         {
             InputManager.instance.enabled = false;
             gameOverTransform.SetActive(true);
-            gameOverTransform.transform.GetChild(0).GetComponent<TMP_Text>().text = message;
             hasEnded = true;
 
+            string currentScene = (SceneManager.GetActiveScene().name);
+            bool won = false;
+
+            if (LevelSettings.instance.setting == Setting.MergeCrown)
+            {
+                won = mergedCrowns;
+                if (won && PlayerPrefs.GetInt($"{currentScene} - {LevelSettings.instance.setting}") < mergeDeath - dropped)
+                    PlayerPrefs.SetInt($"{currentScene} - {LevelSettings.instance.setting}", mergeDeath - dropped);
+            }
+            else if (LevelSettings.instance.setting == Setting.DropShape)
+            {
+                won = (dropped == dropCreate) && score < dropDeath;
+                if (won && PlayerPrefs.GetInt($"{currentScene} - {LevelSettings.instance.setting}") > score)
+                    PlayerPrefs.SetInt($"{currentScene} - {LevelSettings.instance.setting}", score);
+            }
+            else if (LevelSettings.instance.setting == Setting.DropEndless && PlayerPrefs.GetInt($"{currentScene} - {LevelSettings.instance.setting}") < dropped)
+            {
+                PlayerPrefs.SetInt($"{currentScene} - {LevelSettings.instance.setting}", dropped);
+            }
+            else if (LevelSettings.instance.setting == Setting.MergeEndless && PlayerPrefs.GetInt($"{currentScene} - {LevelSettings.instance.setting}") < score)
+            {
+                PlayerPrefs.SetInt($"{currentScene} - {LevelSettings.instance.setting}", score);
+            }
+
+            TMP_Text textBox = gameOverTransform.transform.GetChild(0).GetComponent<TMP_Text>();
             if (won)
+            {
                 AudioManager.instance.PlaySound(winSound, 0.5f);
+                textBox.text = "You Won!";
+            }
             else
+            {
                 AudioManager.instance.PlaySound(loseSound, 0.5f);
-
-            if (LevelSettings.instance.setting == TitleScreen.Setting.Endless && PlayerPrefs.GetInt($"{SceneManager.GetActiveScene().name} - Endless") < score)
-                PlayerPrefs.SetInt($"{SceneManager.GetActiveScene().name} - Endless", score);
-
-            else if (LevelSettings.instance.setting == TitleScreen.Setting.MaxDrop && PlayerPrefs.GetInt($"{SceneManager.GetActiveScene().name} - MaxDrop") < dropped)
-                PlayerPrefs.SetInt($"{SceneManager.GetActiveScene().name} - MaxDrop", dropped);
-
-            else if (won && LevelSettings.instance.setting == TitleScreen.Setting.MergeCrown && PlayerPrefs.GetInt($"{SceneManager.GetActiveScene().name} - Merge") < 150-dropped)
-                PlayerPrefs.SetInt($"{SceneManager.GetActiveScene().name} - Merge", 150-dropped);
-
-            else if (won && LevelSettings.instance.setting == TitleScreen.Setting.Drops && PlayerPrefs.GetInt($"{SceneManager.GetActiveScene().name} - Drops") > score)
-                PlayerPrefs.SetInt($"{SceneManager.GetActiveScene().name} - Drops", score);
+                textBox.text = loseMessage;
+            }
         }
     }
 

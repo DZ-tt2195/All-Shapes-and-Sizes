@@ -1,9 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using MyBox;
-using UnityEngine.SceneManagement;
 using static TitleScreen;
 
 public class LevelSettings : MonoBehaviour

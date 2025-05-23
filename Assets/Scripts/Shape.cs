@@ -96,7 +96,7 @@ public class Shape : MonoBehaviour
                 else
                 {
                     active = false;
-                    ShapeManager.instance.GameOver("You Lost.", false);
+                    ShapeManager.instance.GameOver("You Lost.");
                 }
             }
         }
@@ -118,7 +118,10 @@ public class Shape : MonoBehaviour
             if (value + 1 >= ShapeManager.instance.listOfShapes.Count)
             {
                 if (LevelSettings.instance.setting == TitleScreen.Setting.MergeCrown)
-                    ShapeManager.instance.GameOver("You Won!", true);
+                {
+                    ShapeManager.instance.mergedCrowns = true;
+                    ShapeManager.instance.GameOver("You Won!");
+                }
             }
             else
             {
