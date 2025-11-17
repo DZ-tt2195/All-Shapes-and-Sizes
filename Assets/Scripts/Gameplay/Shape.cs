@@ -31,7 +31,7 @@ public class Shape : MonoBehaviour
         this.name = this.name.Replace("(Clone)", "");
         rb.gravityScale = gravity;
         rb.mass = 2;
-        rb.angularDrag = 2;
+        rb.angularDamping = 2;
         StartCoroutine(BecomeActive());
     }
 
@@ -43,7 +43,7 @@ public class Shape : MonoBehaviour
         rb.mass = 2;
         textBox.text = $"{score}";
         rb.gravityScale = gravity;
-        rb.angularDrag = 2;
+        rb.angularDamping = 2;
         StartCoroutine(BecomeActive());
     }
 

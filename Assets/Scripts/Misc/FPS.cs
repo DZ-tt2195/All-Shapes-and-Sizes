@@ -17,7 +17,7 @@ public class FPS : MonoBehaviour
 
     void Update()
     {
-        textbox.text = $"FPS: {CalculateFrames()}";
+        textbox.text = Translator.inst.Translate("FPS", new() { ("Num", CalculateFrames().ToString()) });
     }
 
     int CalculateFrames()

@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Scenes/-1. Startup.unity
+    guid: 20d6e851bd6df48048e47523b9032536
+  - enabled: 1
     path: Assets/Scenes/0. TitleScene.unity
     guid: e7caeada85d9548998159b1511b44b42
   - enabled: 1
@@ -21,3 +24,4 @@ EditorBuildSettings:
     path: Assets/Scenes/4. Bouncy.unity
     guid: 7f2e2418ef6cc4770a3485df65ca6dd5
   m_configObjects: {}
+  m_UseUCBPForAssetBundles: 0

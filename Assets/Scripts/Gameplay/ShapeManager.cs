@@ -110,41 +110,32 @@ public class ShapeManager : MonoBehaviour
         gravityArrow.transform.localScale = new Vector2(0, 0);
         gravityArrow.transform.localEulerAngles = new Vector3(0, 0, -90);
 
-        resign.onClick.AddListener(() => GameOver("You gave up."));
+        resign.onClick.AddListener(() => GameOver("You Gave Up"));
         hideUI.onClick.AddListener(ToggleUI);
         ceiling.gameObject.SetActive(false);
         deathLine.transform.localPosition = new Vector3(0, ceiling.transform.localPosition.y + 0.15f, 0);
 
-        if (Application.isMobilePlatform)
-        {
-            tutorialText.text =
-            "Touch the screen to drop shapes down the tube. When a shape touches another of the same shape, they merge into a larger one. ";
-        }
-        else
-        {
-            tutorialText.text =
-            "Click on the screen to drop shapes down the tube. When a shape touches another of the same shape, they merge into a larger one.\n\n";
-        }
-
+        string answer = $"{Translator.inst.Translate("Tutorial 1")}\n\n";
         switch (LevelSettings.instance.setting)
         {
             case Setting.MergeCrown:
-                tutorialText.text += $"If you let any shapes go above the top, or drop more than {mergeDeath} shapes, you lose." +
-                "\n\nTo win, create 2 Crowns, and then have them merge with one another.";
+                answer += $"{Translator.inst.Translate("Merge Crown Tutorial", new() { ("Num", mergeDeath.ToString()) })}\n\n";
+                answer += $"{Translator.inst.Translate("Merge Crown WinCon")}";
                 break;
             case Setting.DropShape:
-                tutorialText.text += $"If you let any shapes go above the top, or go above {dropDeath} points, you lose." +
-                $"\n\nTo win, drop {dropCreate} shapes.";
+                answer += $"{Translator.inst.Translate("Drop Shape Tutorial", new() { ("Num", dropDeath.ToString()) })}\n\n";
+                answer += $"{Translator.inst.Translate("Drop Shape WinCon", new() { ("Num", dropCreate.ToString()) }) }";
                 break;
             case Setting.DropEndless:
-                tutorialText.text += $"If you let any shapes go above the top, or go above {permaDeath} points, you lose." +
-                "\n\nPlay for as long as you are able to until you lose.";
+                answer += $"{Translator.inst.Translate("Drop Endless Tutorial", new() { ("Num", permaDeath.ToString()) })}\n\n";
+                answer += $"{Translator.inst.Translate("Endless WinCon")}";
                 break;
             case Setting.MergeEndless:
-                tutorialText.text += "If you let any shapes go above the top, you lose." +
-                "\n\nPlay for as long as you are able to until you lose.";
+                answer += $"{Translator.inst.Translate("Merge Endless Tutorial")}\n\n";
+                answer += $"{Translator.inst.Translate("Endless WinCon")}";
                 break;
         }
+        tutorialText.text = answer;
 
         StartCoroutine(DropRandomly());
         foreach(ChanceOfDrop next in shapesToDrop)
@@ -183,7 +174,7 @@ public class ShapeManager : MonoBehaviour
         yield return new WaitForSeconds(2f);
 
         PointsVisual newPV = Instantiate(pv);
-        newPV.Setup("Begin!", new Vector3(0, 0, -1), 1f);
+        newPV.Setup(Translator.inst.Translate("Begin"), new Vector3(0, 0, -1), 1f);
         AudioManager.instance.PlaySound(winSound, 0.5f);
 
         yield return new WaitForSeconds(1f);
@@ -377,22 +368,28 @@ public class ShapeManager : MonoBehaviour
         if (LevelSettings.instance.setting == Setting.MergeEndless)
         {
             char infinitySymbol = '\u221E';
-            dataText.text = $"Score: {score} \nDropped: {dropped}/{infinitySymbol}";
+            dataText.text = Translator.inst.Translate("Score Text No Limit", new() { ("Num1", score.ToString()) });
+            dataText.text += $"\n{Translator.inst.Translate("Drop Text", new() { ("Num1", dropped.ToString()), ("Num2", infinitySymbol.ToString()) })}";
         }
         else if (LevelSettings.instance.setting == Setting.DropEndless)
         {
             char infinitySymbol = '\u221E';
-            dataText.text = $"Score: {score}/{permaDeath} \nDropped: {dropped}/{infinitySymbol}";
+            dataText.text = Translator.inst.Translate("Score Text", new() { ("Num1", score.ToString()), ("Num2", permaDeath.ToString()) });
+            dataText.text += $"\n{Translator.inst.Translate("Drop Text", new() { ("Num1", dropped.ToString()), ("Num2", infinitySymbol.ToString()) })}";
+
             if (score >= permaDeath)
                 GameOver("You Lost.");
         }
         else if (LevelSettings.instance.setting == Setting.MergeCrown)
         {
-            dataText.text = $"Score: {score} \nDropped: {dropped}/{mergeDeath}";
+            dataText.text = Translator.inst.Translate("Score Text No Limit", new() { ("Num1", score.ToString())});
+            dataText.text += $"\n{Translator.inst.Translate("Drop Text", new() { ("Num1", dropped.ToString()), ("Num2", mergeDeath.ToString()) })}";
         }
         else if (LevelSettings.instance.setting == Setting.DropShape)
         {
-            dataText.text = $"Score: {score}/{dropDeath} \nDropped: {dropped}/{dropCreate}";
+            dataText.text = Translator.inst.Translate("Score Text", new() { ("Num1", score.ToString()), ("Num2", dropDeath.ToString()) });
+            dataText.text += $"\n{Translator.inst.Translate("Drop Text", new() { ("Num1", dropped.ToString()), ("Num2", dropCreate.ToString()) })}";
+
             if (score >= dropDeath)
                 GameOver("You Lost.");
         }
@@ -537,12 +534,12 @@ public class ShapeManager : MonoBehaviour
             if (won)
             {
                 AudioManager.instance.PlaySound(winSound, 0.5f);
-                textBox.text = "You Won!";
+                textBox.text = Translator.inst.Translate("You Won");
             }
             else
             {
                 AudioManager.instance.PlaySound(loseSound, 0.5f);
-                textBox.text = loseMessage;
+                textBox.text = Translator.inst.Translate(loseMessage);
             }
         }
     }

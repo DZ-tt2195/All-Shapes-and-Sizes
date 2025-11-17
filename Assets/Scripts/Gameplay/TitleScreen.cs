@@ -33,7 +33,6 @@ public class TitleScreen : MonoBehaviour
         [SerializeField] List<ButtonInfo> buttonSettings;
 
     [Foldout("Buttons", true)]
-        [SerializeField] TMP_Dropdown fpsSetting;
         [SerializeField] Button sfxButton;
         [SerializeField] Button clearData;
         [SerializeField] Button leftArrow;
@@ -43,15 +42,13 @@ public class TitleScreen : MonoBehaviour
         [SerializeField] GameObject sfxCredits;
         [SerializeField] Image levelImage;
         [SerializeField] TMP_Text levelText;
-        [SerializeField] TMP_Text maxDropScore;
-        [SerializeField] TMP_Text endlessHighScore;
+        [SerializeField] TMP_Text endlessDropScore;
+        [SerializeField] TMP_Text endlessMergeScore;
         public enum Setting { MergeCrown, DropShape, DropEndless, MergeEndless };
 
     private void Start()
     {
         levelToLoad = LevelSettings.instance.lastLevel;
-        fpsSetting.value = (Application.targetFrameRate == 60) ? 0 : 1;
-        fpsSetting.onValueChanged.AddListener(PlaySound);
 
         for (int i = 0; i < buttonSettings.Count; i++)
         {
@@ -89,7 +86,7 @@ public class TitleScreen : MonoBehaviour
 
     void LoadWithSetting(Setting setting)
     {
-        Application.targetFrameRate = fpsSetting.value == 0 ? 60 : 30;
+        Application.targetFrameRate = 60;
         LevelSettings.instance.setting = setting;
         LevelSettings.instance.lastLevel = levelToLoad;
         SceneManager.LoadScene(listOfLevels[levelToLoad].name);
@@ -98,7 +95,7 @@ public class TitleScreen : MonoBehaviour
     void DisplayLevel()
     {
         LevelInfo currentLevel = listOfLevels[levelToLoad];
-        levelText.text = currentLevel.name;
+        levelText.text = Translator.inst.Translate(currentLevel.name);
         levelImage.sprite = currentLevel.sprite;
 
         foreach (ButtonInfo BI in buttonSettings)
@@ -117,10 +114,10 @@ public class TitleScreen : MonoBehaviour
         buttonSettings[1].achievement.SetActive(score <= 200);
 
         score = PlayerPrefs.GetInt($"{currentLevel.name} - {Setting.DropEndless}");
-        maxDropScore.text = $"High Score:\n{score} Shapes";
+        endlessDropScore.text = Translator.inst.Translate("High Score", new() { ("Num", score.ToString()) });
 
-        score = PlayerPrefs.GetInt($"{currentLevel.name} - {Setting.DropShape}");
-        endlessHighScore.text = $"High Score:\n{score} Points";
+        score = PlayerPrefs.GetInt($"{currentLevel.name} - {Setting.MergeEndless}");
+        endlessMergeScore.text = Translator.inst.Translate("High Score", new() { ("Num", score.ToString()) });
     }
 
     void ResetData()
