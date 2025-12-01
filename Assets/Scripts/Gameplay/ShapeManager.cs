@@ -42,6 +42,8 @@ public class ShapeManager : MonoBehaviour
         Shape nextShape1;
         [SerializeField] Image nextImage2;
         Shape nextShape2;
+        [SerializeField] Image saveImage;
+        Shape savedShape;
 
     [Foldout("To drop", true)]
         public List<Shape> listOfShapes = new();
@@ -112,51 +114,39 @@ public class ShapeManager : MonoBehaviour
 
         resign.onClick.AddListener(() => GameOver("You Gave Up"));
         hideUI.onClick.AddListener(ToggleUI);
+        void ToggleUI() { tutorialText.transform.parent.gameObject.SetActive(!tutorialText.transform.parent.gameObject.activeSelf);}
+
         ceiling.gameObject.SetActive(false);
         deathLine.transform.localPosition = new Vector3(0, ceiling.transform.localPosition.y + 0.15f, 0);
 
-        string answer = $"{Translator.inst.Translate("Tutorial 1")}\n\n";
+        nextShape2 = AssignRandomShape();
+        RollNextShape();
+
+        string answer = $"{Translator.inst.Translate("Tutorial 1")}\n" +
+        $"{(Application.isEditor ? Translator.inst.Translate("Tutorial 2") + "\n" : "")}" +
+            $"{Translator.inst.Translate("Tutorial 3")}\n\n";
         switch (LevelSettings.instance.setting)
         {
             case Setting.MergeCrown:
-                answer += $"{Translator.inst.Translate("Merge Crown Tutorial", new() { ("Num", mergeDeath.ToString()) })}\n\n";
+                answer += $"{Translator.inst.Translate("Merge Crown Tutorial", new() { ("Num", mergeDeath.ToString()) })}\n";
                 answer += $"{Translator.inst.Translate("Merge Crown WinCon")}";
                 break;
             case Setting.DropShape:
-                answer += $"{Translator.inst.Translate("Drop Shape Tutorial", new() { ("Num", dropDeath.ToString()) })}\n\n";
+                answer += $"{Translator.inst.Translate("Drop Shape Tutorial", new() { ("Num", dropDeath.ToString()) })}\n";
                 answer += $"{Translator.inst.Translate("Drop Shape WinCon", new() { ("Num", dropCreate.ToString()) }) }";
                 break;
             case Setting.DropEndless:
-                answer += $"{Translator.inst.Translate("Drop Endless Tutorial", new() { ("Num", permaDeath.ToString()) })}\n\n";
+                answer += $"{Translator.inst.Translate("Drop Endless Tutorial", new() { ("Num", permaDeath.ToString()) })}\n";
                 answer += $"{Translator.inst.Translate("Endless WinCon")}";
                 break;
             case Setting.MergeEndless:
-                answer += $"{Translator.inst.Translate("Merge Endless Tutorial")}\n\n";
+                answer += $"{Translator.inst.Translate("Merge Endless Tutorial")}\n";
                 answer += $"{Translator.inst.Translate("Endless WinCon")}";
                 break;
         }
         tutorialText.text = answer;
 
         StartCoroutine(DropRandomly());
-        foreach(ChanceOfDrop next in shapesToDrop)
-        {
-            for (int i = 0; i < next.chance; i++)
-                toDrop.Add(next.shape);
-        }
-
-        Shape AssignRandomShape(Image targetImage)
-        {
-            int randIndex = UnityEngine.Random.Range(0, toDrop.Count);
-            Shape shape = toDrop[randIndex];
-            toDrop.RemoveAt(randIndex);
-
-            targetImage.sprite = shape.spriterenderer.sprite;
-            targetImage.color = shape.spriterenderer.color;
-            return shape;
-        }
-
-        nextShape1 = AssignRandomShape(nextImage1);
-        nextShape2 = AssignRandomShape(nextImage2);
     }
 
     IEnumerator DropRandomly()
@@ -164,6 +154,7 @@ public class ShapeManager : MonoBehaviour
         dataText.transform.parent.gameObject.SetActive(false);
         nextImage1.transform.parent.gameObject.SetActive(false);
         nextImage2.transform.parent.gameObject.SetActive(false);
+        saveImage.transform.parent.gameObject.SetActive(false);
 
         for (int i = 0; i < 75; i++)
         {
@@ -183,10 +174,9 @@ public class ShapeManager : MonoBehaviour
         {
             dataText.transform.parent.gameObject.SetActive(true);
             InputManager.instance.enabled = true;
-            score = 0;
             dropped = 0;
-            AddScore(0, null);
-            RollNextShape();
+            UpdateDataText();
+            ShapeUI();
         }
     }
 
@@ -196,22 +186,27 @@ public class ShapeManager : MonoBehaviour
 
     private void Update()
     {
+        if (dropped == 0)
+            score = 0;
+
         if (InputManager.instance.enabled && !Application.isMobilePlatform)
         {
             if (Input.GetMouseButtonDown(0) && !hasEnded)
                 DropShape(Input.mousePosition);
+            else if (Input.GetMouseButtonDown(1) && !hasEnded && Application.isEditor)
+                SaveShape();
         }
-    }
-
-    Vector2 GetWorldCoordinates(Vector2 screenPos)
-    {
-        Vector2 screenCoord = new(screenPos.x, screenPos.y);
-        Vector2 worldCoord = mainCam.ScreenToWorldPoint(screenCoord);
-        return worldCoord;
     }
 
     void DropShape(Vector2 screenPosition)
     {
+        Vector2 GetWorldCoordinates(Vector2 screenPos)
+        {
+            Vector2 screenCoord = new(screenPos.x, screenPos.y);
+            Vector2 worldCoord = mainCam.ScreenToWorldPoint(screenCoord);
+            return worldCoord;
+        }
+
         float yValue = (currentGravity > 0) ? deathLine.position.y - 0.6f : deathLine.position.y + 0.6f;
         float xValue = GetWorldCoordinates(screenPosition).x;
 
@@ -240,6 +235,21 @@ public class ShapeManager : MonoBehaviour
             UpdateDataText();
             StartCoroutine(GenerateShape(nextShape1, new Vector2(xValue, yValue)));
             RollNextShape();
+        }
+    }
+
+    void SaveShape()
+    {
+        if (savedShape == null)
+        {
+            savedShape = nextShape1;
+            nextShape1 = null;
+            RollNextShape();
+        }
+        else
+        {
+            (nextShape1, savedShape) = (savedShape, nextShape1);
+            ShapeUI();
         }
     }
 
@@ -272,30 +282,41 @@ public class ShapeManager : MonoBehaviour
         warningText.transform.localScale = maxSize;
     }
 
-    void RollNextShape()
+    void ShapeUI()
     {
-        nextShape1 = nextShape2;
-        nextImage1.transform.parent.gameObject.SetActive(true);
-        nextImage1.sprite = nextShape2.spriterenderer.sprite;
-        nextImage1.color = nextShape2.spriterenderer.color;
-
-        if (toDrop.Count == 0)
+        if (savedShape != null)
         {
-            foreach (ChanceOfDrop next in shapesToDrop)
+            saveImage.transform.parent.gameObject.SetActive(true);
+            saveImage.sprite = savedShape.spriterenderer.sprite;
+            saveImage.color = savedShape.spriterenderer.color;
+            switch (savedShape.name)
             {
-                for (int i = 0; i < next.chance; i++)
-                    toDrop.Add(next.shape);
+                case "Circle":
+                    saveImage.rectTransform.sizeDelta = new Vector2(50, 50);
+                    break;
+                case "Square":
+                    saveImage.rectTransform.sizeDelta = new Vector2(65, 65);
+                    break;
+                case "Arrow":
+                    saveImage.rectTransform.sizeDelta = new Vector2(100, 100);
+                    break;
+                case "Diamond":
+                    saveImage.rectTransform.sizeDelta = new Vector2(110, 60);
+                    break;
+                case "Bomb":
+                    saveImage.rectTransform.sizeDelta = new Vector2(55, 95);
+                    break;
+                case "Inversion":
+                    saveImage.rectTransform.sizeDelta = new Vector2(90, 90);
+                    break;
+                case "Wall":
+                    saveImage.rectTransform.sizeDelta = new Vector2(110, 50);
+                    break;
             }
         }
-
-        int randRemoval = UnityEngine.Random.Range(0, toDrop.Count);
-        nextShape2 = toDrop[randRemoval];
-        toDrop.RemoveAt(randRemoval);
-
-        nextImage2.transform.parent.gameObject.SetActive(true);
-        nextImage2.sprite = nextShape2.spriterenderer.sprite;
-        nextImage2.color = nextShape2.spriterenderer.color;
-
+        nextImage1.transform.parent.gameObject.SetActive(true);
+        nextImage1.sprite = nextShape1.spriterenderer.sprite;
+        nextImage1.color = nextShape1.spriterenderer.color;
         switch (nextShape1.name)
         {
             case "Circle":
@@ -321,6 +342,9 @@ public class ShapeManager : MonoBehaviour
                 break;
         }
 
+        nextImage2.transform.parent.gameObject.SetActive(true);
+        nextImage2.sprite = nextShape2.spriterenderer.sprite;
+        nextImage2.color = nextShape2.spriterenderer.color;
         switch (nextShape2.name)
         {
             case "Circle":
@@ -345,6 +369,32 @@ public class ShapeManager : MonoBehaviour
                 nextImage2.rectTransform.sizeDelta = new Vector2(65, 25);
                 break;
         }
+    }
+
+    void RollNextShape()
+    {
+        nextShape1 = nextShape2;
+        do
+        {
+            nextShape2 = AssignRandomShape();
+        } while (nextShape1.name.Equals("Inversion") && nextShape2.name.Equals("Inversion"));
+        ShapeUI();
+    }
+
+    Shape AssignRandomShape()
+    {
+        if (toDrop.Count == 0)
+        {
+            foreach (ChanceOfDrop next in shapesToDrop)
+            {
+                for (int i = 0; i < next.chance; i++)
+                    toDrop.Add(next.shape);
+            }
+        }
+        int randIndex = UnityEngine.Random.Range(0, toDrop.Count);
+        Shape shape = toDrop[randIndex];
+        toDrop.RemoveAt(randIndex);
+        return shape;
     }
 
     public IEnumerator GenerateShape(Shape shape, Vector2 spawn)
@@ -403,6 +453,7 @@ public class ShapeManager : MonoBehaviour
             InputManager.instance.enabled = false;
             nextImage1.transform.parent.gameObject.SetActive(false);
             nextImage2.transform.parent.gameObject.SetActive(false);
+            saveImage.transform.parent.gameObject.SetActive(false);
             warningText.gameObject.SetActive(false);
 
             floor.gameObject.SetActive(true);
@@ -479,8 +530,7 @@ public class ShapeManager : MonoBehaviour
         {
             InputManager.instance.enabled = true;
             deathLine.gameObject.SetActive(true);
-            nextImage1.transform.parent.gameObject.SetActive(true);
-            nextImage2.transform.parent.gameObject.SetActive(true);
+            ShapeUI();
         }
     }
 
@@ -542,11 +592,6 @@ public class ShapeManager : MonoBehaviour
                 textBox.text = Translator.inst.Translate(loseMessage);
             }
         }
-    }
-
-    void ToggleUI()
-    {
-        tutorialText.transform.parent.gameObject.SetActive(!tutorialText.transform.parent.gameObject.activeSelf);
     }
 
 #endregion
