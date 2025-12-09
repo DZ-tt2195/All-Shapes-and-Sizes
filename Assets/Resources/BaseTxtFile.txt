@@ -1,7 +1,7 @@
 All Shapes and Sizes=All Shapes and Sizes
 Designer=A puzzle game by Thomas Tang (DZ)
 Inspiration=Inspired by Aladdin X's Suika Game
-Last Update=Last Updated: Nov 17, 2025
+Last Update=Last Updated: Dec 08, 2025
 Translator Credit=
 Language=Language
 Sound Credits=Sound Credits
@@ -39,3 +39,4 @@ Drop Endless Tutorial=If you let any shapes go above the top, or go above $Num$ 
 Merge Endless Tutorial=If you let any shapes go above the top, you lose.
 Endless WinCon=Play for as long as you are able to until you lose.
 Saved=Saved
+Time=Time: $Time$

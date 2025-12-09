@@ -7,7 +7,7 @@ using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
 using static TitleScreen;
-
+using System.Diagnostics;
 [Serializable]
 public class ChanceOfDrop
 {
@@ -63,6 +63,12 @@ public class ShapeManager : MonoBehaviour
         int dropDeath = 250;
         int dropCreate = 50;
         int permaDeath = 1500;
+
+    [Foldout("FPS", true)]
+        int lastframe = 0;
+        int lastupdate = 60;
+        float[] framearray = new float[60];
+        Stopwatch gameTimer;
 
     [Foldout("Game end", true)]
         [ReadOnly] public bool mergedCrowns = false;
@@ -175,7 +181,8 @@ public class ShapeManager : MonoBehaviour
             dataText.transform.parent.gameObject.SetActive(true);
             InputManager.instance.enabled = true;
             dropped = 0;
-            UpdateDataText();
+            gameTimer = new Stopwatch();
+            gameTimer.Start();
             ShapeUI();
         }
     }
@@ -186,15 +193,66 @@ public class ShapeManager : MonoBehaviour
 
     private void Update()
     {
-        if (dropped == 0)
-            score = 0;
-
         if (InputManager.instance.enabled && !Application.isMobilePlatform)
         {
             if (Input.GetMouseButtonDown(0) && !hasEnded)
                 DropShape(Input.mousePosition);
             else if (Input.GetMouseButtonDown(1) && !hasEnded && Application.isEditor)
                 SaveShape();
+        }
+
+        if (dropped == 0)
+            score = 0;
+
+        if (!dataText.transform.parent.gameObject.activeSelf)
+            return;
+
+        dataText.text = Translator.inst.Translate("Time", new() {("Time", $"{MyExtensions.StopwatchTime(gameTimer)}")} );
+        dataText.text += $"\n{Translator.inst.Translate("FPS", new(){("Num", CalculateFrames())})}\n";
+
+        if (LevelSettings.instance.setting == Setting.MergeEndless)
+        {
+            char infinitySymbol = '\u221E';
+            dataText.text += Translator.inst.Translate("Score Text No Limit", new() { ("Num1", score.ToString()) });
+            dataText.text += $"\n{Translator.inst.Translate("Drop Text", new() { ("Num1", dropped.ToString()), ("Num2", infinitySymbol.ToString()) })}";
+        }
+        else if (LevelSettings.instance.setting == Setting.DropEndless)
+        {
+            char infinitySymbol = '\u221E';
+            dataText.text += Translator.inst.Translate("Score Text", new() { ("Num1", score.ToString()), ("Num2", permaDeath.ToString()) });
+            dataText.text += $"\n{Translator.inst.Translate("Drop Text", new() { ("Num1", dropped.ToString()), ("Num2", infinitySymbol.ToString()) })}";
+
+            if (score >= permaDeath)
+                GameOver("You Lost.");
+        }
+        else if (LevelSettings.instance.setting == Setting.MergeCrown)
+        {
+            dataText.text += Translator.inst.Translate("Score Text No Limit", new() { ("Num1", score.ToString())});
+            dataText.text += $"\n{Translator.inst.Translate("Drop Text", new() { ("Num1", dropped.ToString()), ("Num2", mergeDeath.ToString()) })}";
+        }
+        else if (LevelSettings.instance.setting == Setting.DropShape)
+        {
+            dataText.text += Translator.inst.Translate("Score Text", new() { ("Num1", score.ToString()), ("Num2", dropDeath.ToString()) });
+            dataText.text += $"\n{Translator.inst.Translate("Drop Text", new() { ("Num1", dropped.ToString()), ("Num2", dropCreate.ToString()) })}";
+
+            if (score >= dropDeath)
+                GameOver("You Lost.");
+        }
+
+        string CalculateFrames()
+        {
+            framearray[lastframe] = Time.deltaTime;
+            lastframe = (lastframe + 1);
+            if (lastframe == 60)
+            {
+                lastframe = 0;
+                float total = 0;
+                for (int i = 0; i < framearray.Length; i++)
+                    total += framearray[i];
+                lastupdate = (int)(framearray.Length / total);
+                return lastupdate.ToString();
+            }
+            return (lastupdate > Application.targetFrameRate) ? Application.targetFrameRate.ToString() : lastupdate.ToString();
         }
     }
 
@@ -232,7 +290,6 @@ public class ShapeManager : MonoBehaviour
             }
 
             AudioManager.instance.PlaySound(dropSound, 0.5f);
-            UpdateDataText();
             StartCoroutine(GenerateShape(nextShape1, new Vector2(xValue, yValue)));
             RollNextShape();
         }
@@ -413,38 +470,6 @@ public class ShapeManager : MonoBehaviour
 
 #region Other
 
-    void UpdateDataText()
-    {
-        if (LevelSettings.instance.setting == Setting.MergeEndless)
-        {
-            char infinitySymbol = '\u221E';
-            dataText.text = Translator.inst.Translate("Score Text No Limit", new() { ("Num1", score.ToString()) });
-            dataText.text += $"\n{Translator.inst.Translate("Drop Text", new() { ("Num1", dropped.ToString()), ("Num2", infinitySymbol.ToString()) })}";
-        }
-        else if (LevelSettings.instance.setting == Setting.DropEndless)
-        {
-            char infinitySymbol = '\u221E';
-            dataText.text = Translator.inst.Translate("Score Text", new() { ("Num1", score.ToString()), ("Num2", permaDeath.ToString()) });
-            dataText.text += $"\n{Translator.inst.Translate("Drop Text", new() { ("Num1", dropped.ToString()), ("Num2", infinitySymbol.ToString()) })}";
-
-            if (score >= permaDeath)
-                GameOver("You Lost.");
-        }
-        else if (LevelSettings.instance.setting == Setting.MergeCrown)
-        {
-            dataText.text = Translator.inst.Translate("Score Text No Limit", new() { ("Num1", score.ToString())});
-            dataText.text += $"\n{Translator.inst.Translate("Drop Text", new() { ("Num1", dropped.ToString()), ("Num2", mergeDeath.ToString()) })}";
-        }
-        else if (LevelSettings.instance.setting == Setting.DropShape)
-        {
-            dataText.text = Translator.inst.Translate("Score Text", new() { ("Num1", score.ToString()), ("Num2", dropDeath.ToString()) });
-            dataText.text += $"\n{Translator.inst.Translate("Drop Text", new() { ("Num1", dropped.ToString()), ("Num2", dropCreate.ToString()) })}";
-
-            if (score >= dropDeath)
-                GameOver("You Lost.");
-        }
-    }
-
     public void SwitchGravity()
     {
         if (InputManager.instance.enabled)
@@ -544,7 +569,6 @@ public class ShapeManager : MonoBehaviour
                 PointsVisual newPV = Instantiate(pv);
                 newPV.Setup(score, shape, 0.75f);
             }
-            UpdateDataText();
         }
     }
 
@@ -552,6 +576,7 @@ public class ShapeManager : MonoBehaviour
     {
         if (!hasEnded)
         {
+            gameTimer.Stop();
             InputManager.instance.enabled = false;
             gameOverTransform.SetActive(true);
             hasEnded = true;

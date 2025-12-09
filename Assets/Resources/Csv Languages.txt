@@ -17,7 +17,7 @@
     ],
     [
       "Last Update",
-      "Last Updated: Nov 17, 2025"
+      "Last Updated: Dec 08, 2025"
     ],
     [
       "Translator Credit",
@@ -166,6 +166,10 @@
     [
       "Saved",
       "Saved"
+    ],
+    [
+      "Time",
+      "Time: $Time$"
     ]
   ]
 }
