@@ -6,10 +6,12 @@ using MyBox;
 using TMPro;
 using UnityEngine.SceneManagement;
 
+public enum Setting { MergeCrown, DropShape, DropEndless, MergeEndless };
+
 [System.Serializable]
 public struct LevelInfo
 {
-    public string name;
+    public ToTranslate levelName;
     public Sprite sprite;
 }
 
@@ -44,12 +46,9 @@ public class TitleScreen : MonoBehaviour
         [SerializeField] TMP_Text levelText;
         [SerializeField] TMP_Text endlessDropScore;
         [SerializeField] TMP_Text endlessMergeScore;
-        public enum Setting { MergeCrown, DropShape, DropEndless, MergeEndless };
 
     private void Start()
     {
-        levelToLoad = LevelSettings.instance.lastLevel;
-
         for (int i = 0; i < buttonSettings.Count; i++)
         {
             Setting enumValue = (Setting)i;
@@ -61,7 +60,6 @@ public class TitleScreen : MonoBehaviour
         clearData.onClick.AddListener(ResetData);
         sfxButton.onClick.AddListener(Credits);
         sfxCredits.SetActive(false);
-        levelToLoad = LevelSettings.instance.lastLevel;
         DisplayLevel();
     }
 
@@ -87,15 +85,15 @@ public class TitleScreen : MonoBehaviour
     void LoadWithSetting(Setting setting)
     {
         Application.targetFrameRate = 60;
-        LevelSettings.instance.setting = setting;
-        LevelSettings.instance.lastLevel = levelToLoad;
-        SceneManager.LoadScene(listOfLevels[levelToLoad].name);
+        PrefManager.SetLevel(listOfLevels[levelToLoad].levelName);
+        PrefManager.SetSetting(setting);
+        SceneManager.LoadScene(listOfLevels[levelToLoad].levelName.ToString());
     }
 
     void DisplayLevel()
     {
         LevelInfo currentLevel = listOfLevels[levelToLoad];
-        levelText.text = Translator.inst.Translate(currentLevel.name);
+        levelText.text = AutoTranslate.DoEnum(currentLevel.levelName);
         levelImage.sprite = currentLevel.sprite;
 
         foreach (ButtonInfo BI in buttonSettings)
@@ -104,20 +102,20 @@ public class TitleScreen : MonoBehaviour
             BI.image.color = Color.white;
         }
 
-        int score = PlayerPrefs.GetInt($"{currentLevel.name} - {Setting.MergeCrown}");
+        int score = PrefManager.GetScore(currentLevel.levelName, Setting.MergeCrown);
         buttonSettings[0].image.color = (score >= 1) ? Color.yellow : Color.white;
         buttonSettings[0].achievement.SetActive(score >= 50);
 
-        if (!PlayerPrefs.HasKey($"{currentLevel.name} - {Setting.DropShape}")) PlayerPrefs.SetInt($"{currentLevel.name} - {Setting.DropShape}", 1000);
-        score = PlayerPrefs.GetInt($"{currentLevel.name} - {Setting.DropShape}");
+        if (!PlayerPrefs.HasKey($"{currentLevel.levelName} - {Setting.DropShape}")) PrefManager.SetScore(currentLevel.levelName, Setting.DropShape, 1000);
+        score = PrefManager.GetScore(currentLevel.levelName, Setting.DropShape);
         buttonSettings[1].image.color = (score <= 999) ? Color.yellow : Color.white;
         buttonSettings[1].achievement.SetActive(score <= 200);
 
-        score = PlayerPrefs.GetInt($"{currentLevel.name} - {Setting.DropEndless}");
-        endlessDropScore.text = Translator.inst.Translate("High Score", new() { ("Num", score.ToString()) });
+        score = PrefManager.GetScore(currentLevel.levelName, Setting.DropEndless);
+        endlessDropScore.text = AutoTranslate.High_Score(score.ToString());
 
-        score = PlayerPrefs.GetInt($"{currentLevel.name} - {Setting.MergeEndless}");
-        endlessMergeScore.text = Translator.inst.Translate("High Score", new() { ("Num", score.ToString()) });
+        score = PrefManager.GetScore(currentLevel.levelName, Setting.MergeEndless);
+        endlessMergeScore.text = AutoTranslate.High_Score(score.ToString());
     }
 
     void ResetData()
@@ -125,10 +123,10 @@ public class TitleScreen : MonoBehaviour
         for (int i = 0; i < listOfLevels.Count; i++)
         {
             LevelInfo currentLevel = listOfLevels[i];
-            PlayerPrefs.SetInt($"{currentLevel.name} - {Setting.MergeCrown}", 0);
-            PlayerPrefs.SetInt($"{currentLevel.name} - {Setting.DropShape}", 1000);
-            PlayerPrefs.SetInt($"{currentLevel.name} - {Setting.MergeEndless}", 0);
-            PlayerPrefs.SetInt($"{currentLevel.name} - {Setting.DropEndless}", 0);
+            PrefManager.SetScore(currentLevel.levelName, Setting.MergeCrown, 0);
+            PrefManager.SetScore(currentLevel.levelName, Setting.DropShape, 1000);
+            PrefManager.SetScore(currentLevel.levelName, Setting.MergeEndless, 0);
+            PrefManager.SetScore(currentLevel.levelName, Setting.DropEndless, 0);
         }
 
         PlaySound(0);

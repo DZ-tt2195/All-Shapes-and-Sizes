@@ -75,7 +75,11 @@ public class Translator : MonoBehaviour
                     if (line != "")
                     {
                         string[] parts = line.Split('=');
-                        newDictionary[parts[0].Trim()] = parts[1].Trim();
+                        string key = FixLine(parts[0]).Replace(" ", "_");
+                        if (newDictionary.ContainsKey(key))
+                            Debug.Log($"ignore duplicate: {key}");
+                        else
+                            newDictionary[FixLine(key)] = FixLine(parts[1]);
                     }
                 }
             }
@@ -93,6 +97,11 @@ public class Translator : MonoBehaviour
         }
     }
 
+    public static string FixLine(string line)
+    {
+        return line.Replace("\"", "").Replace("\\", "").Replace("]", "").Replace("|", "\n").Trim();
+    }
+
     void CsvLanguages(string[][] data)
     {
         for (int i = 1; i < data[1].Length; i++)
@@ -106,17 +115,20 @@ public class Translator : MonoBehaviour
         {
             for (int j = 0; j < data[i].Length; j++)
             {
-                data[i][j] = data[i][j].Replace("\"", "").Replace("\\", "").Replace("]", "").Replace("|", "\n").Trim();
+                data[i][j] = FixLine(data[i][j]);
                 if (j > 0)
                 {
                     string language = data[1][j];
-                    string key = data[i][0];
-                    keyTranslate[language][key] = data[i][j];
+                    string key = data[i][0].Replace(" ", "_");
+                    if (keyTranslate[language].ContainsKey(key))
+                        Debug.Log($"ignore duplicate: {key}");
+                    else
+                        keyTranslate[language][key] = data[i][j];
                 }
             }
         }
     }
-
+ 
     #endregion
 
 #region Helpers
@@ -128,9 +140,6 @@ public class Translator : MonoBehaviour
 
     public string Translate(string key, List<(string, string)> toReplace = null)
     {
-        if (key == "" || int.TryParse(key, out _))
-            return key;
-
         string answer;
         try
         {

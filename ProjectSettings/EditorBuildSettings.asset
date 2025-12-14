@@ -12,16 +12,19 @@ EditorBuildSettings:
     path: Assets/Scenes/0. TitleScene.unity
     guid: e7caeada85d9548998159b1511b44b42
   - enabled: 1
-    path: Assets/Scenes/1. Basics.unity
+    path: Assets/Scenes/Basics.unity
     guid: 2cda990e2423bbf4892e6590ba056729
   - enabled: 1
-    path: Assets/Scenes/2. Moving.unity
+    path: Assets/Scenes/Moving.unity
     guid: be0ec5ed34eb54ce4a839bf70a9e04d5
   - enabled: 1
-    path: Assets/Scenes/3. Bottleneck.unity
+    path: Assets/Scenes/Bottleneck.unity
     guid: ea6309797539a4bf5b97c4874ccef30f
   - enabled: 1
-    path: Assets/Scenes/4. Bouncy.unity
+    path: Assets/Scenes/Bouncy.unity
     guid: 7f2e2418ef6cc4770a3485df65ca6dd5
+  - enabled: 1
+    path: Assets/Scenes/5. Spinner.unity
+    guid: e0963a06974dc4e63abe489e4c5a6e26
   m_configObjects: {}
   m_UseUCBPForAssetBundles: 0

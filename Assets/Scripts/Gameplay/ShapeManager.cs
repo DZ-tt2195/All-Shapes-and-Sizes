@@ -6,7 +6,6 @@ using System;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
-using static TitleScreen;
 using System.Diagnostics;
 [Serializable]
 public class ChanceOfDrop
@@ -118,7 +117,7 @@ public class ShapeManager : MonoBehaviour
         gravityArrow.transform.localScale = new Vector2(0, 0);
         gravityArrow.transform.localEulerAngles = new Vector3(0, 0, -90);
 
-        resign.onClick.AddListener(() => GameOver("You Gave Up"));
+        resign.onClick.AddListener(() => GameOver(ToTranslate.You_Gave_Up));
         hideUI.onClick.AddListener(ToggleUI);
         void ToggleUI() { tutorialText.transform.parent.gameObject.SetActive(!tutorialText.transform.parent.gameObject.activeSelf);}
 
@@ -128,26 +127,26 @@ public class ShapeManager : MonoBehaviour
         nextShape2 = AssignRandomShape();
         RollNextShape();
 
-        string answer = $"{Translator.inst.Translate("Tutorial 1")}\n" +
-        $"{(Application.isEditor ? Translator.inst.Translate("Tutorial 2") + "\n" : "")}" +
-            $"{Translator.inst.Translate("Tutorial 3")}\n\n";
-        switch (LevelSettings.instance.setting)
+        string answer = $"{AutoTranslate.DoEnum(ToTranslate.Tutorial_1)}\n" +
+        $"{(Application.isEditor ? AutoTranslate.DoEnum(ToTranslate.Tutorial_2) + "\n" : "")}" +
+            $"{AutoTranslate.DoEnum(ToTranslate.Tutorial_3)}\n\n";
+        switch (PrefManager.GetSetting())
         {
             case Setting.MergeCrown:
-                answer += $"{Translator.inst.Translate("Merge Crown Tutorial", new() { ("Num", mergeDeath.ToString()) })}\n";
-                answer += $"{Translator.inst.Translate("Merge Crown WinCon")}";
+                answer += $"{AutoTranslate.Merge_Crown_Tutorial(mergeDeath.ToString())}\n";
+                answer += $"{AutoTranslate.DoEnum(ToTranslate.Merge_Crown_WinCon)}";
                 break;
             case Setting.DropShape:
-                answer += $"{Translator.inst.Translate("Drop Shape Tutorial", new() { ("Num", dropDeath.ToString()) })}\n";
-                answer += $"{Translator.inst.Translate("Drop Shape WinCon", new() { ("Num", dropCreate.ToString()) }) }";
+                answer += $"{AutoTranslate.Drop_Shape_Tutorial(dropDeath.ToString())}\n";
+                answer += $"{AutoTranslate.Drop_Shape_WinCon(dropCreate.ToString())}";
                 break;
             case Setting.DropEndless:
-                answer += $"{Translator.inst.Translate("Drop Endless Tutorial", new() { ("Num", permaDeath.ToString()) })}\n";
-                answer += $"{Translator.inst.Translate("Endless WinCon")}";
+                answer += $"{AutoTranslate.Drop_Endless_Tutorial(permaDeath.ToString())}\n";
+                answer += $"{AutoTranslate.DoEnum(ToTranslate.Endless_WinCon)}";
                 break;
             case Setting.MergeEndless:
-                answer += $"{Translator.inst.Translate("Merge Endless Tutorial")}\n";
-                answer += $"{Translator.inst.Translate("Endless WinCon")}";
+                answer += $"{AutoTranslate.DoEnum(ToTranslate.Merge_Endless_Tutorial)}\n";
+                answer += $"{AutoTranslate.DoEnum(ToTranslate.Endless_WinCon)}";
                 break;
         }
         tutorialText.text = answer;
@@ -207,36 +206,31 @@ public class ShapeManager : MonoBehaviour
         if (!dataText.transform.parent.gameObject.activeSelf)
             return;
 
-        dataText.text = Translator.inst.Translate("Time", new() {("Time", $"{MyExtensions.StopwatchTime(gameTimer)}")} );
-        dataText.text += $"\n{Translator.inst.Translate("FPS", new(){("Num", CalculateFrames())})}\n";
-
-        if (LevelSettings.instance.setting == Setting.MergeEndless)
+        dataText.text = AutoTranslate.Time(MyExtensions.StopwatchTime(gameTimer));
+        dataText.text += $"\n{AutoTranslate.FPS(CalculateFrames())}\n";
+        char infinitySymbol = '\u221E';
+        switch (PrefManager.GetSetting())
         {
-            char infinitySymbol = '\u221E';
-            dataText.text += Translator.inst.Translate("Score Text No Limit", new() { ("Num1", score.ToString()) });
-            dataText.text += $"\n{Translator.inst.Translate("Drop Text", new() { ("Num1", dropped.ToString()), ("Num2", infinitySymbol.ToString()) })}";
-        }
-        else if (LevelSettings.instance.setting == Setting.DropEndless)
-        {
-            char infinitySymbol = '\u221E';
-            dataText.text += Translator.inst.Translate("Score Text", new() { ("Num1", score.ToString()), ("Num2", permaDeath.ToString()) });
-            dataText.text += $"\n{Translator.inst.Translate("Drop Text", new() { ("Num1", dropped.ToString()), ("Num2", infinitySymbol.ToString()) })}";
-
-            if (score >= permaDeath)
-                GameOver("You Lost.");
-        }
-        else if (LevelSettings.instance.setting == Setting.MergeCrown)
-        {
-            dataText.text += Translator.inst.Translate("Score Text No Limit", new() { ("Num1", score.ToString())});
-            dataText.text += $"\n{Translator.inst.Translate("Drop Text", new() { ("Num1", dropped.ToString()), ("Num2", mergeDeath.ToString()) })}";
-        }
-        else if (LevelSettings.instance.setting == Setting.DropShape)
-        {
-            dataText.text += Translator.inst.Translate("Score Text", new() { ("Num1", score.ToString()), ("Num2", dropDeath.ToString()) });
-            dataText.text += $"\n{Translator.inst.Translate("Drop Text", new() { ("Num1", dropped.ToString()), ("Num2", dropCreate.ToString()) })}";
-
-            if (score >= dropDeath)
-                GameOver("You Lost.");
+            case Setting.MergeEndless:
+                dataText.text += AutoTranslate.Score_Text_No_Limit(score.ToString());
+                dataText.text += $"\n{AutoTranslate.Drop_Text(dropped.ToString(), infinitySymbol.ToString())}";
+                break;
+            case Setting.DropEndless:
+                dataText.text += AutoTranslate.Score_Text(score.ToString(), permaDeath.ToString());
+                dataText.text += $"\n{AutoTranslate.Drop_Text(dropped.ToString(), infinitySymbol.ToString())}";
+                if (score >= permaDeath)
+                    GameOver(ToTranslate.You_Lost);
+                break;
+            case Setting.MergeCrown:
+                dataText.text += AutoTranslate.Score_Text_No_Limit(score.ToString());
+                dataText.text += $"\n{AutoTranslate.Drop_Text(dropped.ToString(), mergeDeath.ToString())}";
+                break;
+            case Setting.DropShape:
+                dataText.text += AutoTranslate.Score_Text(score.ToString(), dropDeath.ToString());
+                dataText.text += $"\n{AutoTranslate.Drop_Text(dropped.ToString(), dropCreate.ToString())}";
+                if (score >= dropDeath)
+                    GameOver(ToTranslate.You_Lost);
+                break;
         }
 
         string CalculateFrames()
@@ -273,19 +267,19 @@ public class ShapeManager : MonoBehaviour
             if (nextShape1.textBox != null)
             {
                 dropped++;
-                if (LevelSettings.instance.setting == Setting.MergeCrown && mergeDeath-dropped <= 50)
+                if (PrefManager.GetSetting() == Setting.MergeCrown && mergeDeath-dropped <= 50)
                 {
                     StopCoroutine(FlashWarning(mergeDeath - dropped));
                     StartCoroutine(FlashWarning(mergeDeath - dropped));
                     if (mergeDeath - dropped <= 0)
-                        StartCoroutine(WaitForEnd("You're out of shapes."));
+                        StartCoroutine(WaitForEnd(ToTranslate.Out_of_Shapes));
                 }
-                else if (LevelSettings.instance.setting == Setting.DropShape && dropCreate-dropped <= 15)
+                else if (PrefManager.GetSetting() == Setting.DropShape && dropCreate-dropped <= 15)
                 {
                     StopCoroutine(FlashWarning(dropCreate - dropped));
                     StartCoroutine(FlashWarning(dropCreate - dropped));
                     if (dropCreate - dropped <= 0)
-                        StartCoroutine(WaitForEnd(""));
+                        StartCoroutine(WaitForEnd(ToTranslate.Blank));
                 }
             }
 
@@ -310,7 +304,7 @@ public class ShapeManager : MonoBehaviour
         }
     }
 
-    IEnumerator WaitForEnd(string message)
+    IEnumerator WaitForEnd(ToTranslate message)
     {
         nextImage1.transform.parent.gameObject.SetActive(false);
         nextImage2.transform.parent.gameObject.SetActive(false);
@@ -572,7 +566,7 @@ public class ShapeManager : MonoBehaviour
         }
     }
 
-    public void GameOver(string loseMessage)
+    public void GameOver(ToTranslate loseMessage)
     {
         if (!hasEnded)
         {
@@ -581,40 +575,41 @@ public class ShapeManager : MonoBehaviour
             gameOverTransform.SetActive(true);
             hasEnded = true;
 
-            string currentScene = (SceneManager.GetActiveScene().name);
             bool won = false;
+            Setting currentSetting = PrefManager.GetSetting();
+            ToTranslate currentLevel = PrefManager.GetLevel(); 
 
-            if (LevelSettings.instance.setting == Setting.MergeCrown)
+            if (currentSetting == Setting.MergeCrown)
             {
                 won = mergedCrowns;
-                if (won && PlayerPrefs.GetInt($"{currentScene} - {LevelSettings.instance.setting}") < mergeDeath - dropped)
-                    PlayerPrefs.SetInt($"{currentScene} - {LevelSettings.instance.setting}", mergeDeath - dropped);
+                if (won && PrefManager.GetScore(currentLevel, currentSetting) < mergeDeath - dropped)
+                    PrefManager.SetScore(currentLevel, currentSetting, mergeDeath-dropped);
             }
-            else if (LevelSettings.instance.setting == Setting.DropShape)
+            else if (currentSetting == Setting.DropShape)
             {
                 won = (dropped == dropCreate) && score < dropDeath;
-                if (won && PlayerPrefs.GetInt($"{currentScene} - {LevelSettings.instance.setting}") > score)
-                    PlayerPrefs.SetInt($"{currentScene} - {LevelSettings.instance.setting}", score);
+                if (won && PrefManager.GetScore(currentLevel, currentSetting) > score)
+                    PrefManager.SetScore(currentLevel, currentSetting, score);
             }
-            else if (LevelSettings.instance.setting == Setting.DropEndless && PlayerPrefs.GetInt($"{currentScene} - {LevelSettings.instance.setting}") < dropped)
+            else if (currentSetting == Setting.DropEndless && PrefManager.GetScore(currentLevel, currentSetting) < dropped)
             {
-                PlayerPrefs.SetInt($"{currentScene} - {LevelSettings.instance.setting}", dropped);
-            }
-            else if (LevelSettings.instance.setting == Setting.MergeEndless && PlayerPrefs.GetInt($"{currentScene} - {LevelSettings.instance.setting}") < score)
+                PrefManager.SetScore(currentLevel, currentSetting, dropped);
+            }            
+            else if (currentSetting == Setting.MergeEndless && PrefManager.GetScore(currentLevel, currentSetting) < score)
             {
-                PlayerPrefs.SetInt($"{currentScene} - {LevelSettings.instance.setting}", score);
+                PrefManager.SetScore(currentLevel, currentSetting, score);
             }
 
             TMP_Text textBox = gameOverTransform.transform.GetChild(0).GetComponent<TMP_Text>();
             if (won)
             {
                 AudioManager.instance.PlaySound(winSound, 0.5f);
-                textBox.text = Translator.inst.Translate("You Won");
+                textBox.text = AutoTranslate.DoEnum(ToTranslate.You_Won);
             }
             else
             {
                 AudioManager.instance.PlaySound(loseSound, 0.5f);
-                textBox.text = Translator.inst.Translate(loseMessage);
+                textBox.text = AutoTranslate.DoEnum(loseMessage);
             }
         }
     }

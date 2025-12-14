@@ -17,7 +17,7 @@
     ],
     [
       "Last Update",
-      "Last Updated: Dec 08, 2025"
+      "Last Updated: Dec 14, 2025"
     ],
     [
       "Translator Credit",
@@ -56,19 +56,19 @@
       "High Score: $Num$"
     ],
     [
-      "1. Basics",
+      "Basics",
       "1. Basics"
     ],
     [
-      "2. Moving",
+      "Moving",
       "2. Moving"
     ],
     [
-      "3. Bottleneck",
+      "Bottleneck",
       "3. Bottleneck"
     ],
     [
-      "4. Bouncy",
+      "Bouncy",
       "4. Bouncy"
     ],
     [
@@ -170,6 +170,26 @@
     [
       "Time",
       "Time: $Time$"
+    ],
+    [
+      "Update History",
+      "Update History"
+    ],
+    [
+      "Out of Shapes",
+      "You're out of shapes."
+    ],
+    [
+      "Blank",
+      "\"\""
+    ],
+    [
+      "Update 0",
+      "Dec 17"
+    ],
+    [
+      "Update 0 Text",
+      "Test|Test"
     ]
   ]
 }

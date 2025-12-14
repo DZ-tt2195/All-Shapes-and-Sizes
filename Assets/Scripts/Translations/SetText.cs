@@ -3,10 +3,10 @@ using TMPro;
 
 public class SetText : MonoBehaviour
 {
-    [SerializeField] string key;
+    [SerializeField] ToTranslate key;
 
     private void Start()
     {
-        GetComponent<TMP_Text>().text = Translator.inst.Translate(key);
+        GetComponent<TMP_Text>().text = AutoTranslate.DoEnum(key);
     }
 }
