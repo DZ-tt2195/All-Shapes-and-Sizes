@@ -1,10 +1,9 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using MyBox;
 using TMPro;
-using UnityEngine.UI;
-using System;
+
+public enum KindOfShape { None, Circle = 1, Square, Arrow, Diamond, Star, Hexagon, Heart, Crown, Bomb, Wall, Inversion, Upgrader }
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class Shape : MonoBehaviour
@@ -12,82 +11,84 @@ public class Shape : MonoBehaviour
     public SpriteRenderer spriterenderer;
     [ReadOnly] public Rigidbody2D rb;
 
-    [ReadOnly] public int value;
-    public TMP_Text textBox;
+    int value;
+    [SerializeField] TMP_Text textBox;
 
     bool active = false;
     float deathLineTouched = 0f;
+    public KindOfShape myShape;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+        rb.angularDamping = 2;
         rb.useAutoMass = false;
         rb.collisionDetectionMode = CollisionDetectionMode2D.Discrete;
         rb.interpolation = RigidbodyInterpolation2D.Interpolate;
+        if (IsMainShape())
+        {
+            value = (int)Mathf.Pow((int)myShape, 2);
+            textBox.text = $"{value}";
+        }
     }
 
-    public void AltShape(float gravity)
+    public bool IsMainShape()
     {
-        this.name = this.name.Replace("(Clone)", "");
+        return (int)myShape <= (int)KindOfShape.Crown;
+    }
+
+    public void Setup(Vector3 start, float gravity)
+    {
+        active = false;
+        this.transform.position = start;
+        this.transform.localEulerAngles = Vector3.zero;
         rb.gravityScale = gravity;
-        rb.mass = 2;
-        rb.angularDamping = 2;
-        StartCoroutine(BecomeActive());
+        this.gameObject.SetActive(true);
+        Invoke(nameof(BecomeActive), 0.2f);
     }
 
-    public void Setup(int num, float gravity)
+    void BecomeActive()
     {
-        value = num;
-        this.name = $"{value+1}";
-        int score = (int)Mathf.Pow(value+1, 2);
-        rb.mass = 2;
-        textBox.text = $"{score}";
-        rb.gravityScale = gravity;
-        rb.angularDamping = 2;
-        StartCoroutine(BecomeActive());
-    }
-
-    IEnumerator BecomeActive()
-    {
-        yield return new WaitForSeconds(0.2f);
         active = true;
     }
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-        if (active)
+        if (!active)
+        {       
+        }   
+        else if (collision.TryGetComponent(out Shape otherShape) && otherShape.active)
         {
-            if (this.textBox != null && this.name == collision.name && this.transform.position.y > collision.transform.position.y)
+            if (this.IsMainShape())
             {
-                Shape otherShape = collision.gameObject.GetComponent<Shape>();
-                if (otherShape.active)
+                if ((otherShape.myShape == this.myShape && this.transform.position.y > otherShape.transform.position.y) 
+                || (otherShape.myShape == KindOfShape.Upgrader && this.myShape != KindOfShape.Crown))
                 {
                     active = false;
                     otherShape.active = false;
-                    StartCoroutine(Merge(collision));
+                    StartCoroutine(Upgrade(otherShape));
                 }
             }
-
-            else if (collision.CompareTag("Bomb"))
+            if (otherShape.myShape == KindOfShape.Inversion)
+            {
+                ShapeManager.instance.ReturnShape(otherShape);
+                ShapeManager.instance.SwitchGravity();
+            }
+            if (otherShape.myShape == KindOfShape.Bomb)
             {
                 active = false;
                 AudioManager.instance.PlaySound(ShapeManager.instance.bombSound, 0.35f);
-                Destroy(collision.gameObject);
-                Destroy(this.gameObject);
+                ShapeManager.instance.ReturnShape(otherShape);
+                ShapeManager.instance.ReturnShape(this);
             }
-
-            else if (collision.CompareTag("Out of Bounds"))
+        }   
+        else
+        {
+            if (collision.CompareTag("Out of Bounds"))
             {
-                Destroy(this.gameObject);
+                ShapeManager.instance.ReturnShape(this);
             }
-
-            else if (collision.CompareTag("Inversion"))
-            {
-                Destroy(collision.gameObject);
-                ShapeManager.instance.SwitchGravity();
-            }
-
-            else if (textBox != null && collision.CompareTag("Death Line"))
+            else if (IsMainShape() && collision.CompareTag("Death Line"))
             {
                 if (deathLineTouched < 3f)
                 {
@@ -102,35 +103,31 @@ public class Shape : MonoBehaviour
         }
     }
 
+    IEnumerator Upgrade(Shape otherShape)
+    {
+        yield return new WaitForSeconds(0.1f);
+
+        ShapeManager.instance.AddScore(value, this.transform.position, spriterenderer.color);
+        AudioManager.instance.PlaySound(ShapeManager.instance.scoreSound, 0.25f);
+                
+        if (this.myShape == KindOfShape.Crown)
+        {
+            ShapeManager.instance.mergedCrowns = true;
+            if (PrefManager.GetSetting() == Setting.MergeCrown)
+                ShapeManager.instance.GameOver(ToTranslate.You_Won);
+        }
+        else
+        {
+            KindOfShape nextShape = (KindOfShape)((int)myShape + 1);
+            ShapeManager.instance.GenerateShape(nextShape, this.transform.position);
+        }
+        ShapeManager.instance.ReturnShape(otherShape);
+        ShapeManager.instance.ReturnShape(this);
+    }
+
     private void OnTriggerExit2D(Collider2D collision)
     {
         if (collision.CompareTag("Death Line"))
             deathLineTouched = 0f;
-    }
-
-    IEnumerator Merge(Collider2D collision)
-    {
-        if (textBox != null)
-        {
-            ShapeManager.instance.AddScore(int.Parse(textBox.text), this);
-            AudioManager.instance.PlaySound(ShapeManager.instance.scoreSound, 0.25f);
-
-            if (value + 1 >= ShapeManager.instance.listOfShapes.Count)
-            {
-                if (PrefManager.GetSetting() == Setting.MergeCrown)
-                {
-                    ShapeManager.instance.mergedCrowns = true;
-                    ShapeManager.instance.GameOver(ToTranslate.You_Won);
-                }
-            }
-            else
-            {
-                yield return ShapeManager.instance.GenerateShape(ShapeManager.instance.listOfShapes[value + 1], this.transform.position);
-            }
-
-            if (collision != null)
-                Destroy(collision.gameObject);
-            Destroy(this.gameObject);
-        }
     }
 }

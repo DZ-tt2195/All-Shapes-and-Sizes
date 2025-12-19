@@ -5,7 +5,6 @@ using MyBox;
 using System;
 using UnityEngine.UI;
 using TMPro;
-using UnityEngine.SceneManagement;
 using System.Diagnostics;
 [Serializable]
 public class ChanceOfDrop
@@ -45,16 +44,19 @@ public class ShapeManager : MonoBehaviour
         Shape savedShape;
 
     [Foldout("To drop", true)]
-        public List<Shape> listOfShapes = new();
         [SerializeField] List<ChanceOfDrop> shapesToDrop = new();
+        Shape[] allShapes;
         List<Shape> toDrop = new();
         [SerializeField] Transform gravityArrow;
         float currentGravity = 2.5f;
+        Dictionary<KindOfShape, Queue<Shape>> shapeStorage = new();
 
     [Foldout("Score", true)]
         int score = 0;
         int dropped = 0;
         [SerializeField] PointsVisual pv;
+        Queue<PointsVisual> visualStorage = new();
+
         [SerializeField] Button hideUI;
 
     [Foldout("Numbers", true)]
@@ -96,6 +98,10 @@ public class ShapeManager : MonoBehaviour
         rightWall = GameObject.Find("Right Wall").transform;
         floor = GameObject.Find("Floor").transform;
         ceiling = GameObject.Find("Ceiling").transform;
+
+        allShapes = Resources.LoadAll<Shape>("Shapes");
+        foreach (Shape shape in allShapes)
+            shapeStorage.Add(shape.myShape, new Queue<Shape>());
     }
 
     private void OnEnable()
@@ -163,14 +169,13 @@ public class ShapeManager : MonoBehaviour
 
         for (int i = 0; i < 75; i++)
         {
+            yield return new WaitForSeconds(0.05f);
             AudioManager.instance.PlaySound(dropSound, 0.2f);
-            yield return GenerateShape(listOfShapes[0], new Vector2(UnityEngine.Random.Range(leftWall.position.x + 0.6f, rightWall.position.x - 0.6f), deathLine.position.y - 0.15f));
+            GenerateShape(KindOfShape.Circle, new Vector2(UnityEngine.Random.Range(leftWall.position.x + 0.6f, rightWall.position.x - 0.6f), deathLine.position.y - 0.15f));
         }
 
         yield return new WaitForSeconds(2f);
-
-        PointsVisual newPV = Instantiate(pv);
-        newPV.Setup(Translator.inst.Translate("Begin"), new Vector3(0, 0, -1), 1f);
+        NewVisual(Translator.inst.Translate("Begin"), 3, Vector3.zero, Color.white);
         AudioManager.instance.PlaySound(winSound, 0.5f);
 
         yield return new WaitForSeconds(1f);
@@ -188,7 +193,7 @@ public class ShapeManager : MonoBehaviour
 
 #endregion
 
-#region Shapes
+#region Shape Info
 
     private void Update()
     {
@@ -264,7 +269,7 @@ public class ShapeManager : MonoBehaviour
 
         if (xValue > (leftWall.position.x + 0.3f) && xValue < (rightWall.position.x - 0.3f))
         {
-            if (nextShape1.textBox != null)
+            if (nextShape1.IsMainShape())
             {
                 dropped++;
                 if (PrefManager.GetSetting() == Setting.MergeCrown && mergeDeath-dropped <= 50)
@@ -284,7 +289,7 @@ public class ShapeManager : MonoBehaviour
             }
 
             AudioManager.instance.PlaySound(dropSound, 0.5f);
-            StartCoroutine(GenerateShape(nextShape1, new Vector2(xValue, yValue)));
+            GenerateShape(nextShape1.myShape, new Vector2(xValue, yValue));
             RollNextShape();
         }
     }
@@ -335,92 +340,47 @@ public class ShapeManager : MonoBehaviour
 
     void ShapeUI()
     {
-        if (savedShape != null)
+        void Apply(Image image, Shape shape, bool large)
         {
-            saveImage.transform.parent.gameObject.SetActive(true);
-            saveImage.sprite = savedShape.spriterenderer.sprite;
-            saveImage.color = savedShape.spriterenderer.color;
-            switch (savedShape.name)
+            image.transform.parent.gameObject.SetActive(true);
+            image.sprite = shape.spriterenderer.sprite;
+            image.color = shape.spriterenderer.color;
+
+            switch (shape.myShape)
             {
-                case "Circle":
-                    saveImage.rectTransform.sizeDelta = new Vector2(50, 50);
+                case KindOfShape.Circle:
+                    image.rectTransform.sizeDelta = large ? new(50, 50) : new(40, 40);
                     break;
-                case "Square":
-                    saveImage.rectTransform.sizeDelta = new Vector2(65, 65);
+                case KindOfShape.Square:
+                    image.rectTransform.sizeDelta = large ? new(65, 65) : new(50, 50);
                     break;
-                case "Arrow":
-                    saveImage.rectTransform.sizeDelta = new Vector2(100, 100);
+                case KindOfShape.Arrow:
+                    image.rectTransform.sizeDelta = large ? new(100, 100) : new(70, 70);
                     break;
-                case "Diamond":
-                    saveImage.rectTransform.sizeDelta = new Vector2(110, 60);
+                case KindOfShape.Diamond:
+                    image.rectTransform.sizeDelta = large ? new(110, 60) : new(80, 50);
                     break;
-                case "Bomb":
-                    saveImage.rectTransform.sizeDelta = new Vector2(55, 95);
+                case KindOfShape.Bomb:
+                    image.rectTransform.sizeDelta = large ? new(55, 95) : new(45, 80);
                     break;
-                case "Inversion":
-                    saveImage.rectTransform.sizeDelta = new Vector2(90, 90);
+                case KindOfShape.Inversion:
+                    image.rectTransform.sizeDelta = large ? new(90, 90) : new(60, 60);
                     break;
-                case "Wall":
-                    saveImage.rectTransform.sizeDelta = new Vector2(110, 50);
+                case KindOfShape.Wall:
+                    image.rectTransform.sizeDelta = large ? new(110, 50) : new(65, 25);
                     break;
             }
         }
-        nextImage1.transform.parent.gameObject.SetActive(true);
-        nextImage1.sprite = nextShape1.spriterenderer.sprite;
-        nextImage1.color = nextShape1.spriterenderer.color;
-        switch (nextShape1.name)
-        {
-            case "Circle":
-                nextImage1.rectTransform.sizeDelta = new Vector2(50, 50);
-                break;
-            case "Square":
-                nextImage1.rectTransform.sizeDelta = new Vector2(65, 65);
-                break;
-            case "Arrow":
-                nextImage1.rectTransform.sizeDelta = new Vector2(100, 100);
-                break;
-            case "Diamond":
-                nextImage1.rectTransform.sizeDelta = new Vector2(110, 60);
-                break;
-            case "Bomb":
-                nextImage1.rectTransform.sizeDelta = new Vector2(55, 95);
-                break;
-            case "Inversion":
-                nextImage1.rectTransform.sizeDelta = new Vector2(90, 90);
-                break;
-            case "Wall":
-                nextImage1.rectTransform.sizeDelta = new Vector2(110, 50);
-                break;
-        }
 
-        nextImage2.transform.parent.gameObject.SetActive(true);
-        nextImage2.sprite = nextShape2.spriterenderer.sprite;
-        nextImage2.color = nextShape2.spriterenderer.color;
-        switch (nextShape2.name)
-        {
-            case "Circle":
-                nextImage2.rectTransform.sizeDelta = new Vector2(40, 40);
-                break;
-            case "Square":
-                nextImage2.rectTransform.sizeDelta = new Vector2(50, 50);
-                break;
-            case "Arrow":
-                nextImage2.rectTransform.sizeDelta = new Vector2(70, 70);
-                break;
-            case "Diamond":
-                nextImage2.rectTransform.sizeDelta = new Vector2(80, 50);
-                break;
-            case "Bomb":
-                nextImage2.rectTransform.sizeDelta = new Vector2(45, 80);
-                break;
-            case "Inversion":
-                nextImage2.rectTransform.sizeDelta = new Vector2(60, 60);
-                break;
-            case "Wall":
-                nextImage2.rectTransform.sizeDelta = new Vector2(65, 25);
-                break;
-        }
+        Apply(nextImage1, nextShape1, true);
+        Apply(nextImage2, nextShape2, false);
+        if (savedShape != null)
+            Apply(saveImage, savedShape, true);
     }
+
+    #endregion
+
+#region New Shapes
 
     void RollNextShape()
     {
@@ -448,16 +408,31 @@ public class ShapeManager : MonoBehaviour
         return shape;
     }
 
-    public IEnumerator GenerateShape(Shape shape, Vector2 spawn)
+    public void GenerateShape(KindOfShape shape, Vector3 spawn)
     {
-        yield return new WaitForSeconds(0.05f);
-        Shape newShape = Instantiate(shape);
-        newShape.transform.position = spawn;
-
-        if (shape.textBox != null)
-            newShape.Setup(listOfShapes.IndexOf(shape), currentGravity);
+        Shape toCreate = null;
+        if (shapeStorage[shape].Count > 0)
+        {
+            toCreate = shapeStorage[shape].Dequeue();
+        }
         else
-            newShape.AltShape(currentGravity);
+        {
+            foreach (Shape drop in allShapes)
+            {
+                if (drop.myShape == shape)
+                {
+                    toCreate = Instantiate(drop);
+                    break;
+                }
+            }
+        }
+        toCreate.Setup(spawn, currentGravity);
+    }
+
+    public void ReturnShape(Shape shape)
+    {
+        shapeStorage[shape.myShape].Enqueue(shape);
+        shape.gameObject.SetActive(false);
     }
 
 #endregion
@@ -553,17 +528,25 @@ public class ShapeManager : MonoBehaviour
         }
     }
 
-    public void AddScore(int score, Shape shape)
+    public void AddScore(int toAdd, Vector3 spawn, Color textColor)
     {
-        if (dataText.transform.parent.gameObject.activeSelf)
+        if (dropped > 0)
         {
-            this.score += score;
-            if (shape != null)
-            {
-                PointsVisual newPV = Instantiate(pv);
-                newPV.Setup(score, shape, 0.75f);
-            }
+            this.score += toAdd;
+            NewVisual($"+{toAdd}", (int)Mathf.Sqrt(toAdd), spawn, textColor);
         }
+    }
+
+    void NewVisual(string text, int size, Vector3 spawn, Color textColor)
+    {
+        PointsVisual newVisual = (visualStorage.Count > 0) ? visualStorage.Dequeue() : Instantiate(pv);
+        newVisual.Setup(text, spawn, 0.75f, size, textColor);
+    }
+
+    public void ReturnVisual(PointsVisual visual)
+    {
+        visualStorage.Enqueue(visual);
+        visual.gameObject.SetActive(false);
     }
 
     public void GameOver(ToTranslate loseMessage)
