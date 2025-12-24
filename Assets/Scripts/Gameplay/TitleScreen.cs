@@ -109,7 +109,7 @@ public class TitleScreen : MonoBehaviour
         if (!PlayerPrefs.HasKey($"{currentLevel.levelName} - {Setting.DropShape}")) PrefManager.SetScore(currentLevel.levelName, Setting.DropShape, 1000);
         score = PrefManager.GetScore(currentLevel.levelName, Setting.DropShape);
         buttonSettings[1].image.color = (score <= 999) ? Color.yellow : Color.white;
-        buttonSettings[1].achievement.SetActive(score <= 200);
+        buttonSettings[1].achievement.SetActive(score <= 250);
 
         score = PrefManager.GetScore(currentLevel.levelName, Setting.DropEndless);
         endlessDropScore.text = AutoTranslate.High_Score(score.ToString());

@@ -17,7 +17,7 @@
     ],
     [
       "Last Update",
-      "Last Updated: Dec 14, 2025"
+      "Last Updated: Dec 23, 2025"
     ],
     [
       "Translator Credit",
@@ -89,11 +89,11 @@
     ],
     [
       "You Gave Up",
-      "You Gave Up"
+      "You Gave Up."
     ],
     [
       "You Lost",
-      "You Lost"
+      "You Lost."
     ],
     [
       "You Won",
@@ -177,7 +177,7 @@
     ],
     [
       "Out of Shapes",
-      "You're out of shapes."
+      "You're Out of Shapes."
     ],
     [
       "Blank",
@@ -185,11 +185,11 @@
     ],
     [
       "Update 0",
-      "Dec 17"
+      "Dec 23, 2025"
     ],
     [
       "Update 0 Text",
-      "Test|Test"
+      "New item: Warp - Moves a shape to the other side of the screen|Both drop-shape modes have a higher points threshold|Shapes have a new spawning animation|Minor physics changes"
     ]
   ]
 }

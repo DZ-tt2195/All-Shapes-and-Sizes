@@ -21,6 +21,7 @@ public class UpdateDropdown : MonoBehaviour
             nextUpdate++;
         }
         dropdown.value = dropdown.options.Count-1;
+        ChangeDropdown(dropdown.options.Count-1);
 
         void ChangeDropdown(int n)
         {

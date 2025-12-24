@@ -212,8 +212,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -9.86, y: -5.03, z: 0}
-  m_LocalScale: {x: 2.25, y: 2.25, z: 2.5}
-  m_ConstrainProportionsScale: 1
+  m_LocalScale: {x: 2.25, y: 2.25, z: 2.25}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5551522348207243462}
   m_Father: {fileID: 0}
@@ -288,8 +288,8 @@ Rigidbody2D:
   m_BodyType: 0
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 1
+  m_UseAutoMass: 1
+  m_Mass: 1.265625
   m_LinearDamping: 0
   m_AngularDamping: 0.05
   m_GravityScale: 1

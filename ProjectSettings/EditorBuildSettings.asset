@@ -23,8 +23,5 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Bouncy.unity
     guid: 7f2e2418ef6cc4770a3485df65ca6dd5
-  - enabled: 1
-    path: Assets/Scenes/5. Spinner.unity
-    guid: e0963a06974dc4e63abe489e4c5a6e26
   m_configObjects: {}
   m_UseUCBPForAssetBundles: 0

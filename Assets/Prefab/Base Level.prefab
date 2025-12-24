@@ -27,8 +27,8 @@ Transform:
   m_GameObject: {fileID: 561727673563511432}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 4, y: 0, z: 0}
-  m_LocalScale: {x: 0.5, y: 8.5, z: 1}
+  m_LocalPosition: {x: 4.25, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 8.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6588126557958777220}
@@ -136,7 +136,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1.5, y: 1}
+  m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
 --- !u!1 &894551604736223326
 GameObject:
@@ -958,8 +958,8 @@ Transform:
   m_GameObject: {fileID: 2916851555276761685}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 4, z: 0}
-  m_LocalScale: {x: 8, y: 0.5, z: 1}
+  m_LocalPosition: {x: 0, y: 4.25, z: 0}
+  m_LocalScale: {x: 9.5, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6588126557958777220}
@@ -2050,15 +2050,6 @@ MonoBehaviour:
   nextImage1: {fileID: 6280230829282906185}
   nextImage2: {fileID: 4250803405571967865}
   saveImage: {fileID: 2851592583250270701}
-  listOfShapes:
-  - {fileID: 7031427604454891696, guid: 0d698fb18ca044af5acbfa2da3f67acf, type: 3}
-  - {fileID: 1932051135275018775, guid: 9a00e84a67bb14ce8a1ad0b4a5e824f4, type: 3}
-  - {fileID: 2175767774175878959, guid: dd85d487a775d458eb300ca447948b58, type: 3}
-  - {fileID: 4720192475247843558, guid: a6b4a62a1bd584fab8d8a34a36d3093a, type: 3}
-  - {fileID: 3270174606042010638, guid: f6d696592e8294457bbe080745ac9b15, type: 3}
-  - {fileID: 2585974766208824965, guid: 7f159d94b222048daae80a6cff2bf005, type: 3}
-  - {fileID: 1663190294509960684, guid: 5eafaf081a2c54a89a15f449ea550d7b, type: 3}
-  - {fileID: 6795132352071457203, guid: c3bfaa17383304012a42622255a1e3d4, type: 3}
   shapesToDrop:
   - shape: {fileID: 7031427604454891696, guid: 0d698fb18ca044af5acbfa2da3f67acf, type: 3}
     chance: 8
@@ -2074,13 +2065,19 @@ MonoBehaviour:
     chance: 2
   - shape: {fileID: 8432302721300003302, guid: 93ba6f37a332b49328a97d1b5a274709, type: 3}
     chance: 1
+  - shape: {fileID: 8693503666184399859, guid: cc16ecf9a361a435187ade3c5009b6a5, type: 3}
+    chance: 2
   gravityArrow: {fileID: 2618610796815020630}
   pv: {fileID: 5700913299117066173, guid: d817be641f2464bdaa47d0a4e0b6d381, type: 3}
   hideUI: {fileID: 3415852272800770083}
   mergedCrowns: 0
   gameOverTransform: {fileID: 2644165489988059071}
   resign: {fileID: 3947910739599837090}
-  deathLine: {fileID: 0}
+  deathLine: {fileID: 389105842979531914}
+  floor: {fileID: 4464404332692730875}
+  ceiling: {fileID: 5759149373867445508}
+  leftWall: {fileID: 1731676538100253486}
+  rightWall: {fileID: 9117000709151511902}
 --- !u!1 &4736568685185064281
 GameObject:
   m_ObjectHideFlags: 0
@@ -2546,8 +2543,8 @@ Transform:
   m_GameObject: {fileID: 5119596285115185601}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -4, z: 0}
-  m_LocalScale: {x: 8, y: 0.5, z: 1}
+  m_LocalPosition: {x: 0, y: -4.25, z: 0}
+  m_LocalScale: {x: 9.5, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6588126557958777220}
@@ -3940,8 +3937,8 @@ Transform:
   m_GameObject: {fileID: 7955004992535045482}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -4, y: 0, z: 0}
-  m_LocalScale: {x: 0.5, y: 8.5, z: 1}
+  m_LocalPosition: {x: -4.25, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 8.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6588126557958777220}
@@ -4049,7 +4046,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1.5, y: 1}
+  m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
 --- !u!1 &7959796158159544028
 GameObject:

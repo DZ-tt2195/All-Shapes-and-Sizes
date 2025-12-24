@@ -1,7 +1,7 @@
 All_Shapes_and_Sizes=All Shapes and Sizes
 Designer=A puzzle game by Thomas Tang (DZ)
 Inspiration=Inspired by Aladdin X's Suika Game
-Last_Update=Last Updated: Dec 14, 2025
+Last_Update=Last Updated: Dec 23, 2025
 Translator_Credit=
 Language=Language
 Sound_Credits=Sound Credits
@@ -19,8 +19,8 @@ Give_Up=Give Up
 FPS=FPS: $Num$
 Hide_UI=Hide UI
 Next=Next
-You_Gave_Up=You Gave Up
-You_Lost=You Lost
+You_Gave_Up=You Gave Up.
+You_Lost=You Lost.
 You_Won=You Won!
 Title_Screen=Title Screen
 Replay=Replay
@@ -41,8 +41,10 @@ Endless_WinCon=Play for as long as you are able to until you lose.
 Saved=Saved
 Time=Time: $Time$
 Update_History=Update History
-Out_of_Shapes=You're out of shapes.
+Out_of_Shapes=You're Out of Shapes.
 Blank=
-Update_0=Dec 17
-Update_0_Text=Test
-Test
+Update_0=Dec 23, 2025
+Update_0_Text=New item: Warp - Moves a shape to the other side of the screen
+Both drop-shape modes have a higher points threshold
+Shapes have a new spawning animation
+Minor physics changes

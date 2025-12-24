@@ -22,7 +22,7 @@ public class ShapeManager : MonoBehaviour
     [ReadOnly] public Camera mainCam;
 
     [Foldout("Audio", true)]
-        public AudioClip scoreSound;
+        [SerializeField] AudioClip scoreSound;
         [SerializeField] AudioClip dropSound;
         [SerializeField] AudioClip timerSound;
         [SerializeField] AudioClip gravitySound;
@@ -61,9 +61,9 @@ public class ShapeManager : MonoBehaviour
 
     [Foldout("Numbers", true)]
         int mergeDeath = 150;
-        int dropDeath = 250;
+        int dropDeath = 300;
         int dropCreate = 50;
-        int permaDeath = 1500;
+        int permaDeath = 2000;
 
     [Foldout("FPS", true)]
         int lastframe = 0;
@@ -78,11 +78,11 @@ public class ShapeManager : MonoBehaviour
         bool hasEnded = false;
 
     [Foldout("Level geometry", true)]
-        [ReadOnly] public Transform deathLine;
-        Transform floor;
-        Transform ceiling;
-        Transform leftWall;
-        Transform rightWall;
+        public Transform deathLine;
+        public Transform floor;
+        public Transform ceiling;
+        public Transform leftWall;
+        public Transform rightWall;
 
     #endregion
 
@@ -93,11 +93,6 @@ public class ShapeManager : MonoBehaviour
         gameOverTransform.SetActive(false);
         instance = this;
         mainCam = Camera.main;
-        deathLine = GameObject.Find("Death Line").transform;
-        leftWall = GameObject.Find("Left Wall").transform;
-        rightWall = GameObject.Find("Right Wall").transform;
-        floor = GameObject.Find("Floor").transform;
-        ceiling = GameObject.Find("Ceiling").transform;
 
         allShapes = Resources.LoadAll<Shape>("Shapes");
         foreach (Shape shape in allShapes)
@@ -264,7 +259,7 @@ public class ShapeManager : MonoBehaviour
             return worldCoord;
         }
 
-        float yValue = (currentGravity > 0) ? deathLine.position.y - 0.6f : deathLine.position.y + 0.6f;
+        float yValue = (currentGravity > 0) ? deathLine.position.y - 0.5f : deathLine.position.y + 0.5f;
         float xValue = GetWorldCoordinates(screenPosition).x;
 
         if (xValue > (leftWall.position.x + 0.3f) && xValue < (rightWall.position.x - 0.3f))
@@ -360,6 +355,18 @@ public class ShapeManager : MonoBehaviour
                 case KindOfShape.Diamond:
                     image.rectTransform.sizeDelta = large ? new(110, 60) : new(80, 50);
                     break;
+                case KindOfShape.Star:
+                    image.rectTransform.sizeDelta = large ? new(100, 100) : new(60, 60);
+                    break;
+                case KindOfShape.Hexagon:
+                    image.rectTransform.sizeDelta = large ? new(80, 80) : new(50, 50);
+                    break;
+                case KindOfShape.Heart:
+                    image.rectTransform.sizeDelta = large ? new(105, 90) : new (70, 60);
+                    break;
+                case KindOfShape.Crown:
+                    image.rectTransform.sizeDelta = large ? new(105, 90) : new (70, 60);
+                    break;
                 case KindOfShape.Bomb:
                     image.rectTransform.sizeDelta = large ? new(55, 95) : new(45, 80);
                     break;
@@ -368,6 +375,9 @@ public class ShapeManager : MonoBehaviour
                     break;
                 case KindOfShape.Wall:
                     image.rectTransform.sizeDelta = large ? new(110, 50) : new(65, 25);
+                    break;
+                case KindOfShape.Warp:
+                    image.rectTransform.sizeDelta = large ? new(90, 90) : new(60, 60);
                     break;
             }
         }
@@ -533,14 +543,18 @@ public class ShapeManager : MonoBehaviour
         if (dropped > 0)
         {
             this.score += toAdd;
+            AudioManager.instance.PlaySound(scoreSound, 0.25f);
             NewVisual($"+{toAdd}", (int)Mathf.Sqrt(toAdd), spawn, textColor);
         }
     }
 
     void NewVisual(string text, int size, Vector3 spawn, Color textColor)
     {
-        PointsVisual newVisual = (visualStorage.Count > 0) ? visualStorage.Dequeue() : Instantiate(pv);
-        newVisual.Setup(text, spawn, 0.75f, size, textColor);
+        if (!hasEnded)
+        {
+            PointsVisual newVisual = (visualStorage.Count > 0) ? visualStorage.Dequeue() : Instantiate(pv);
+            newVisual.Setup(text, spawn, 0.75f, size, textColor);
+        }
     }
 
     public void ReturnVisual(PointsVisual visual)
