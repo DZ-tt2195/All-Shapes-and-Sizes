@@ -25,4 +25,4 @@ public static string Time (string Time)  { return(Translator.inst.Translate("Tim
 public static string DoEnum(ToTranslate thing) {return(Translator.inst.Translate(thing.ToString()));}
 }
 public enum ToTranslate {
-All_Shapes_and_Sizes,Designer,Inspiration,Last_Update,Translator_Credit,Language,Sound_Credits,Clear_Data,Merge_Crowns,Drop_Shapes,Endless_Drops,Endless_Scoring,Basics,Moving,Bottleneck,Bouncy,Give_Up,Hide_UI,Next,You_Gave_Up,You_Lost,You_Won,Title_Screen,Replay,Begin,Tutorial_1,Tutorial_2,Tutorial_3,Merge_Crown_WinCon,Merge_Endless_Tutorial,Endless_WinCon,Saved,Update_History,Out_of_Shapes,Blank,Update_0,Update_0_Text}
+All_Shapes_and_Sizes,Designer,Inspiration,Last_Update,Translator_Credit,Language,Sound_Credits,Clear_Data,Merge_Crowns,Drop_Shapes,Endless_Drops,Endless_Scoring,Basics,Moving,Bottleneck,Bouncy,Give_Up,Hide_UI,Next,You_Gave_Up,You_Lost,You_Won,Title_Screen,Replay,Begin,Tutorial_1,Tutorial_2,Tutorial_3,Merge_Crown_WinCon,Merge_Endless_Tutorial,Endless_Wincon,Saved,Update_History,Out_of_Shapes,Blank,Update_0,Update_0_Text,Upload_Translation,Download_English,Update_1,Update_1_Text}

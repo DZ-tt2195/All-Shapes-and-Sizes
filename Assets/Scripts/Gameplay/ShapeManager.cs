@@ -143,11 +143,11 @@ public class ShapeManager : MonoBehaviour
                 break;
             case Setting.DropEndless:
                 answer += $"{AutoTranslate.Drop_Endless_Tutorial(permaDeath.ToString())}\n";
-                answer += $"{AutoTranslate.DoEnum(ToTranslate.Endless_WinCon)}";
+                answer += $"{AutoTranslate.DoEnum(ToTranslate.Endless_Wincon)}";
                 break;
             case Setting.MergeEndless:
                 answer += $"{AutoTranslate.DoEnum(ToTranslate.Merge_Endless_Tutorial)}\n";
-                answer += $"{AutoTranslate.DoEnum(ToTranslate.Endless_WinCon)}";
+                answer += $"{AutoTranslate.DoEnum(ToTranslate.Endless_Wincon)}";
                 break;
         }
         tutorialText.text = answer;

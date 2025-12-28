@@ -1,0 +1,51 @@
+All_Shapes_and_Sizes	All Shapes and Sizes
+Designer	A puzzle game by Thomas Tang (DZ)
+Inspiration	Inspired by Aladdin X's Suika Game
+Last_Update	Last Updated: Dec 28, 2025
+Translator_Credit	Original Language
+Language	Language
+Sound_Credits	Sound Credits
+Clear_Data	Clear Data
+Merge_Crowns	Merge Crowns
+Drop_Shapes	Drop Shapes
+Endless_Drops	Endless Drops
+Endless_Scoring	Endless Scoring
+High_Score	High Score: $Num$
+Basics	1. Basics
+Moving	2. Moving
+Bottleneck	3. Bottleneck
+Bouncy	4. Bouncy
+Give_Up	Give Up
+FPS	FPS: $Num$
+Hide_UI	Hide UI
+Next	Next
+You_Gave_Up	You Gave Up.
+You_Lost	You Lost.
+You_Won	You Won!
+Title_Screen	Title Screen
+Replay	Replay
+Begin	Begin!
+Score_Text	Score: $Num1$ / $Num2$
+Score_Text_No_Limit	Score: $Num1$
+Drop_Text	Dropped: $Num1$ / $Num2$
+Tutorial_1	Click on the screen to drop shapes down the tube.
+Tutorial_2	Right click to save a shape to be used later.
+Tutorial_3	When a shape touches another of the same shape, they merge into a larger one.
+Merge_Crown_Tutorial	If you let any shapes go above the top, or drop more than $Num$ shapes, you lose.
+Merge_Crown_WinCon	To win, create 2 Crowns, and then have them merge with one another.
+Drop_Shape_Tutorial	If you let any shapes go above the top, or go above $Num$ points, you lose.
+Drop_Shape_WinCon	To win, drop $Num$ shapes.
+Drop_Endless_Tutorial	If you let any shapes go above the top, or go above $Num$ points, you lose.
+Merge_Endless_Tutorial	If you let any shapes go above the top, you lose.
+Endless_Wincon	Play for as long as you are able to until you lose.
+Saved	Saved
+Time	Time: $Time$
+Update_History	Update History
+Out_of_Shapes	You're Out of Shapes.
+Blank	
+Update_0	Dec 23, 2025
+Update_0_Text	New item: Warp - Moves a shape to the other side of the screen \nBoth drop-shape modes have a higher points threshold \nShapes have a new spawning animation \nMinor physics changes
+Upload_Translation	Upload Translation
+Download_English	Download English
+Update_1	Dec 28, 2025
+Update_1_Text	New translation features - you can download the English translation file and upload your own translation

@@ -31,104 +31,47 @@ public class Translator : MonoBehaviour
 
     private void Start()
     {
-        if (!PlayerPrefs.HasKey("Language"))
+        
+        TextAsset[] languageFiles = Resources.LoadAll<TextAsset>("TSVs");
+        foreach (TextAsset language in languageFiles)
+        {
+            string fileName = ConvertName(language);
+
+            string ConvertName(TextAsset asset)
+            {
+                //pattern: "0. English"
+                string pattern = @"^\d+\.\s*(.+)$";
+                Match match = Regex.Match(asset.name, pattern);
+                if (match.Success)
+                    return match.Groups[1].Value;
+                else
+                    return asset.name;
+            }
+
+            Dictionary<string, string> newDictionary = ReadFile(language.text);
+            keyTranslate.Add(fileName, newDictionary);
+        }
+        if (!PlayerPrefs.HasKey("English") || !keyTranslate.ContainsKey(PlayerPrefs.GetString("Language")))
             PlayerPrefs.SetString("Language", "English");
 
-        TxtLanguages();
-        CsvLanguages(ReadFile("Csv Languages"));
         SceneManager.LoadScene(toLoad);
     }
 
-    #endregion
-
-#region Reading Files
-
-    public static string[][] ReadFile(string range)
+    public static Dictionary<string, string> ReadFile(string textToConvert)
     {
-        TextAsset data = Resources.Load($"{range}") as TextAsset;
+        string[] splitUp = textToConvert.Split('\n');
+        Dictionary<string, string> toReturn = new();
 
-        string editData = data.text;
-        editData = editData.Replace("],", "").Replace("{", "").Replace("}", "");
-
-        string[] numLines = editData.Split("[");
-        string[][] list = new string[numLines.Length][];
-
-        for (int i = 0; i < numLines.Length; i++)
-            list[i] = numLines[i].Split("\",");
-        return list;
+        foreach (string line in splitUp)
+        {
+            int index = line.IndexOf('\t');
+            string partOne = line[..index].Trim();
+            string partTwo = /*partOne.Equals("Blank") ? "" :*/ line[(index + 1)..].Trim();
+            toReturn.Add(partOne, partTwo);
+        }
+        return toReturn;
     }
 
-    void TxtLanguages()
-    {
-        TextAsset[] languageFiles = Resources.LoadAll<TextAsset>("Txt Languages");
-        foreach (TextAsset language in languageFiles)
-        {
-            (bool success, string converted) = ConvertTxtName(language);
-            if (success)
-            {
-                Dictionary<string, string> newDictionary = new();
-                keyTranslate.Add(converted, newDictionary);
-                string[] lines = language.text.Split('\n');
-
-                foreach (string line in lines)
-                {
-                    if (line != "")
-                    {
-                        string[] parts = line.Split('=');
-                        string key = FixLine(parts[0]).Replace(" ", "_");
-                        if (newDictionary.ContainsKey(key))
-                            Debug.Log($"ignore duplicate: {key}");
-                        else
-                            newDictionary[FixLine(key)] = FixLine(parts[1]);
-                    }
-                }
-            }
-        }
-
-        (bool, string) ConvertTxtName(TextAsset asset)
-        {
-            //pattern: "0. English"
-            string pattern = @"^\d+\.\s*(.+)$";
-            Match match = Regex.Match(asset.name, pattern);
-            if (match.Success)
-                return (true, match.Groups[1].Value);
-            else
-                return (false, "");
-        }
-    }
-
-    public static string FixLine(string line)
-    {
-        return line.Replace("\"", "").Replace("\\", "").Replace("]", "").Replace("|", "\n").Trim();
-    }
-
-    void CsvLanguages(string[][] data)
-    {
-        for (int i = 1; i < data[1].Length; i++)
-        {
-            data[1][i] = data[1][i].Replace("\"", "").Trim();
-            Dictionary<string, string> newDictionary = new();
-            keyTranslate.Add(data[1][i], newDictionary);
-        }
-
-        for (int i = 2; i < data.Length; i++)
-        {
-            for (int j = 0; j < data[i].Length; j++)
-            {
-                data[i][j] = FixLine(data[i][j]);
-                if (j > 0)
-                {
-                    string language = data[1][j];
-                    string key = data[i][0].Replace(" ", "_");
-                    if (keyTranslate[language].ContainsKey(key))
-                        Debug.Log($"ignore duplicate: {key}");
-                    else
-                        keyTranslate[language][key] = data[i][j];
-                }
-            }
-        }
-    }
- 
     #endregion
 
 #region Helpers
@@ -172,8 +115,12 @@ public class Translator : MonoBehaviour
         return keyTranslate;
     }
 
-    public void ChangeLanguage(string newLanguage)
+    public void ChangeLanguage(string newLanguage, Dictionary<string, string> addedTranslation)
     {
+        if (addedTranslation != null)
+        {
+            keyTranslate.Add(newLanguage, addedTranslation);
+        }
         if (!PlayerPrefs.GetString("Language").Equals(newLanguage))
         {
             PlayerPrefs.SetString("Language", newLanguage);
@@ -181,6 +128,6 @@ public class Translator : MonoBehaviour
         }
     }
 
-    #endregion
+#endregion
 
 }
