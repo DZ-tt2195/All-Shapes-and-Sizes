@@ -68,7 +68,7 @@ public class LanguageDropdown : MonoBehaviour
     public void OnFileLoaded(string json)
     {
         UploadedFile file = JsonUtility.FromJson<UploadedFile>(json);
-        Dictionary<string, string> newDictionary = Translator.ReadFile(file.fileText);
+        Dictionary<string, string> newDictionary = Translator.ReadLanguageFile(file.fileText);
         Translator.inst.ChangeLanguage(file.fileName, newDictionary);
     }
 

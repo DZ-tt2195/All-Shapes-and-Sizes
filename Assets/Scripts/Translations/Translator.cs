@@ -32,7 +32,7 @@ public class Translator : MonoBehaviour
     private void Start()
     {
         
-        TextAsset[] languageFiles = Resources.LoadAll<TextAsset>("TSVs");
+        TextAsset[] languageFiles = Resources.LoadAll<TextAsset>("Languages");
         foreach (TextAsset language in languageFiles)
         {
             string fileName = ConvertName(language);
@@ -48,7 +48,7 @@ public class Translator : MonoBehaviour
                     return asset.name;
             }
 
-            Dictionary<string, string> newDictionary = ReadFile(language.text);
+            Dictionary<string, string> newDictionary = ReadLanguageFile(language.text);
             keyTranslate.Add(fileName, newDictionary);
         }
         if (!PlayerPrefs.HasKey("English") || !keyTranslate.ContainsKey(PlayerPrefs.GetString("Language")))
@@ -57,7 +57,7 @@ public class Translator : MonoBehaviour
         SceneManager.LoadScene(toLoad);
     }
 
-    public static Dictionary<string, string> ReadFile(string textToConvert)
+    public static Dictionary<string, string> ReadLanguageFile(string textToConvert)
     {
         string[] splitUp = textToConvert.Split('\n');
         Dictionary<string, string> toReturn = new();
@@ -79,6 +79,11 @@ public class Translator : MonoBehaviour
     public bool TranslationExists(string key)
     {
         return keyTranslate["English"].ContainsKey(key);
+    }
+
+    public string Translate(ToTranslate key)
+    {
+        return Translate(key.ToString());
     }
 
     public string Translate(string key, List<(string, string)> toReplace = null)

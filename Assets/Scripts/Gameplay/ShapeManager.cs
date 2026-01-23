@@ -128,14 +128,14 @@ public class ShapeManager : MonoBehaviour
         nextShape2 = AssignRandomShape();
         RollNextShape();
 
-        string answer = $"{AutoTranslate.DoEnum(ToTranslate.Tutorial_1)}\n" +
-        $"{(Application.isEditor ? AutoTranslate.DoEnum(ToTranslate.Tutorial_2) + "\n" : "")}" +
-            $"{AutoTranslate.DoEnum(ToTranslate.Tutorial_3)}\n\n";
+        string answer = $"{AutoTranslate.Tutorial_1()}\n" +
+        $"{(Application.isEditor ? AutoTranslate.Tutorial_2() + "\n" : "")}" +
+            $"{AutoTranslate.Tutorial_3()}\n\n";
         switch (PrefManager.GetSetting())
         {
             case Setting.MergeCrown:
                 answer += $"{AutoTranslate.Merge_Crown_Tutorial(mergeDeath.ToString())}\n";
-                answer += $"{AutoTranslate.DoEnum(ToTranslate.Merge_Crown_WinCon)}";
+                answer += $"{AutoTranslate.Merge_Crown_WinCon()}";
                 break;
             case Setting.DropShape:
                 answer += $"{AutoTranslate.Drop_Shape_Tutorial(dropDeath.ToString())}\n";
@@ -143,11 +143,11 @@ public class ShapeManager : MonoBehaviour
                 break;
             case Setting.DropEndless:
                 answer += $"{AutoTranslate.Drop_Endless_Tutorial(permaDeath.ToString())}\n";
-                answer += $"{AutoTranslate.DoEnum(ToTranslate.Endless_Wincon)}";
+                answer += $"{AutoTranslate.Endless_Wincon()}";
                 break;
             case Setting.MergeEndless:
-                answer += $"{AutoTranslate.DoEnum(ToTranslate.Merge_Endless_Tutorial)}\n";
-                answer += $"{AutoTranslate.DoEnum(ToTranslate.Endless_Wincon)}";
+                answer += $"{AutoTranslate.Merge_Endless_Tutorial()}\n";
+                answer += $"{AutoTranslate.Endless_Wincon()}";
                 break;
         }
         tutorialText.text = answer;
@@ -601,12 +601,12 @@ public class ShapeManager : MonoBehaviour
             if (won)
             {
                 AudioManager.instance.PlaySound(winSound, 0.5f);
-                textBox.text = AutoTranslate.DoEnum(ToTranslate.You_Won);
+                textBox.text = AutoTranslate.You_Won();
             }
             else
             {
                 AudioManager.instance.PlaySound(loseSound, 0.5f);
-                textBox.text = AutoTranslate.DoEnum(loseMessage);
+                textBox.text = Translator.inst.Translate(loseMessage);
             }
         }
     }

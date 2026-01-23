@@ -93,7 +93,7 @@ public class TitleScreen : MonoBehaviour
     void DisplayLevel()
     {
         LevelInfo currentLevel = listOfLevels[levelToLoad];
-        levelText.text = AutoTranslate.DoEnum(currentLevel.levelName);
+        levelText.text = Translator.inst.Translate(currentLevel.levelName);
         levelImage.sprite = currentLevel.sprite;
 
         foreach (ButtonInfo BI in buttonSettings)
