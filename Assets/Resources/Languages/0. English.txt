@@ -1,7 +1,7 @@
 All_Shapes_and_Sizes	All Shapes and Sizes
 Designer	A puzzle game by Thomas Tang (DZ)
 Inspiration	Inspired by Aladdin X's Suika Game
-Last_Update	Last Updated: Dec 28, 2025
+Last_Update	Last Updated: Jan 28, 2026
 Translator_Credit	Original Language
 Language	Language
 Sound_Credits	Sound Credits
@@ -49,3 +49,5 @@ Upload_Translation	Upload Translation
 Download_English	Download English
 Update_1	Dec 28, 2025
 Update_1_Text	New translation features - you can download the English translation file and upload your own translation
+Update_2	Jan 28, 2026
+Update_2_Text	Added fonts to support more languages \nFixed a ui issue
