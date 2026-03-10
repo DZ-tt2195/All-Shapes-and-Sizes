@@ -8,46 +8,42 @@ using MyBox;
 public class PointsVisual : MonoBehaviour
 {
     [SerializeField] TMP_Text textbox;
-    float duration;
-    int topSize;
 
     public void Setup(string text, Vector3 position, float duration, int topSize, Color textColor)
     {
-        this.transform.localPosition = position + new Vector3(0, 0, -1);
-        this.duration = duration;
-        this.topSize = topSize;
+        this.transform.localPosition = position;
         textbox.text = text;
         textbox.color = textColor;
         
         transform.localScale = Vector3.zero;
         this.gameObject.SetActive(true);
         StartCoroutine(ExpandContract());
-    }
 
-    IEnumerator ExpandContract()
-    {
-        Vector2 maxSize = (topSize <= 2) ? new(2, 2): new(topSize, topSize);
-        float elapsedTime = 0f;
-        float waitTime = duration / 2;
-
-        while (elapsedTime < waitTime)
+        IEnumerator ExpandContract()
         {
-            transform.localScale = Vector3.Lerp(Vector3.zero, maxSize, elapsedTime / waitTime);
-            elapsedTime += Time.deltaTime;
-            transform.SetAsFirstSibling();
-            yield return null;
+            Vector2 maxSize = (topSize <= 2) ? new(2, 2): new(topSize, topSize);
+            float elapsedTime = 0f;
+            float waitTime = duration / 2;
+
+            while (elapsedTime < waitTime)
+            {
+                transform.localScale = Vector3.Lerp(Vector3.zero, maxSize, elapsedTime / waitTime);
+                elapsedTime += Time.deltaTime;
+                transform.SetAsLastSibling();
+                yield return null;
+            }
+
+            elapsedTime = 0f;
+
+            while (elapsedTime < waitTime)
+            {
+                transform.localScale = Vector3.Lerp(maxSize, Vector3.zero, elapsedTime / waitTime);
+                elapsedTime += Time.deltaTime;
+                transform.SetAsLastSibling();
+                yield return null;
+            }
+
+            ShapeManager.instance.ReturnVisual(this);
         }
-
-        elapsedTime = 0f;
-
-        while (elapsedTime < waitTime)
-        {
-            transform.localScale = Vector3.Lerp(maxSize, Vector3.zero, elapsedTime / waitTime);
-            elapsedTime += Time.deltaTime;
-            transform.SetAsFirstSibling();
-            yield return null;
-        }
-
-        ShapeManager.instance.ReturnVisual(this);
     }
 }
