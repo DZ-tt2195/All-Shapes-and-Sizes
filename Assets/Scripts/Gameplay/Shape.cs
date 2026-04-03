@@ -24,6 +24,7 @@ public class Shape : MonoBehaviour
     {
         mySize = transform.localScale;
         rb = GetComponent<Rigidbody2D>();
+        rb.gravityScale = 2.75f;
         rb.angularDamping = 2;
         rb.collisionDetectionMode = CollisionDetectionMode2D.Discrete;
         rb.interpolation = RigidbodyInterpolation2D.Interpolate;
@@ -39,13 +40,12 @@ public class Shape : MonoBehaviour
         return (int)myShape <= (int)KindOfShape.Crown;
     }
 
-    public void Setup(Vector3 start, float gravity)
+    public void Setup(Vector3 start)
     {
         active = false;
         this.transform.position = start;
         this.transform.localEulerAngles = Vector3.zero;
         this.transform.localScale = Vector3.zero;
-        rb.gravityScale = gravity;
         this.gameObject.SetActive(true);
         rb.WakeUp();
         
@@ -73,7 +73,7 @@ public class Shape : MonoBehaviour
         {
             if (this.IsMainShape())
             {
-                if (otherShape.myShape == this.myShape && (rb.gravityScale > 0 && this.transform.position.y > otherShape.transform.position.y || rb.gravityScale < 0 && this.transform.position.y < otherShape.transform.position.y))
+                if (otherShape.myShape == this.myShape && this.transform.position.y > otherShape.transform.position.y)
                 {
                     active = false;
                     otherShape.active = false;
@@ -122,7 +122,7 @@ public class Shape : MonoBehaviour
                 else
                 {
                     active = false;
-                    ShapeManager.instance.GameOver(ToTranslate.You_Lost);
+                    ShapeManager.instance.GameOver(AutoTranslate.You_Lost());
                 }
             }
         }
@@ -137,7 +137,7 @@ public class Shape : MonoBehaviour
         {
             ShapeManager.instance.mergedCrowns = true;
             if (PrefManager.GetSetting() == Setting.MergeCrown)
-                ShapeManager.instance.GameOver(ToTranslate.You_Won);
+                ShapeManager.instance.GameOver(AutoTranslate.You_Won());
         }
         else
         {

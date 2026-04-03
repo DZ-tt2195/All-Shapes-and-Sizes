@@ -36,7 +36,6 @@ public static string Title_Screen() => Translator.inst.Translate("Title_Screen")
 public static string Replay() => Translator.inst.Translate("Replay");
 public static string Begin() => Translator.inst.Translate("Begin");
 public static string Tutorial_1() => Translator.inst.Translate("Tutorial_1");
-public static string Tutorial_2() => Translator.inst.Translate("Tutorial_2");
 public static string Tutorial_3() => Translator.inst.Translate("Tutorial_3");
 public static string Merge_Crown_WinCon() => Translator.inst.Translate("Merge_Crown_WinCon");
 public static string Merge_Endless_Tutorial() => Translator.inst.Translate("Merge_Endless_Tutorial");
@@ -54,4 +53,4 @@ public static string Update_1_Text() => Translator.inst.Translate("Update_1_Text
 public static string Update_2() => Translator.inst.Translate("Update_2");
 public static string Update_2_Text() => Translator.inst.Translate("Update_2_Text");
 }
-public enum ToTranslate {All_Shapes_and_Sizes,Designer,Inspiration,Last_Update,Translator_Credit,Language,Sound_Credits,Clear_Data,Merge_Crowns,Drop_Shapes,Endless_Drops,Endless_Scoring,Basics,Moving,Bottleneck,Bouncy,Give_Up,Hide_UI,Next,You_Gave_Up,You_Lost,You_Won,Title_Screen,Replay,Begin,Tutorial_1,Tutorial_2,Tutorial_3,Merge_Crown_WinCon,Merge_Endless_Tutorial,Endless_Wincon,Saved,Update_History,Out_of_Shapes,Blank,Update_0,Update_0_Text,Upload_Translation,Download_English,Update_1,Update_1_Text,Update_2,Update_2_Text}
+public enum ToTranslate {All_Shapes_and_Sizes,Designer,Inspiration,Last_Update,Translator_Credit,Language,Sound_Credits,Clear_Data,Merge_Crowns,Drop_Shapes,Endless_Drops,Endless_Scoring,Basics,Moving,Bottleneck,Bouncy,Give_Up,Hide_UI,Next,You_Gave_Up,You_Lost,You_Won,Title_Screen,Replay,Begin,Tutorial_1,Tutorial_3,Merge_Crown_WinCon,Merge_Endless_Tutorial,Endless_Wincon,Saved,Update_History,Out_of_Shapes,Blank,Update_0,Update_0_Text,Upload_Translation,Download_English,Update_1,Update_1_Text,Update_2,Update_2_Text}

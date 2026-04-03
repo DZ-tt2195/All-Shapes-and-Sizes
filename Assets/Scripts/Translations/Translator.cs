@@ -31,7 +31,6 @@ public class Translator : MonoBehaviour
 
     private void Start()
     {
-        
         TextAsset[] languageFiles = Resources.LoadAll<TextAsset>("Languages");
         foreach (TextAsset language in languageFiles)
         {
@@ -51,6 +50,7 @@ public class Translator : MonoBehaviour
             Dictionary<string, string> newDictionary = ReadLanguageFile(language.text);
             keyTranslate.Add(fileName, newDictionary);
         }
+
         if (!PlayerPrefs.HasKey("English") || !keyTranslate.ContainsKey(PlayerPrefs.GetString("Language")))
             PlayerPrefs.SetString("Language", "English");
 
@@ -76,16 +76,7 @@ public class Translator : MonoBehaviour
 
 #region Helpers
 
-    public bool TranslationExists(string key)
-    {
-        return keyTranslate["English"].ContainsKey(key);
-    }
-
-    public string Translate(ToTranslate key)
-    {
-        return Translate(key.ToString());
-    }
-
+    public bool TranslationExists(string key) => keyTranslate["English"].ContainsKey(key);
     public string Translate(string key, List<(string, string)> toReplace = null)
     {
         string answer;
@@ -97,8 +88,8 @@ public class Translator : MonoBehaviour
         {
             try
             {
-                answer = keyTranslate[("English")][key];
                 //Debug.Log($"{key} failed to translate in {PlayerPrefs.GetString("Language")}");
+                answer = keyTranslate[("English")][key];
             }
             catch
             {
@@ -110,16 +101,14 @@ public class Translator : MonoBehaviour
         if (toReplace != null)
         {
             foreach ((string one, string two) in toReplace)
-                answer = answer.Replace($"${one}$", two);
+                answer = answer.Replace($"${one}$", Translate(two));
         }
         return answer;
     }
-
     public Dictionary<string, Dictionary<string, string>> GetTranslations()
     {
         return keyTranslate;
     }
-
     public void ChangeLanguage(string newLanguage, Dictionary<string, string> addedTranslation)
     {
         if (addedTranslation != null)
@@ -129,7 +118,7 @@ public class Translator : MonoBehaviour
         if (!PlayerPrefs.GetString("Language").Equals(newLanguage))
         {
             PlayerPrefs.SetString("Language", newLanguage);
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            SceneManager.LoadScene(toLoad);
         }
     }
 

@@ -37,10 +37,7 @@ public static class TestScripts
             return;
         }
 
-        TMP_Text[] texts = Object.FindObjectsByType<TMP_Text>(
-            FindObjectsSortMode.None
-        );
-
+        TMP_Text[] texts = Object.FindObjectsByType<TMP_Text>(FindObjectsSortMode.None);
         int count = 0;
 
         foreach (var text in texts)

@@ -29,7 +29,6 @@ Score_Text	Score: $Num1$ / $Num2$
 Score_Text_No_Limit	Score: $Num1$
 Drop_Text	Dropped: $Num1$ / $Num2$
 Tutorial_1	Click on the screen to drop shapes down the tube.
-Tutorial_2	Right click to save a shape to be used later.
 Tutorial_3	When a shape touches another of the same shape, they merge into a larger one.
 Merge_Crown_Tutorial	If you let any shapes go above the top, or drop more than $Num$ shapes, you lose.
 Merge_Crown_WinCon	To win, create 2 Crowns, and then have them merge with one another.

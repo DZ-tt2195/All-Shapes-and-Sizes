@@ -11,7 +11,7 @@ public enum Setting { MergeCrown, DropShape, DropEndless, MergeEndless };
 [System.Serializable]
 public struct LevelInfo
 {
-    public ToTranslate levelName;
+    public string levelName;
     public Sprite sprite;
 }
 
@@ -46,9 +46,30 @@ public class TitleScreen : MonoBehaviour
         [SerializeField] TMP_Text levelText;
         [SerializeField] TMP_Text endlessDropScore;
         [SerializeField] TMP_Text endlessMergeScore;
+        [SerializeField] TMP_Text title;
+        [SerializeField] TMP_Text gameDesigner;
+        [SerializeField] TMP_Text lastUpdate;
+        [SerializeField] TMP_Text inspiration;
+        [SerializeField] TMP_Text clearDataText;
+        [SerializeField] TMP_Text mergeCrowns;
+        [SerializeField] TMP_Text dropShapes;
+        [SerializeField] TMP_Text endlessDrops;
+        [SerializeField] TMP_Text endlessScoring;
+        [SerializeField] TMP_Text soundCreditsText;
 
     private void Start()
     {
+        title.text = AutoTranslate.Title_Screen();
+        gameDesigner.text = AutoTranslate.Designer();
+        lastUpdate.text = AutoTranslate.Last_Update();
+        inspiration.text = AutoTranslate.Inspiration();
+        clearDataText.text = AutoTranslate.Clear_Data();
+        mergeCrowns.text = AutoTranslate.Merge_Crowns();
+        dropShapes.text = AutoTranslate.Drop_Shapes();
+        endlessDrops.text = AutoTranslate.Endless_Drops();
+        endlessScoring.text = AutoTranslate.Endless_Scoring();
+        soundCreditsText.text = AutoTranslate.Sound_Credits();
+
         for (int i = 0; i < buttonSettings.Count; i++)
         {
             Setting enumValue = (Setting)i;

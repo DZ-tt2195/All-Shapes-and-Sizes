@@ -34,21 +34,23 @@ public class ShapeManager : MonoBehaviour
         [SerializeField] TMP_Text dataText;
         [SerializeField] TMP_Text tutorialText;
         [SerializeField] TMP_Text warningText;
+        [SerializeField] TMP_Text next;
+        [SerializeField] TMP_Text hideUIText;
+        [SerializeField] TMP_Text giveUp;
+        [SerializeField] TMP_Text replay;
+        [SerializeField] TMP_Text titleScreen;
 
     [Foldout("Next shapes", true)]
         [SerializeField] Image nextImage1;
         Shape nextShape1;
         [SerializeField] Image nextImage2;
         Shape nextShape2;
-        [SerializeField] Image saveImage;
-        Shape savedShape;
 
     [Foldout("To drop", true)]
         [SerializeField] List<ChanceOfDrop> shapesToDrop = new();
         Shape[] allShapes;
         List<Shape> toDrop = new();
         [SerializeField] Transform gravityArrow;
-        float currentGravity = 2.5f;
         Dictionary<KindOfShape, Queue<Shape>> shapeStorage = new();
 
     [Foldout("Score", true)]
@@ -94,6 +96,12 @@ public class ShapeManager : MonoBehaviour
         instance = this;
         mainCam = Camera.main;
 
+        next.text = AutoTranslate.Next();
+        hideUIText.text = AutoTranslate.Hide_UI();
+        giveUp.text = AutoTranslate.Give_Up();
+        replay.text = AutoTranslate.Replay();
+        titleScreen.text = AutoTranslate.Title_Screen();
+
         allShapes = Resources.LoadAll<Shape>("Shapes");
         foreach (Shape shape in allShapes)
             shapeStorage.Add(shape.myShape, new Queue<Shape>());
@@ -118,7 +126,7 @@ public class ShapeManager : MonoBehaviour
         gravityArrow.transform.localScale = new Vector2(0, 0);
         gravityArrow.transform.localEulerAngles = new Vector3(0, 0, -90);
 
-        resign.onClick.AddListener(() => GameOver(ToTranslate.You_Gave_Up));
+        resign.onClick.AddListener(() => GameOver(AutoTranslate.You_Gave_Up()));
         hideUI.onClick.AddListener(ToggleUI);
         void ToggleUI() { tutorialText.transform.parent.gameObject.SetActive(!tutorialText.transform.parent.gameObject.activeSelf);}
 
@@ -128,9 +136,7 @@ public class ShapeManager : MonoBehaviour
         nextShape2 = AssignRandomShape();
         RollNextShape();
 
-        string answer = $"{AutoTranslate.Tutorial_1()}\n" +
-        $"{(Application.isEditor ? AutoTranslate.Tutorial_2() + "\n" : "")}" +
-            $"{AutoTranslate.Tutorial_3()}\n\n";
+        string answer = $"{AutoTranslate.Tutorial_1()}\n" + $"{AutoTranslate.Tutorial_3()}\n\n";
         switch (PrefManager.GetSetting())
         {
             case Setting.MergeCrown:
@@ -160,7 +166,6 @@ public class ShapeManager : MonoBehaviour
         dataText.transform.parent.gameObject.SetActive(false);
         nextImage1.transform.parent.gameObject.SetActive(false);
         nextImage2.transform.parent.gameObject.SetActive(false);
-        saveImage.transform.parent.gameObject.SetActive(false);
 
         for (int i = 0; i < 75; i++)
         {
@@ -196,8 +201,6 @@ public class ShapeManager : MonoBehaviour
         {
             if (Input.GetMouseButtonDown(0) && !hasEnded)
                 DropShape(Input.mousePosition);
-            else if (Input.GetMouseButtonDown(1) && !hasEnded && Application.isEditor)
-                SaveShape();
         }
 
         if (dropped == 0)
@@ -219,7 +222,7 @@ public class ShapeManager : MonoBehaviour
                 dataText.text += AutoTranslate.Score_Text(score.ToString(), permaDeath.ToString());
                 dataText.text += $"\n{AutoTranslate.Drop_Text(dropped.ToString(), infinitySymbol.ToString())}";
                 if (score >= permaDeath)
-                    GameOver(ToTranslate.You_Lost);
+                    GameOver(AutoTranslate.You_Lost());
                 break;
             case Setting.MergeCrown:
                 dataText.text += AutoTranslate.Score_Text_No_Limit(score.ToString());
@@ -229,7 +232,7 @@ public class ShapeManager : MonoBehaviour
                 dataText.text += AutoTranslate.Score_Text(score.ToString(), dropDeath.ToString());
                 dataText.text += $"\n{AutoTranslate.Drop_Text(dropped.ToString(), dropCreate.ToString())}";
                 if (score >= dropDeath)
-                    GameOver(ToTranslate.You_Lost);
+                    GameOver(AutoTranslate.You_Lost());
                 break;
         }
 
@@ -259,10 +262,10 @@ public class ShapeManager : MonoBehaviour
             return worldCoord;
         }
 
-        float yValue = (currentGravity > 0) ? deathLine.position.y - 0.5f : deathLine.position.y + 0.5f;
+        float yValue = (Physics2D.gravity.y > 0) ? deathLine.position.y - 0.5f : deathLine.position.y + 0.5f;
         float xValue = GetWorldCoordinates(screenPosition).x;
 
-        if (xValue > (leftWall.position.x + 0.3f) && xValue < (rightWall.position.x - 0.3f))
+        if (xValue > (leftWall.position.x + 0.5f) && xValue < (rightWall.position.x - 0.5f))
         {
             if (nextShape1.IsMainShape())
             {
@@ -272,14 +275,14 @@ public class ShapeManager : MonoBehaviour
                     StopCoroutine(FlashWarning(mergeDeath - dropped));
                     StartCoroutine(FlashWarning(mergeDeath - dropped));
                     if (mergeDeath - dropped <= 0)
-                        StartCoroutine(WaitForEnd(ToTranslate.Out_of_Shapes));
+                        StartCoroutine(WaitForEnd(AutoTranslate.Out_of_Shapes()));
                 }
                 else if (PrefManager.GetSetting() == Setting.DropShape && dropCreate-dropped <= 15)
                 {
                     StopCoroutine(FlashWarning(dropCreate - dropped));
                     StartCoroutine(FlashWarning(dropCreate - dropped));
                     if (dropCreate - dropped <= 0)
-                        StartCoroutine(WaitForEnd(ToTranslate.Blank));
+                        StartCoroutine(WaitForEnd(AutoTranslate.Blank()));
                 }
             }
 
@@ -289,22 +292,7 @@ public class ShapeManager : MonoBehaviour
         }
     }
 
-    void SaveShape()
-    {
-        if (savedShape == null)
-        {
-            savedShape = nextShape1;
-            nextShape1 = null;
-            RollNextShape();
-        }
-        else
-        {
-            (nextShape1, savedShape) = (savedShape, nextShape1);
-            ShapeUI();
-        }
-    }
-
-    IEnumerator WaitForEnd(ToTranslate message)
+    IEnumerator WaitForEnd(string message)
     {
         nextImage1.transform.parent.gameObject.SetActive(false);
         nextImage2.transform.parent.gameObject.SetActive(false);
@@ -384,8 +372,6 @@ public class ShapeManager : MonoBehaviour
 
         Apply(nextImage1, nextShape1, true);
         Apply(nextImage2, nextShape2, false);
-        if (savedShape != null)
-            Apply(saveImage, savedShape, true);
     }
 
     #endregion
@@ -436,7 +422,7 @@ public class ShapeManager : MonoBehaviour
                 }
             }
         }
-        toCreate.Setup(spawn, currentGravity);
+        toCreate.Setup(spawn);
     }
 
     public void ReturnShape(Shape shape)
@@ -457,18 +443,13 @@ public class ShapeManager : MonoBehaviour
             InputManager.instance.enabled = false;
             nextImage1.transform.parent.gameObject.SetActive(false);
             nextImage2.transform.parent.gameObject.SetActive(false);
-            saveImage.transform.parent.gameObject.SetActive(false);
             warningText.gameObject.SetActive(false);
 
             floor.gameObject.SetActive(true);
             ceiling.gameObject.SetActive(true);
             deathLine.gameObject.SetActive(false);
 
-            currentGravity *= -1;
-            Shape[] allShapes = FindObjectsByType<Shape>(FindObjectsSortMode.None);
-            foreach (Shape shape in allShapes)
-                shape.rb.gravityScale = currentGravity;
-
+            Physics2D.gravity = new Vector2(0, Physics2D.gravity.y*-1);
             StartCoroutine(ArrowAnimation());
             StartCoroutine(UnPauseGame());
         }
@@ -517,7 +498,7 @@ public class ShapeManager : MonoBehaviour
     IEnumerator UnPauseGame()
     {
         yield return new WaitForSeconds(1.5f);
-        if (currentGravity < 0)
+        if (Physics2D.gravity.y > 0)
         {
             deathLine.transform.localEulerAngles = new Vector3(0, 0, -180);
             deathLine.transform.localPosition = new Vector3(0, floor.transform.localPosition.y - 0.15f, 0);
@@ -563,7 +544,7 @@ public class ShapeManager : MonoBehaviour
         visual.gameObject.SetActive(false);
     }
 
-    public void GameOver(ToTranslate loseMessage)
+    public void GameOver(string loseMessage)
     {
         if (!hasEnded)
         {
@@ -574,7 +555,7 @@ public class ShapeManager : MonoBehaviour
 
             bool won = false;
             Setting currentSetting = PrefManager.GetSetting();
-            ToTranslate currentLevel = PrefManager.GetLevel(); 
+            string currentLevel = PrefManager.GetLevel(); 
 
             if (currentSetting == Setting.MergeCrown)
             {
@@ -606,7 +587,7 @@ public class ShapeManager : MonoBehaviour
             else
             {
                 AudioManager.instance.PlaySound(loseSound, 0.5f);
-                textBox.text = Translator.inst.Translate(loseMessage);
+                textBox.text = loseMessage;
             }
         }
     }

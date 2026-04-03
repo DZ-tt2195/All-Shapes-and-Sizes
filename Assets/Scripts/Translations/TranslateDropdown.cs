@@ -1,8 +1,10 @@
+using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
-using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
-public class EditDropdown : MonoBehaviour
+public class TranslateDropdown : MonoBehaviour
 {
     public TMP_Dropdown dropdown { get; private set; }
     public List<(string, string)> translatedOptions = new();
