@@ -8,9 +8,9 @@ using TMPro;
 public class Shape : MonoBehaviour
 {
     public SpriteRenderer spriterenderer;
-    Rigidbody2D rb;
-    [SerializeField] int value;
-    TMP_Text textBox;
+    protected Rigidbody2D rb;
+    [SerializeField] protected int value;
+    protected TMP_Text textBox;
     [ReadOnly] public bool canInteract;
     float deathLineTouched = 0f;
     Vector3 mySize;

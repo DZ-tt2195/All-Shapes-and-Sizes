@@ -272,21 +272,21 @@ public class ShapeManager : MonoBehaviour
 
         if (xValue > (leftWall.position.x + 0.5f) && xValue < (rightWall.position.x - 0.5f))
         {
-                dropped++;
-                if (PrefManager.GetSetting() == Setting.MergeCrown && mergeDeath-dropped <= 50)
-                {
-                    StopCoroutine(FlashWarning(mergeDeath - dropped));
-                    StartCoroutine(FlashWarning(mergeDeath - dropped));
-                    if (mergeDeath - dropped <= 0)
-                        StartCoroutine(WaitForEnd(AutoTranslate.Out_of_Shapes()));
-                }
-                else if (PrefManager.GetSetting() == Setting.DropShape && dropCreate-dropped <= 15)
-                {
-                    StopCoroutine(FlashWarning(dropCreate - dropped));
-                    StartCoroutine(FlashWarning(dropCreate - dropped));
-                    if (dropCreate - dropped <= 0)
-                        StartCoroutine(WaitForEnd(AutoTranslate.Blank()));
-                }
+            dropped++;
+            if (PrefManager.GetSetting() == Setting.MergeCrown && mergeDeath-dropped <= 50)
+            {
+                StopCoroutine(FlashWarning(mergeDeath - dropped));
+                StartCoroutine(FlashWarning(mergeDeath - dropped));
+                if (mergeDeath - dropped <= 0)
+                    StartCoroutine(WaitForEnd(AutoTranslate.Out_of_Shapes()));
+            }
+            else if (PrefManager.GetSetting() == Setting.DropShape && dropCreate-dropped <= 15)
+            {
+                StopCoroutine(FlashWarning(dropCreate - dropped));
+                StartCoroutine(FlashWarning(dropCreate - dropped));
+                if (dropCreate - dropped <= 0)
+                    StartCoroutine(WaitForEnd(AutoTranslate.Blank()));
+            }
 
             AudioManager.instance.PlaySound(dropSound, 0.5f);
             GenerateShape(nextShape1.GetType().Name, new Vector2(xValue, yValue));

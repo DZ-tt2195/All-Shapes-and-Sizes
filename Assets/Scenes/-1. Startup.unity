@@ -472,7 +472,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -2852, y: -164}
-  m_SizeDelta: {x: 1723.9944, y: 900}
+  m_SizeDelta: {x: 1800, y: 900}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1955109914
 MonoBehaviour:
@@ -494,12 +494,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Rain circles
+  m_text: 'Teleport shapes to the corner
 
-    Teleport shapes to the corner
-
-    Ghost star - disappears
-    if not merged after 5 drops'
+    Ghost star - disappears if not merged
+    with another star after 5 drops'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
