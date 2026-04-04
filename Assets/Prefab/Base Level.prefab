@@ -1671,13 +1671,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Click on the screen to drop shapes down the tube. When a shape touches
-    another of the same shape, they merge into a larger one. If you let any shapes
-    go above the top, or drop more than 150 shapes, you lose.
-
-
-    To win, create
-    2 Crowns, and then have them merge with one another.'
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 31e79ddad7b2d41c395ada76a18cbcdd, type: 2}
   m_sharedMaterial: {fileID: -3852492252101762229, guid: 31e79ddad7b2d41c395ada76a18cbcdd, type: 2}
@@ -1704,7 +1698,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 37.9
+  m_fontSize: 35
   m_fontSizeBase: 35
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -1934,24 +1928,24 @@ MonoBehaviour:
   titleScreen: {fileID: 8968640148395817591}
   nextImage1: {fileID: 6280230829282906185}
   nextImage2: {fileID: 4250803405571967865}
-  shapesToDrop:
+  mainShapesToDrop:
   - shape: {fileID: 7031427604454891696, guid: 0d698fb18ca044af5acbfa2da3f67acf, type: 3}
-    chance: 8
+    chance: 5
   - shape: {fileID: 1932051135275018775, guid: 9a00e84a67bb14ce8a1ad0b4a5e824f4, type: 3}
-    chance: 6
-  - shape: {fileID: 2175767774175878959, guid: dd85d487a775d458eb300ca447948b58, type: 3}
     chance: 4
+  - shape: {fileID: 2175767774175878959, guid: dd85d487a775d458eb300ca447948b58, type: 3}
+    chance: 3
   - shape: {fileID: 4720192475247843558, guid: a6b4a62a1bd584fab8d8a34a36d3093a, type: 3}
-    chance: 2
-  - shape: {fileID: 8693503666184399859, guid: 0d3bf015433194f56868b0d5da55252a, type: 3}
     chance: 2
   - shape: {fileID: 8295550733241061694, guid: 62dd3b0f01c33438ea6360a85edff74f, type: 3}
     chance: 2
+  bonusShapesToDrop:
+  - shape: {fileID: 8693503666184399859, guid: 0d3bf015433194f56868b0d5da55252a, type: 3}
+    chance: 1
   - shape: {fileID: 8432302721300003302, guid: 93ba6f37a332b49328a97d1b5a274709, type: 3}
     chance: 1
   - shape: {fileID: 8693503666184399859, guid: cc16ecf9a361a435187ade3c5009b6a5, type: 3}
     chance: 2
-  gravityArrow: {fileID: 2618610796815020630}
   pv: {fileID: 5700913299117066173, guid: d817be641f2464bdaa47d0a4e0b6d381, type: 3}
   hideUI: {fileID: 3415852272800770083}
   mergedCrowns: 0
@@ -1962,6 +1956,7 @@ MonoBehaviour:
   ceiling: {fileID: 5759149373867445508}
   leftWall: {fileID: 1731676538100253486}
   rightWall: {fileID: 9117000709151511902}
+  gravityArrow: {fileID: 2618610796815020630}
 --- !u!1 &4736568685185064281
 GameObject:
   m_ObjectHideFlags: 0
@@ -2133,7 +2128,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -505, y: -145}
+  m_AnchoredPosition: {x: -507.5, y: -145}
   m_SizeDelta: {x: 285, y: 400}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2411252396253840363

@@ -47,18 +47,17 @@ public class ShapeManager : MonoBehaviour
         Shape nextShape2;
 
     [Foldout("To drop", true)]
-        [SerializeField] List<ChanceOfDrop> shapesToDrop = new();
+        [SerializeField] List<ChanceOfDrop> mainShapesToDrop = new();
+        [SerializeField] List<ChanceOfDrop> bonusShapesToDrop = new();
         Shape[] allShapes;
         List<Shape> toDrop = new();
-        [SerializeField] Transform gravityArrow;
         Dictionary<KindOfShape, Queue<Shape>> shapeStorage = new();
 
     [Foldout("Score", true)]
         int score = 0;
-        int dropped = 0;
+        public int dropped {get; private set;}
         [SerializeField] PointsVisual pv;
         Queue<PointsVisual> visualStorage = new();
-
         [SerializeField] Button hideUI;
 
     [Foldout("Numbers", true)]
@@ -85,6 +84,7 @@ public class ShapeManager : MonoBehaviour
         public Transform ceiling;
         public Transform leftWall;
         public Transform rightWall;
+        [SerializeField] Transform gravityArrow;
 
     #endregion
 
@@ -95,6 +95,7 @@ public class ShapeManager : MonoBehaviour
         gameOverTransform.SetActive(false);
         instance = this;
         mainCam = Camera.main;
+        Physics2D.gravity = new(0, -10);
 
         next.text = AutoTranslate.Next();
         hideUIText.text = AutoTranslate.Hide_UI();
@@ -105,6 +106,13 @@ public class ShapeManager : MonoBehaviour
         allShapes = Resources.LoadAll<Shape>("Shapes");
         foreach (Shape shape in allShapes)
             shapeStorage.Add(shape.myShape, new Queue<Shape>());
+
+        while (bonusShapesToDrop.Count > 2)
+        {
+            int random = UnityEngine.Random.Range(0, bonusShapesToDrop.Count);
+            UnityEngine.Debug.Log($"removed {bonusShapesToDrop[random].shape.name}");
+            bonusShapesToDrop.RemoveAt(random);
+        }
     }
 
     private void OnEnable()
@@ -262,13 +270,11 @@ public class ShapeManager : MonoBehaviour
             return worldCoord;
         }
 
-        float yValue = (Physics2D.gravity.y > 0) ? deathLine.position.y - 0.5f : deathLine.position.y + 0.5f;
+        float yValue = (Physics2D.gravity.y > 0) ? deathLine.position.y + 0.5f : deathLine.position.y - 0.5f;
         float xValue = GetWorldCoordinates(screenPosition).x;
 
         if (xValue > (leftWall.position.x + 0.5f) && xValue < (rightWall.position.x - 0.5f))
         {
-            if (nextShape1.IsMainShape())
-            {
                 dropped++;
                 if (PrefManager.GetSetting() == Setting.MergeCrown && mergeDeath-dropped <= 50)
                 {
@@ -284,7 +290,6 @@ public class ShapeManager : MonoBehaviour
                     if (dropCreate - dropped <= 0)
                         StartCoroutine(WaitForEnd(AutoTranslate.Blank()));
                 }
-            }
 
             AudioManager.instance.PlaySound(dropSound, 0.5f);
             GenerateShape(nextShape1.myShape, new Vector2(xValue, yValue));
@@ -392,7 +397,12 @@ public class ShapeManager : MonoBehaviour
     {
         if (toDrop.Count == 0)
         {
-            foreach (ChanceOfDrop next in shapesToDrop)
+            foreach (ChanceOfDrop next in mainShapesToDrop)
+            {
+                for (int i = 0; i < next.chance; i++)
+                    toDrop.Add(next.shape);
+            }
+            foreach (ChanceOfDrop next in bonusShapesToDrop)
             {
                 for (int i = 0; i < next.chance; i++)
                     toDrop.Add(next.shape);
@@ -404,7 +414,7 @@ public class ShapeManager : MonoBehaviour
         return shape;
     }
 
-    public void GenerateShape(KindOfShape shape, Vector3 spawn)
+    public void GenerateShape(KindOfShape shape, Vector2 spawn)
     {
         Shape toCreate = null;
         if (shapeStorage[shape].Count > 0)
@@ -440,18 +450,29 @@ public class ShapeManager : MonoBehaviour
         if (InputManager.instance.enabled)
         {
             AudioManager.instance.PlaySound(gravitySound, 0.5f);
-            InputManager.instance.enabled = false;
-            nextImage1.transform.parent.gameObject.SetActive(false);
-            nextImage2.transform.parent.gameObject.SetActive(false);
-            warningText.gameObject.SetActive(false);
-
             floor.gameObject.SetActive(true);
             ceiling.gameObject.SetActive(true);
-            deathLine.gameObject.SetActive(false);
 
             Physics2D.gravity = new Vector2(0, Physics2D.gravity.y*-1);
+            if (Physics2D.gravity.y > 0)
+            {
+                deathLine.transform.localEulerAngles = new Vector3(0, 0, -180);
+                deathLine.transform.localPosition = new Vector3(0, floor.transform.localPosition.y - 0.15f, 0);
+                floor.gameObject.SetActive(false);
+            }
+            else
+            {
+                deathLine.transform.localEulerAngles = new Vector3(0, 0, 0);
+                deathLine.transform.localPosition = new Vector3(0, ceiling.transform.localPosition.y + 0.15f, 0);
+                ceiling.gameObject.SetActive(false);
+            }
+
+            if (!hasEnded)
+            {
+                deathLine.gameObject.SetActive(true);
+                ShapeUI();
+            }
             StartCoroutine(ArrowAnimation());
-            StartCoroutine(UnPauseGame());
         }
     }
 
@@ -495,30 +516,6 @@ public class ShapeManager : MonoBehaviour
         warningText.gameObject.SetActive(true);
     }
 
-    IEnumerator UnPauseGame()
-    {
-        yield return new WaitForSeconds(1.5f);
-        if (Physics2D.gravity.y > 0)
-        {
-            deathLine.transform.localEulerAngles = new Vector3(0, 0, -180);
-            deathLine.transform.localPosition = new Vector3(0, floor.transform.localPosition.y - 0.15f, 0);
-            floor.gameObject.SetActive(false);
-        }
-        else
-        {
-            deathLine.transform.localEulerAngles = new Vector3(0, 0, 0);
-            deathLine.transform.localPosition = new Vector3(0, ceiling.transform.localPosition.y + 0.15f, 0);
-            ceiling.gameObject.SetActive(false);
-        }
-
-        if (!hasEnded)
-        {
-            InputManager.instance.enabled = true;
-            deathLine.gameObject.SetActive(true);
-            ShapeUI();
-        }
-    }
-
     public void AddScore(int toAdd, Vector3 spawn, Color textColor)
     {
         if (dropped > 0)
@@ -548,7 +545,7 @@ public class ShapeManager : MonoBehaviour
     {
         if (!hasEnded)
         {
-            gameTimer.Stop();
+            gameTimer?.Stop();
             InputManager.instance.enabled = false;
             gameOverTransform.SetActive(true);
             hasEnded = true;

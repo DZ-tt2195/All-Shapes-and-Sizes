@@ -5,16 +5,13 @@ using MyBox;
 using TMPro;
 
 public enum KindOfShape { None, Circle = 1, Square, Arrow, Diamond, Star, Hexagon, Heart, Crown, Bomb, Wall, Inversion, Warp }
-
 [RequireComponent(typeof(Rigidbody2D))]
 public class Shape : MonoBehaviour
 {
     public SpriteRenderer spriterenderer;
     [ReadOnly] public Rigidbody2D rb;
-
     int value;
     [SerializeField] TMP_Text textBox;
-
     bool active = false;
     float deathLineTouched = 0f;
     public KindOfShape myShape;
@@ -40,7 +37,7 @@ public class Shape : MonoBehaviour
         return (int)myShape <= (int)KindOfShape.Crown;
     }
 
-    public void Setup(Vector3 start)
+    public void Setup(Vector2 start)
     {
         active = false;
         this.transform.position = start;
@@ -66,19 +63,14 @@ public class Shape : MonoBehaviour
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-        if (!active)
-        {       
-        }   
-        else if (collision.TryGetComponent(out Shape otherShape) && otherShape.active)
+        if (!active) return;
+        if (collision.TryGetComponent(out Shape otherShape) && otherShape.active)
         {
-            if (this.IsMainShape())
+            if (this.IsMainShape() && otherShape.myShape == this.myShape && this.transform.position.y > otherShape.transform.position.y)
             {
-                if (otherShape.myShape == this.myShape && this.transform.position.y > otherShape.transform.position.y)
-                {
-                    active = false;
-                    otherShape.active = false;
-                    ChangeMe(otherShape, 1);
-                }
+                active = false;
+                otherShape.active = false;
+                ChangeMe(otherShape, 1);
             }
             if (otherShape.myShape == KindOfShape.Inversion)
             {
@@ -92,7 +84,7 @@ public class Shape : MonoBehaviour
                 otherShape.active = false;
 
                 float newXPosition = otherShape.transform.position.x > 0 ? ShapeManager.instance.leftWall.transform.position.x + 1f : ShapeManager.instance.rightWall.transform.position.x - 1f;
-                ShapeManager.instance.GenerateShape(this.myShape, new(newXPosition, this.transform.position.y, 0));
+                ShapeManager.instance.GenerateShape(this.myShape, new(newXPosition, this.transform.position.y));
                 ShapeManager.instance.ReturnShape(otherShape);
                 ShapeManager.instance.ReturnShape(this);
             }
@@ -130,19 +122,20 @@ public class Shape : MonoBehaviour
 
     void ChangeMe(Shape otherShape, int change)
     {
+        if (change == 0) return;
         if (otherShape.myShape == this.myShape)
             ShapeManager.instance.AddScore(value, this.transform.position, spriterenderer.color);
-                
-        if (this.myShape == KindOfShape.Crown)
+
+        int nextStage = (int)myShape + change;
+        if (nextStage > (int)KindOfShape.Crown)
         {
             ShapeManager.instance.mergedCrowns = true;
             if (PrefManager.GetSetting() == Setting.MergeCrown)
                 ShapeManager.instance.GameOver(AutoTranslate.You_Won());
         }
-        else
+        else if (nextStage >= (int)KindOfShape.Circle)
         {
-            KindOfShape nextShape = (KindOfShape)((int)myShape + change);
-            ShapeManager.instance.GenerateShape(nextShape, this.transform.position);
+            ShapeManager.instance.GenerateShape((KindOfShape)nextStage, this.transform.position);
         }
         ShapeManager.instance.ReturnShape(otherShape);
         ShapeManager.instance.ReturnShape(this);

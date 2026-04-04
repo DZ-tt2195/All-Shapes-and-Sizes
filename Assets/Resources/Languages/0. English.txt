@@ -37,7 +37,6 @@ Drop_Shape_WinCon	To win, drop $Num$ shapes.
 Drop_Endless_Tutorial	If you let any shapes go above the top, or go above $Num$ points, you lose.
 Merge_Endless_Tutorial	If you let any shapes go above the top, you lose.
 Endless_Wincon	Play for as long as you are able to until you lose.
-Saved	Saved
 Time	Time: $Time$
 Update_History	Update History
 Out_of_Shapes	You're Out of Shapes.
@@ -50,3 +49,5 @@ Update_1	Dec 28, 2025
 Update_1_Text	New translation features - you can download the English translation file and upload your own translation
 Update_2	Jan 28, 2026
 Update_2_Text	Added fonts to support more languages \nFixed a ui issue
+Update_3	Apr 03, 2026
+Update_3_Text	During gameplay, you have access to circles, squares, arrows, diamonds, bombs, and (only) 2 bonus shapes \nBonus shapes count towards the number of shapes you've dropped \nGravity inverter doesn't stop you from dropping shapes
