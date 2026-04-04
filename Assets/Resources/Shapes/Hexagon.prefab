@@ -194,7 +194,7 @@ GameObject:
   - component: {fileID: 4939119121244586674}
   - component: {fileID: 6160212558154659735}
   - component: {fileID: 8740596058595501419}
-  - component: {fileID: 2585974766208824965}
+  - component: {fileID: 1132442424565399410}
   m_Layer: 0
   m_Name: Hexagon
   m_TagString: Untagged
@@ -410,7 +410,7 @@ PolygonCollider2D:
       - {x: 0.47, y: -0.27}
       - {x: 0.47, y: 0.27}
   m_UseDelaunayMesh: 0
---- !u!114 &2585974766208824965
+--- !u!114 &1132442424565399410
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -419,10 +419,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 9190476690169363604}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 931b8b4cf321941d7b84a618a1cc4d5f, type: 3}
+  m_Script: {fileID: 11500000, guid: 0b48a804526104d0abc541f12c74da3f, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier: Assembly-CSharp::Hexagon
   spriterenderer: {fileID: 2210777265563657384}
-  rb: {fileID: 0}
-  textBox: {fileID: 6182495352025634333}
-  myShape: 6
+  value: 6
+  active: 0

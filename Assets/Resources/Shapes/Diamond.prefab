@@ -133,7 +133,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 43
+  m_fontSize: 39.25
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -194,7 +194,7 @@ GameObject:
   - component: {fileID: 2634452694099790022}
   - component: {fileID: 4307233763307470404}
   - component: {fileID: 2735035742248785220}
-  - component: {fileID: 4720192475247843558}
+  - component: {fileID: 7789470370418034270}
   m_Layer: 0
   m_Name: Diamond
   m_TagString: Untagged
@@ -406,7 +406,7 @@ PolygonCollider2D:
       - {x: 0, y: -0.27}
       - {x: 0.52, y: 0}
   m_UseDelaunayMesh: 0
---- !u!114 &4720192475247843558
+--- !u!114 &7789470370418034270
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -415,10 +415,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 9063514190670151809}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 931b8b4cf321941d7b84a618a1cc4d5f, type: 3}
+  m_Script: {fileID: 11500000, guid: c3cf469c8f917460f83e7cc8d08bdc01, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier: Assembly-CSharp::Diamond
   spriterenderer: {fileID: 6220482175659235991}
-  rb: {fileID: 0}
-  textBox: {fileID: 4906960107042611533}
-  myShape: 4
+  value: 4
+  active: 0

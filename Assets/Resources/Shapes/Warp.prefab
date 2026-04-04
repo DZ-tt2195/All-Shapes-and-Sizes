@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 3539584020249371874}
   - component: {fileID: 5783274277680178189}
   - component: {fileID: 7679433017287995444}
-  - component: {fileID: 8693503666184399859}
   - component: {fileID: 9198219565131715791}
   - component: {fileID: 2615127201543193395}
+  - component: {fileID: 2665926777722749875}
   m_Layer: 0
   m_Name: Warp
   m_TagString: Untagged
@@ -122,22 +122,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &8693503666184399859
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1733716940557391168}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 931b8b4cf321941d7b84a618a1cc4d5f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  spriterenderer: {fileID: 5783274277680178189}
-  rb: {fileID: 0}
-  textBox: {fileID: 0}
-  myShape: 12
 --- !u!61 &9198219565131715791
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -230,3 +214,18 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 12.5, y: 12.5}
   m_EdgeRadius: 0
+--- !u!114 &2665926777722749875
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1733716940557391168}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6dd21e24d418d486a8f363d0d4d1909e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Warp
+  spriterenderer: {fileID: 5783274277680178189}
+  value: 0
+  active: 0

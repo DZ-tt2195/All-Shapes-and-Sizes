@@ -192,9 +192,9 @@ GameObject:
   - component: {fileID: 5966125362031026197}
   - component: {fileID: 943879734067713240}
   - component: {fileID: 1042244004078865653}
-  - component: {fileID: 1663190294509960684}
   - component: {fileID: 8264512363509979634}
   - component: {fileID: 2685692858024947189}
+  - component: {fileID: 828168335081719328}
   m_Layer: 0
   m_Name: Heart
   m_TagString: Untagged
@@ -304,22 +304,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &1663190294509960684
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7073126835520378041}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 931b8b4cf321941d7b84a618a1cc4d5f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  spriterenderer: {fileID: 943879734067713240}
-  rb: {fileID: 0}
-  textBox: {fileID: 2657296402124601255}
-  myShape: 7
 --- !u!60 &8264512363509979634
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -434,3 +418,18 @@ PolygonCollider2D:
       - {x: 1.85, y: 1.8}
       - {x: 0.75, y: 2.1}
   m_UseDelaunayMesh: 0
+--- !u!114 &828168335081719328
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7073126835520378041}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9e341819e16b459187dc710887fcc60, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Heart
+  spriterenderer: {fileID: 943879734067713240}
+  value: 7
+  active: 0

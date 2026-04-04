@@ -59,7 +59,7 @@ public class TitleScreen : MonoBehaviour
 
     private void Start()
     {
-        title.text = AutoTranslate.Title_Screen();
+        title.text = AutoTranslate.All_Shapes_and_Sizes();
         gameDesigner.text = AutoTranslate.Designer();
         lastUpdate.text = AutoTranslate.Last_Update();
         inspiration.text = AutoTranslate.Inspiration();

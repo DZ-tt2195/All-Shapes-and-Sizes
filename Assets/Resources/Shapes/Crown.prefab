@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 1402477737922416485}
   - component: {fileID: 1493016017448104985}
   - component: {fileID: 8428436672843256547}
-  - component: {fileID: 6795132352071457203}
   - component: {fileID: 8418793654686855626}
   - component: {fileID: 6868244347704740800}
+  - component: {fileID: 6356066666894933064}
   m_Layer: 0
   m_Name: Crown
   m_TagString: Untagged
@@ -123,22 +123,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &6795132352071457203
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6576425910921196811}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 931b8b4cf321941d7b84a618a1cc4d5f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  spriterenderer: {fileID: 1493016017448104985}
-  rb: {fileID: 0}
-  textBox: {fileID: 7224581876729181463}
-  myShape: 8
 --- !u!60 &8418793654686855626
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -247,6 +231,21 @@ PolygonCollider2D:
       - {x: 2.08, y: 1.08}
       - {x: 0.8, y: 0.08}
   m_UseDelaunayMesh: 0
+--- !u!114 &6356066666894933064
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6576425910921196811}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 498e19a5bb5284648b3c659296449159, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Crown
+  spriterenderer: {fileID: 1493016017448104985}
+  value: 8
+  active: 0
 --- !u!1 &7424888025053765403
 GameObject:
   m_ObjectHideFlags: 0

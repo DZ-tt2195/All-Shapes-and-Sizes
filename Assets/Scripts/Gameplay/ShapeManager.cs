@@ -51,7 +51,7 @@ public class ShapeManager : MonoBehaviour
         [SerializeField] List<ChanceOfDrop> bonusShapesToDrop = new();
         Shape[] allShapes;
         List<Shape> toDrop = new();
-        Dictionary<KindOfShape, Queue<Shape>> shapeStorage = new();
+        Dictionary<string, Queue<Shape>> shapeStorage = new();
 
     [Foldout("Score", true)]
         int score = 0;
@@ -105,7 +105,9 @@ public class ShapeManager : MonoBehaviour
 
         allShapes = Resources.LoadAll<Shape>("Shapes");
         foreach (Shape shape in allShapes)
-            shapeStorage.Add(shape.myShape, new Queue<Shape>());
+        {
+            shapeStorage.Add(shape.GetType().Name, new Queue<Shape>());
+        }
 
         while (bonusShapesToDrop.Count > 2)
         {
@@ -114,19 +116,16 @@ public class ShapeManager : MonoBehaviour
             bonusShapesToDrop.RemoveAt(random);
         }
     }
-
     private void OnEnable()
     {
         if (Application.isMobilePlatform)
             InputManager.instance.OnStartTouch += DropShape;
     }
-
     private void OnDisable()
     {
         if (Application.isMobilePlatform)
             InputManager.instance.OnStartTouch -= DropShape;
     }
-
     private void Start()
     {
         warningText.transform.localScale = new Vector2(0, 0);
@@ -168,7 +167,6 @@ public class ShapeManager : MonoBehaviour
 
         StartCoroutine(DropRandomly());
     }
-
     IEnumerator DropRandomly()
     {
         dataText.transform.parent.gameObject.SetActive(false);
@@ -179,11 +177,11 @@ public class ShapeManager : MonoBehaviour
         {
             yield return new WaitForSeconds(0.05f);
             AudioManager.instance.PlaySound(dropSound, 0.2f);
-            GenerateShape(KindOfShape.Circle, new Vector2(UnityEngine.Random.Range(leftWall.position.x + 0.6f, rightWall.position.x - 0.6f), deathLine.position.y - 0.15f));
+            GenerateShape(typeof(Circle).Name, new Vector2(UnityEngine.Random.Range(leftWall.position.x + 0.6f, rightWall.position.x - 0.6f), deathLine.position.y - 0.15f));
         }
 
         yield return new WaitForSeconds(2f);
-        NewVisual(Translator.inst.Translate("Begin"), 3, Vector3.zero, Color.white);
+        NewVisual(AutoTranslate.Begin(), 3, Vector3.zero, Color.white);
         AudioManager.instance.PlaySound(winSound, 0.5f);
 
         yield return new WaitForSeconds(1f);
@@ -260,7 +258,6 @@ public class ShapeManager : MonoBehaviour
             return (lastupdate > Application.targetFrameRate) ? Application.targetFrameRate.ToString() : lastupdate.ToString();
         }
     }
-
     void DropShape(Vector2 screenPosition)
     {
         Vector2 GetWorldCoordinates(Vector2 screenPos)
@@ -292,11 +289,10 @@ public class ShapeManager : MonoBehaviour
                 }
 
             AudioManager.instance.PlaySound(dropSound, 0.5f);
-            GenerateShape(nextShape1.myShape, new Vector2(xValue, yValue));
+            GenerateShape(nextShape1.GetType().Name, new Vector2(xValue, yValue));
             RollNextShape();
         }
     }
-
     IEnumerator WaitForEnd(string message)
     {
         nextImage1.transform.parent.gameObject.SetActive(false);
@@ -305,7 +301,6 @@ public class ShapeManager : MonoBehaviour
         yield return new WaitForSeconds(2.5f);
         GameOver(message);
     }
-
     IEnumerator FlashWarning(int number)
     {
         AudioManager.instance.PlaySound(timerSound, 0.5f);
@@ -325,7 +320,6 @@ public class ShapeManager : MonoBehaviour
         }
         warningText.transform.localScale = maxSize;
     }
-
     void ShapeUI()
     {
         void Apply(Image image, Shape shape, bool large)
@@ -333,46 +327,7 @@ public class ShapeManager : MonoBehaviour
             image.transform.parent.gameObject.SetActive(true);
             image.sprite = shape.spriterenderer.sprite;
             image.color = shape.spriterenderer.color;
-
-            switch (shape.myShape)
-            {
-                case KindOfShape.Circle:
-                    image.rectTransform.sizeDelta = large ? new(50, 50) : new(40, 40);
-                    break;
-                case KindOfShape.Square:
-                    image.rectTransform.sizeDelta = large ? new(65, 65) : new(50, 50);
-                    break;
-                case KindOfShape.Arrow:
-                    image.rectTransform.sizeDelta = large ? new(100, 100) : new(70, 70);
-                    break;
-                case KindOfShape.Diamond:
-                    image.rectTransform.sizeDelta = large ? new(110, 60) : new(80, 50);
-                    break;
-                case KindOfShape.Star:
-                    image.rectTransform.sizeDelta = large ? new(100, 100) : new(60, 60);
-                    break;
-                case KindOfShape.Hexagon:
-                    image.rectTransform.sizeDelta = large ? new(80, 80) : new(50, 50);
-                    break;
-                case KindOfShape.Heart:
-                    image.rectTransform.sizeDelta = large ? new(105, 90) : new (70, 60);
-                    break;
-                case KindOfShape.Crown:
-                    image.rectTransform.sizeDelta = large ? new(105, 90) : new (70, 60);
-                    break;
-                case KindOfShape.Bomb:
-                    image.rectTransform.sizeDelta = large ? new(55, 95) : new(45, 80);
-                    break;
-                case KindOfShape.Inversion:
-                    image.rectTransform.sizeDelta = large ? new(90, 90) : new(60, 60);
-                    break;
-                case KindOfShape.Wall:
-                    image.rectTransform.sizeDelta = large ? new(110, 50) : new(65, 25);
-                    break;
-                case KindOfShape.Warp:
-                    image.rectTransform.sizeDelta = large ? new(90, 90) : new(60, 60);
-                    break;
-            }
+            image.rectTransform.sizeDelta = shape.UISize(large);
         }
 
         Apply(nextImage1, nextShape1, true);
@@ -389,10 +344,9 @@ public class ShapeManager : MonoBehaviour
         do
         {
             nextShape2 = AssignRandomShape();
-        } while (nextShape1.name.Equals("Inversion") && nextShape2.name.Equals("Inversion"));
+        } while (nextShape1.name.Equals(typeof(Inverter).Name) && nextShape2.name.Equals(typeof(Inverter).Name));
         ShapeUI();
     }
-
     Shape AssignRandomShape()
     {
         if (toDrop.Count == 0)
@@ -413,8 +367,7 @@ public class ShapeManager : MonoBehaviour
         toDrop.RemoveAt(randIndex);
         return shape;
     }
-
-    public void GenerateShape(KindOfShape shape, Vector2 spawn)
+    public void GenerateShape(string shape, Vector2 spawn)
     {
         Shape toCreate = null;
         if (shapeStorage[shape].Count > 0)
@@ -425,7 +378,7 @@ public class ShapeManager : MonoBehaviour
         {
             foreach (Shape drop in allShapes)
             {
-                if (drop.myShape == shape)
+                if (drop.GetType().Name.Equals(shape))
                 {
                     toCreate = Instantiate(drop);
                     break;
@@ -434,10 +387,9 @@ public class ShapeManager : MonoBehaviour
         }
         toCreate.Setup(spawn);
     }
-
     public void ReturnShape(Shape shape)
     {
-        shapeStorage[shape.myShape].Enqueue(shape);
+        shapeStorage[shape.GetType().Name].Enqueue(shape);
         shape.gameObject.SetActive(false);
     }
 
@@ -475,7 +427,6 @@ public class ShapeManager : MonoBehaviour
             StartCoroutine(ArrowAnimation());
         }
     }
-
     IEnumerator ArrowAnimation()
     {
         Vector2 zeroSize = new(0, 0);
@@ -513,9 +464,7 @@ public class ShapeManager : MonoBehaviour
             yield return null;
         }
         gravityArrow.localScale = zeroSize;
-        warningText.gameObject.SetActive(true);
     }
-
     public void AddScore(int toAdd, Vector3 spawn, Color textColor)
     {
         if (dropped > 0)
@@ -525,7 +474,6 @@ public class ShapeManager : MonoBehaviour
             NewVisual($"+{toAdd}", (int)Mathf.Sqrt(toAdd), spawn, textColor);
         }
     }
-
     void NewVisual(string text, int size, Vector3 spawn, Color textColor)
     {
         if (!hasEnded)
@@ -534,13 +482,11 @@ public class ShapeManager : MonoBehaviour
             newVisual.Setup(text, spawn, 0.75f, size, textColor);
         }
     }
-
     public void ReturnVisual(PointsVisual visual)
     {
         visualStorage.Enqueue(visual);
         visual.gameObject.SetActive(false);
     }
-
     public void GameOver(string loseMessage)
     {
         if (!hasEnded)

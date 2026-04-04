@@ -4,19 +4,16 @@ using UnityEngine;
 using MyBox;
 using TMPro;
 
-public enum KindOfShape { None, Circle = 1, Square, Arrow, Diamond, Star, Hexagon, Heart, Crown, Bomb, Wall, Inversion, Warp }
 [RequireComponent(typeof(Rigidbody2D))]
 public class Shape : MonoBehaviour
 {
     public SpriteRenderer spriterenderer;
-    [ReadOnly] public Rigidbody2D rb;
-    int value;
-    [SerializeField] TMP_Text textBox;
-    bool active = false;
+    Rigidbody2D rb;
+    [SerializeField] int value;
+    TMP_Text textBox;
+    [ReadOnly] public bool canInteract;
     float deathLineTouched = 0f;
-    public KindOfShape myShape;
     Vector3 mySize;
-
     private void Awake()
     {
         mySize = transform.localScale;
@@ -27,19 +24,19 @@ public class Shape : MonoBehaviour
         rb.interpolation = RigidbodyInterpolation2D.Interpolate;
         if (IsMainShape())
         {
-            value = (int)Mathf.Pow((int)myShape, 2);
+            textBox = this.transform.GetComponentInChildren<TMP_Text>();
+            value = (int)Mathf.Pow(value, 2);
             textBox.text = $"{value}";
         }
     }
-
-    public bool IsMainShape()
+    public virtual Vector2 UISize(bool larger)
     {
-        return (int)myShape <= (int)KindOfShape.Crown;
+        return Vector2.zero;
     }
-
-    public void Setup(Vector2 start)
+    public bool IsMainShape() => value >= 1;
+    public virtual void Setup(Vector2 start)
     {
-        active = false;
+        canInteract = false;
         this.transform.position = start;
         this.transform.localEulerAngles = Vector3.zero;
         this.transform.localScale = Vector3.zero;
@@ -57,46 +54,17 @@ public class Shape : MonoBehaviour
                 this.transform.localScale = Vector3.Lerp(Vector3.zero, mySize, elapsedTime/totalTime);
                 yield return null;
             }
-            active = true;
+            canInteract = true;
         }
     }
-
     private void OnTriggerStay2D(Collider2D collision)
     {
-        if (!active) return;
-        if (collision.TryGetComponent(out Shape otherShape) && otherShape.active)
+        if (!canInteract) return;
+        if (collision.TryGetComponent(out Shape otherShape) && otherShape.canInteract)
         {
-            if (this.IsMainShape() && otherShape.myShape == this.myShape && this.transform.position.y > otherShape.transform.position.y)
-            {
-                active = false;
-                otherShape.active = false;
-                ChangeMe(otherShape, 1);
-            }
-            if (otherShape.myShape == KindOfShape.Inversion)
-            {
-                otherShape.active = false;
-                ShapeManager.instance.ReturnShape(otherShape);
-                ShapeManager.instance.SwitchGravity();
-            }
-            if (otherShape.myShape == KindOfShape.Warp)
-            {
-                active = false;
-                otherShape.active = false;
-
-                float newXPosition = otherShape.transform.position.x > 0 ? ShapeManager.instance.leftWall.transform.position.x + 1f : ShapeManager.instance.rightWall.transform.position.x - 1f;
-                ShapeManager.instance.GenerateShape(this.myShape, new(newXPosition, this.transform.position.y));
-                ShapeManager.instance.ReturnShape(otherShape);
-                ShapeManager.instance.ReturnShape(this);
-            }
-            if (otherShape.myShape == KindOfShape.Bomb)
-            {
-                active = false;
-                otherShape.active = false;
-
-                AudioManager.instance.PlaySound(ShapeManager.instance.bombSound, 0.35f);
-                ShapeManager.instance.ReturnShape(otherShape);
-                ShapeManager.instance.ReturnShape(this);
-            }
+            if (this.IsMainShape() && otherShape.IsMainShape() && this.transform.position.y > otherShape.transform.position.y) 
+                return;
+            HitOtherShape(otherShape);
         }   
         else
         {
@@ -113,34 +81,21 @@ public class Shape : MonoBehaviour
                 }
                 else
                 {
-                    active = false;
+                    canInteract = false;
                     ShapeManager.instance.GameOver(AutoTranslate.You_Lost());
                 }
             }
         }
     }
-
-    void ChangeMe(Shape otherShape, int change)
+    protected virtual void HitOtherShape(Shape otherShape)
     {
-        if (change == 0) return;
-        if (otherShape.myShape == this.myShape)
-            ShapeManager.instance.AddScore(value, this.transform.position, spriterenderer.color);
-
-        int nextStage = (int)myShape + change;
-        if (nextStage > (int)KindOfShape.Crown)
-        {
-            ShapeManager.instance.mergedCrowns = true;
-            if (PrefManager.GetSetting() == Setting.MergeCrown)
-                ShapeManager.instance.GameOver(AutoTranslate.You_Won());
-        }
-        else if (nextStage >= (int)KindOfShape.Circle)
-        {
-            ShapeManager.instance.GenerateShape((KindOfShape)nextStage, this.transform.position);
-        }
+    }
+    protected virtual void Upgrade(Shape otherShape)
+    {
+        ShapeManager.instance.AddScore(value, this.transform.position, spriterenderer.color);
         ShapeManager.instance.ReturnShape(otherShape);
         ShapeManager.instance.ReturnShape(this);
     }
-
     private void OnTriggerExit2D(Collider2D collision)
     {
         if (collision.CompareTag("Death Line"))

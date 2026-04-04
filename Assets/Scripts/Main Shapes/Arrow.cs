@@ -1,0 +1,23 @@
+using UnityEngine;
+
+public class Arrow : Shape
+{
+    public override Vector2 UISize(bool larger)
+    {
+        return larger ? new(100, 100) : new(70, 70);
+    }
+    protected override void HitOtherShape(Shape otherShape)
+    {
+        if (otherShape is Arrow)
+        {
+            this.canInteract = false;
+            otherShape.canInteract = false;
+            Upgrade(otherShape);
+        }
+    }
+    protected override void Upgrade(Shape otherShape)
+    {
+        ShapeManager.instance.GenerateShape(typeof(Diamond).Name, this.transform.position);
+        base.Upgrade(otherShape);
+    }
+}

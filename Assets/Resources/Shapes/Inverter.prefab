@@ -13,9 +13,9 @@ GameObject:
   - component: {fileID: 4005841317756719760}
   - component: {fileID: 2446236893228411073}
   - component: {fileID: 7679433017287995444}
-  - component: {fileID: 8693503666184399859}
+  - component: {fileID: 6594086271669393740}
   m_Layer: 0
-  m_Name: Inversion
+  m_Name: Inverter
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -194,7 +194,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &8693503666184399859
+--- !u!114 &6594086271669393740
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -203,10 +203,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1733716940557391168}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 931b8b4cf321941d7b84a618a1cc4d5f, type: 3}
+  m_Script: {fileID: 11500000, guid: a66dfdc3d431742faa8231ec0d5d3506, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier: Assembly-CSharp::Inverter
   spriterenderer: {fileID: 5783274277680178189}
-  rb: {fileID: 0}
-  textBox: {fileID: 0}
-  myShape: 11
+  value: 0
+  active: 0

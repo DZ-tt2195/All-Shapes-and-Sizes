@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 525284547550905743}
   - component: {fileID: 836589413915615561}
   - component: {fileID: 7037707934003785171}
-  - component: {fileID: 8432302721300003302}
+  - component: {fileID: 3593202905202532862}
   m_Layer: 0
   m_Name: Wall
   m_TagString: Untagged
@@ -214,7 +214,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &8432302721300003302
+--- !u!114 &3593202905202532862
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -223,10 +223,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 4956763675739755191}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 931b8b4cf321941d7b84a618a1cc4d5f, type: 3}
+  m_Script: {fileID: 11500000, guid: 05582fa13d2ad4208a91d74deb70bf0a, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier: Assembly-CSharp::Wall
   spriterenderer: {fileID: 1101493833162781498}
-  rb: {fileID: 0}
-  textBox: {fileID: 0}
-  myShape: 10
+  value: 0
+  active: 0
