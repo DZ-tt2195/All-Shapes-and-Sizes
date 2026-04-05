@@ -1,6 +1,7 @@
 public static class AutoTranslate 
 {
 public static string All_Shapes_and_Sizes () => Translator.inst.Translate("All_Shapes_and_Sizes", new() {});
+public static string Blank () => Translator.inst.Translate("Blank", new() {});
 public static string Designer () => Translator.inst.Translate("Designer", new() {});
 public static string Inspiration () => Translator.inst.Translate("Inspiration", new() {});
 public static string Last_Update () => Translator.inst.Translate("Last_Update", new() {});
@@ -30,6 +31,7 @@ public static string Begin () => Translator.inst.Translate("Begin", new() {});
 public static string Score_Text (string Num1,string Num2) => Translator.inst.Translate("Score_Text", new() {("Num1", Num1),("Num2", Num2)});
 public static string Score_Text_No_Limit (string Num1) => Translator.inst.Translate("Score_Text_No_Limit", new() {("Num1", Num1)});
 public static string Drop_Text (string Num1,string Num2) => Translator.inst.Translate("Drop_Text", new() {("Num1", Num1),("Num2", Num2)});
+public static string Time (string Time) => Translator.inst.Translate("Time", new() {("Time", Time)});
 public static string Tutorial_1 () => Translator.inst.Translate("Tutorial_1", new() {});
 public static string Tutorial_3 () => Translator.inst.Translate("Tutorial_3", new() {});
 public static string Merge_Crown_Tutorial (string Num) => Translator.inst.Translate("Merge_Crown_Tutorial", new() {("Num", Num)});
@@ -39,10 +41,14 @@ public static string Drop_Shape_WinCon (string Num) => Translator.inst.Translate
 public static string Drop_Endless_Tutorial (string Num) => Translator.inst.Translate("Drop_Endless_Tutorial", new() {("Num", Num)});
 public static string Merge_Endless_Tutorial () => Translator.inst.Translate("Merge_Endless_Tutorial", new() {});
 public static string Endless_Wincon () => Translator.inst.Translate("Endless_Wincon", new() {});
-public static string Time (string Time) => Translator.inst.Translate("Time", new() {("Time", Time)});
-public static string Update_History () => Translator.inst.Translate("Update_History", new() {});
 public static string Out_of_Shapes () => Translator.inst.Translate("Out_of_Shapes", new() {});
-public static string Blank () => Translator.inst.Translate("Blank", new() {});
+public static string Close () => Translator.inst.Translate("Close", new() {});
+public static string Wall () => Translator.inst.Translate("Wall", new() {});
+public static string GhostStar () => Translator.inst.Translate("GhostStar", new() {});
+public static string Multiply () => Translator.inst.Translate("Multiply", new() {});
+public static string Inverter () => Translator.inst.Translate("Inverter", new() {});
+public static string Warp () => Translator.inst.Translate("Warp", new() {});
+public static string Update_History () => Translator.inst.Translate("Update_History", new() {});
 public static string Update_0 () => Translator.inst.Translate("Update_0", new() {});
 public static string Update_0_Text () => Translator.inst.Translate("Update_0_Text", new() {});
 public static string Upload_Translation () => Translator.inst.Translate("Upload_Translation", new() {});

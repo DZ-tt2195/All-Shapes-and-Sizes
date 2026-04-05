@@ -40,6 +40,12 @@ public class ShapeManager : MonoBehaviour
         [SerializeField] TMP_Text replay;
         [SerializeField] TMP_Text titleScreen;
 
+    [Foldout("Shape explainer", true)]
+        [SerializeField] Image shapeExplainerBackground;
+        [SerializeField] List<Image> bonusShapeList = new();
+        [SerializeField] List<TMP_Text> bonusTextList = new();
+        [SerializeField] Button closeButton;
+
     [Foldout("Next shapes", true)]
         [SerializeField] Image nextImage1;
         Shape nextShape1;
@@ -109,12 +115,19 @@ public class ShapeManager : MonoBehaviour
             shapeStorage.Add(shape.GetType().Name, new Queue<Shape>());
         }
 
-        while (bonusShapesToDrop.Count > 2)
+        while (bonusShapesToDrop.Count > 3)
         {
             int random = UnityEngine.Random.Range(0, bonusShapesToDrop.Count);
-            UnityEngine.Debug.Log($"removed {bonusShapesToDrop[random].shape.name}");
             bonusShapesToDrop.RemoveAt(random);
         }
+        shapeExplainerBackground.gameObject.SetActive(true);
+        for (int i = 0; i<3; i++)
+        {
+            Apply(bonusShapeList[i], bonusShapesToDrop[i].shape, true);
+            bonusTextList[i].text = Translator.inst.Translate(bonusShapesToDrop[i].shape.GetType().Name);
+        }
+        closeButton.transform.GetChild(0).GetComponent<TMP_Text>().text = AutoTranslate.Close();
+        closeButton.onClick.AddListener(() => shapeExplainerBackground.gameObject.SetActive(false));
     }
     private void OnEnable()
     {
@@ -322,16 +335,15 @@ public class ShapeManager : MonoBehaviour
     }
     void ShapeUI()
     {
-        void Apply(Image image, Shape shape, bool large)
-        {
-            image.transform.parent.gameObject.SetActive(true);
-            image.sprite = shape.spriterenderer.sprite;
-            image.color = shape.spriterenderer.color;
-            image.rectTransform.sizeDelta = shape.UISize(large);
-        }
-
         Apply(nextImage1, nextShape1, true);
         Apply(nextImage2, nextShape2, false);
+    }
+    void Apply(Image image, Shape shape, bool large)
+    {
+        image.transform.parent.gameObject.SetActive(true);
+        image.sprite = shape.spriterenderer.sprite;
+        image.color = shape.spriterenderer.color;
+        image.rectTransform.sizeDelta = shape.UISize(large);
     }
 
     #endregion
