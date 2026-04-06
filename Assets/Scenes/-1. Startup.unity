@@ -149,6 +149,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Translator
   toLoad: 0. TitleScene
+  allLanguageFiles:
+  - {fileID: 4900000, guid: 0cb47dd04388845e9b04317501ae527c, type: 3}
 --- !u!4 &300021387
 Transform:
   m_ObjectHideFlags: 0

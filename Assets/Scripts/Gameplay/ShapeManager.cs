@@ -55,7 +55,7 @@ public class ShapeManager : MonoBehaviour
     [Foldout("To drop", true)]
         [SerializeField] List<ChanceOfDrop> mainShapesToDrop = new();
         [SerializeField] List<ChanceOfDrop> bonusShapesToDrop = new();
-        Shape[] allShapes;
+        [SerializeField] List<Shape> allShapes = new();
         List<Shape> toDrop = new();
         Dictionary<string, Queue<Shape>> shapeStorage = new();
 
@@ -109,7 +109,6 @@ public class ShapeManager : MonoBehaviour
         replay.text = AutoTranslate.Replay();
         titleScreen.text = AutoTranslate.Title_Screen();
 
-        allShapes = Resources.LoadAll<Shape>("Shapes");
         foreach (Shape shape in allShapes)
         {
             shapeStorage.Add(shape.GetType().Name, new Queue<Shape>());

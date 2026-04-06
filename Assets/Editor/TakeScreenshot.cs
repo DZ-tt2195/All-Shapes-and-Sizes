@@ -8,7 +8,7 @@ public class TakeScreenshot : EditorWindow
     static void Picture()
     {
         string sceneName = EditorSceneManager.GetActiveScene().name;
-        ScreenCapture.CaptureScreenshot($"Assets/Resources/{sceneName}.png");
+        ScreenCapture.CaptureScreenshot($"Assets/Art/{sceneName}.png");
         AssetDatabase.Refresh();
     }
 }
