@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using MyBox;
 using TMPro;
 using UnityEngine.SceneManagement;
+using TMPro.Examples;
 
 public enum Setting { MergeCrown, DropShape, DropEndless, MergeEndless };
 
@@ -29,6 +30,7 @@ public class TitleScreen : MonoBehaviour
 
     [Foldout("Sound effects", true)]
         [SerializeField] AudioClip menuSound;
+        [SerializeField] Slider volumeSlider;
 
     [Foldout("Levels", true)]
         [SerializeField] List<LevelInfo> listOfLevels = new();
@@ -42,6 +44,7 @@ public class TitleScreen : MonoBehaviour
 
     [Foldout("Text and images", true)]
         [SerializeField] GameObject sfxCredits;
+        [SerializeField] TMP_Text volume;
         [SerializeField] Image levelImage;
         [SerializeField] TMP_Text levelText;
         [SerializeField] TMP_Text endlessDropScore;
@@ -69,6 +72,7 @@ public class TitleScreen : MonoBehaviour
         endlessDrops.text = AutoTranslate.Endless_Drops();
         endlessScoring.text = AutoTranslate.Endless_Scoring();
         soundCreditsText.text = AutoTranslate.Sound_Credits();
+        volume.text = AutoTranslate.Volume();
 
         for (int i = 0; i < buttonSettings.Count; i++)
         {
@@ -82,6 +86,16 @@ public class TitleScreen : MonoBehaviour
         sfxButton.onClick.AddListener(Credits);
         sfxCredits.SetActive(false);
         DisplayLevel();
+
+        volumeSlider.value = PlayerPrefs.GetFloat("Volume");
+        volumeSlider.onValueChanged.AddListener(SetLevel);
+        SetLevel(PlayerPrefs.GetFloat("Volume"));
+
+        void SetLevel(float value)
+        {
+            AudioManager.instance.mixer.SetFloat("Volume", (Mathf.Log10(volumeSlider.value) * 20));
+            PlayerPrefs.SetFloat("Volume", volumeSlider.value);
+        }
     }
 
     void Increment()
