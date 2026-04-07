@@ -610,7 +610,15 @@ MonoBehaviour:
       m_Calls: []
   m_text: 'Teleport shapes to the corner
 
-    Re-view the bonus shapes'
+    Re-view the bonus shapes
+
+    reward
+    for not combining shapes - wait 5 drops, turns into star - 1 per shape combined
+
+    drop
+    circles
+
+    get rid of drop mode, just crown and endless'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}

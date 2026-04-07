@@ -19,7 +19,7 @@ public class Crown : Shape
     {
         ShapeManager.instance.mergedCrowns = true;
         base.Upgrade(otherShape);
-        if (PrefManager.GetSetting() == Setting.MergeCrown)
+        if (PrefManager.GetSetting() == Setting.Merge_Crown)
             ShapeManager.instance.GameOver(AutoTranslate.You_Won());
     }
 }

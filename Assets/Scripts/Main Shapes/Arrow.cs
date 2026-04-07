@@ -17,7 +17,7 @@ public class Arrow : Shape
     }
     protected override void Upgrade(Shape otherShape)
     {
-        ShapeManager.instance.GenerateShape(typeof(Diamond).Name, this.transform.position);
+        ShapeManager.instance.GenerateShape(typeof(Diamond).Name, this.transform.position, CreationType.Merge);
         base.Upgrade(otherShape);
     }
 }

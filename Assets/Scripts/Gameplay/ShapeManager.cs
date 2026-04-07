@@ -6,6 +6,8 @@ using System;
 using UnityEngine.UI;
 using TMPro;
 using System.Diagnostics;
+using NUnit.Framework.Constraints;
+public enum CreationType {None, Drop, Merge}
 [Serializable]
 public class ChanceOfDrop
 {
@@ -22,11 +24,10 @@ public class ShapeManager : MonoBehaviour
     [ReadOnly] public Camera mainCam;
 
     [Foldout("Audio", true)]
-        [SerializeField] AudioClip scoreSound;
+        [SerializeField] AudioClip createSound;
         [SerializeField] AudioClip dropSound;
         [SerializeField] AudioClip timerSound;
         [SerializeField] AudioClip gravitySound;
-        public AudioClip bombSound;
         [SerializeField] AudioClip winSound;
         [SerializeField] AudioClip loseSound;
 
@@ -60,17 +61,12 @@ public class ShapeManager : MonoBehaviour
         Dictionary<string, Queue<Shape>> shapeStorage = new();
 
     [Foldout("Score", true)]
+        [SerializeField] int mergeDeath;
         int score = 0;
         public int dropped {get; private set;}
         [SerializeField] PointsVisual pv;
         Queue<PointsVisual> visualStorage = new();
         [SerializeField] Button hideUI;
-
-    [Foldout("Numbers", true)]
-        int mergeDeath = 150;
-        int dropDeath = 300;
-        int dropCreate = 50;
-        int permaDeath = 2000;
 
     [Foldout("FPS", true)]
         int lastframe = 0;
@@ -155,23 +151,19 @@ public class ShapeManager : MonoBehaviour
         nextShape2 = AssignRandomShape();
         RollNextShape();
 
-        string answer = $"{AutoTranslate.Tutorial_1()}\n" + $"{AutoTranslate.Tutorial_3()}\n\n";
+        string answer = $"{AutoTranslate.Tutorial_1()}\n" + $"{AutoTranslate.Tutorial_2()}\n\n";
         switch (PrefManager.GetSetting())
         {
-            case Setting.MergeCrown:
+            case Setting.Merge_Crown:
                 answer += $"{AutoTranslate.Merge_Crown_Tutorial(mergeDeath.ToString())}\n";
                 answer += $"{AutoTranslate.Merge_Crown_WinCon()}";
                 break;
-            case Setting.DropShape:
-                answer += $"{AutoTranslate.Drop_Shape_Tutorial(dropDeath.ToString())}\n";
-                answer += $"{AutoTranslate.Drop_Shape_WinCon(dropCreate.ToString())}";
+            case Setting.Time_Attack:
+                answer += $"{AutoTranslate.Time_Attack_Tutorial()}\n";
+                answer += $"{AutoTranslate.Time_Attack_Wincon()}";
                 break;
-            case Setting.DropEndless:
-                answer += $"{AutoTranslate.Drop_Endless_Tutorial(permaDeath.ToString())}\n";
-                answer += $"{AutoTranslate.Endless_Wincon()}";
-                break;
-            case Setting.MergeEndless:
-                answer += $"{AutoTranslate.Merge_Endless_Tutorial()}\n";
+            case Setting.Endless:
+                answer += $"{AutoTranslate.Endless_Tutorial()}\n";
                 answer += $"{AutoTranslate.Endless_Wincon()}";
                 break;
         }
@@ -188,13 +180,12 @@ public class ShapeManager : MonoBehaviour
         for (int i = 0; i < 75; i++)
         {
             yield return new WaitForSeconds(0.05f);
-            AudioManager.instance.PlaySound(dropSound, 0.2f);
-            GenerateShape(typeof(Circle).Name, new Vector2(UnityEngine.Random.Range(leftWall.position.x + 0.6f, rightWall.position.x - 0.6f), deathLine.position.y - 0.15f));
+            GenerateShape(typeof(Circle).Name, new Vector2(UnityEngine.Random.Range(leftWall.position.x + 0.6f, rightWall.position.x - 0.6f), deathLine.position.y - 0.15f), CreationType.Drop);
         }
 
         yield return new WaitForSeconds(2f);
         NewVisual(AutoTranslate.Begin(), 3, Vector3.zero, Color.white);
-        AudioManager.instance.PlaySound(winSound, 0.5f);
+        AudioManager.instance.PlaySound(winSound, 0.2f);
 
         yield return new WaitForSeconds(1f);
 
@@ -232,25 +223,19 @@ public class ShapeManager : MonoBehaviour
         char infinitySymbol = '\u221E';
         switch (PrefManager.GetSetting())
         {
-            case Setting.MergeEndless:
-                dataText.text += AutoTranslate.Score_Text_No_Limit(score.ToString());
+            case Setting.Endless:
+                dataText.text += AutoTranslate.Score_Text(score.ToString());
                 dataText.text += $"\n{AutoTranslate.Drop_Text(dropped.ToString(), infinitySymbol.ToString())}";
                 break;
-            case Setting.DropEndless:
-                dataText.text += AutoTranslate.Score_Text(score.ToString(), permaDeath.ToString());
+            case Setting.Time_Attack:
+                dataText.text += AutoTranslate.Score_Text(score.ToString());
                 dataText.text += $"\n{AutoTranslate.Drop_Text(dropped.ToString(), infinitySymbol.ToString())}";
-                if (score >= permaDeath)
-                    GameOver(AutoTranslate.You_Lost());
+                if (gameTimer != null && gameTimer.Elapsed.TotalMinutes >= 1)
+                    GameOver(AutoTranslate.Game_Over());
                 break;
-            case Setting.MergeCrown:
-                dataText.text += AutoTranslate.Score_Text_No_Limit(score.ToString());
+            case Setting.Merge_Crown:
+                dataText.text += AutoTranslate.Score_Text(score.ToString());
                 dataText.text += $"\n{AutoTranslate.Drop_Text(dropped.ToString(), mergeDeath.ToString())}";
-                break;
-            case Setting.DropShape:
-                dataText.text += AutoTranslate.Score_Text(score.ToString(), dropDeath.ToString());
-                dataText.text += $"\n{AutoTranslate.Drop_Text(dropped.ToString(), dropCreate.ToString())}";
-                if (score >= dropDeath)
-                    GameOver(AutoTranslate.You_Lost());
                 break;
         }
 
@@ -285,23 +270,15 @@ public class ShapeManager : MonoBehaviour
         if (xValue > (leftWall.position.x + 0.5f) && xValue < (rightWall.position.x - 0.5f))
         {
             dropped++;
-            if (PrefManager.GetSetting() == Setting.MergeCrown && mergeDeath-dropped <= 50)
+            if (PrefManager.GetSetting() == Setting.Merge_Crown && mergeDeath-dropped <= 50)
             {
                 StopCoroutine(FlashWarning(mergeDeath - dropped));
                 StartCoroutine(FlashWarning(mergeDeath - dropped));
                 if (mergeDeath - dropped <= 0)
-                    StartCoroutine(WaitForEnd(AutoTranslate.Out_of_Shapes()));
-            }
-            else if (PrefManager.GetSetting() == Setting.DropShape && dropCreate-dropped <= 15)
-            {
-                StopCoroutine(FlashWarning(dropCreate - dropped));
-                StartCoroutine(FlashWarning(dropCreate - dropped));
-                if (dropCreate - dropped <= 0)
-                    StartCoroutine(WaitForEnd(AutoTranslate.Blank()));
+                    StartCoroutine(WaitForEnd(AutoTranslate.Game_Over()));
             }
 
-            AudioManager.instance.PlaySound(dropSound, 0.5f);
-            GenerateShape(nextShape1.GetType().Name, new Vector2(xValue, yValue));
+            GenerateShape(nextShape1.GetType().Name, new Vector2(xValue, yValue), CreationType.Drop);
             RollNextShape();
         }
     }
@@ -378,7 +355,7 @@ public class ShapeManager : MonoBehaviour
         toDrop.RemoveAt(randIndex);
         return shape;
     }
-    public void GenerateShape(string shape, Vector2 spawn)
+    public void GenerateShape(string shape, Vector2 spawn, CreationType creationType)
     {
         Shape toCreate = null;
         if (shapeStorage[shape].Count > 0)
@@ -395,6 +372,15 @@ public class ShapeManager : MonoBehaviour
                     break;
                 }
             }
+        }
+        switch (creationType)
+        {
+            case CreationType.Drop:
+                AudioManager.instance.PlaySound(dropSound, 0.25f); break;
+            case CreationType.Merge:
+                AudioManager.instance.PlaySound(createSound, 0.25f); break;
+            case CreationType.None:
+                break;
         }
         toCreate.Setup(spawn);
     }
@@ -481,7 +467,6 @@ public class ShapeManager : MonoBehaviour
         if (dropped > 0)
         {
             this.score += toAdd;
-            AudioManager.instance.PlaySound(scoreSound, 0.25f);
             NewVisual($"+{toAdd}", (int)Mathf.Sqrt(toAdd), spawn, textColor);
         }
     }
@@ -509,27 +494,22 @@ public class ShapeManager : MonoBehaviour
 
             bool won = false;
             Setting currentSetting = PrefManager.GetSetting();
-            string currentLevel = PrefManager.GetLevel(); 
 
-            if (currentSetting == Setting.MergeCrown)
+            if (currentSetting == Setting.Merge_Crown)
             {
                 won = mergedCrowns;
-                if (won && PrefManager.GetScore(currentLevel, currentSetting) < mergeDeath - dropped)
-                    PrefManager.SetScore(currentLevel, currentSetting, mergeDeath-dropped);
+                if (won && PrefManager.GetScore(currentSetting) < mergeDeath - dropped)
+                    PrefManager.SetScore(currentSetting, mergeDeath-dropped);
             }
-            else if (currentSetting == Setting.DropShape)
+            else if (currentSetting == Setting.Time_Attack)
             {
-                won = (dropped == dropCreate) && score < dropDeath;
-                if (won && PrefManager.GetScore(currentLevel, currentSetting) > score)
-                    PrefManager.SetScore(currentLevel, currentSetting, score);
+                if (PrefManager.GetScore(currentSetting) < score)
+                    PrefManager.SetScore(currentSetting, score);                
             }
-            else if (currentSetting == Setting.DropEndless && PrefManager.GetScore(currentLevel, currentSetting) < dropped)
+            else if (currentSetting == Setting.Endless)
             {
-                PrefManager.SetScore(currentLevel, currentSetting, dropped);
-            }            
-            else if (currentSetting == Setting.MergeEndless && PrefManager.GetScore(currentLevel, currentSetting) < score)
-            {
-                PrefManager.SetScore(currentLevel, currentSetting, score);
+                if (PrefManager.GetScore(currentSetting) < score)
+                    PrefManager.SetScore(currentSetting, score);
             }
 
             TMP_Text textBox = gameOverTransform.transform.GetChild(0).GetComponent<TMP_Text>();

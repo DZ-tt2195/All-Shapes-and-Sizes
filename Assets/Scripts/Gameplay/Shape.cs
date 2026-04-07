@@ -82,7 +82,7 @@ public class Shape : MonoBehaviour
                 else
                 {
                     canInteract = false;
-                    ShapeManager.instance.GameOver(AutoTranslate.You_Lost());
+                    ShapeManager.instance.GameOver(AutoTranslate.Game_Over());
                 }
             }
         }

@@ -208,4 +208,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Bomb
   spriterenderer: {fileID: 5035034588412458990}
   value: 0
-  active: 0
+  canInteract: 0
+  bombSound: {fileID: 8300000, guid: 26ffcf4716d82425a910cd17567530f3, type: 3}

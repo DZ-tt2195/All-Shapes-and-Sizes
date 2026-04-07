@@ -2402,11 +2402,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mainCam: {fileID: 0}
-  scoreSound: {fileID: 8300000, guid: 16be2fda298c445bf814c0c51a59ee67, type: 3}
+  createSound: {fileID: 8300000, guid: 16be2fda298c445bf814c0c51a59ee67, type: 3}
   dropSound: {fileID: 8300000, guid: 492488b5c92b84851a2ddd2ec6b3fef6, type: 3}
   timerSound: {fileID: 8300000, guid: 54f5376ce8d294d0fb36c266f3137e33, type: 3}
   gravitySound: {fileID: 8300000, guid: ed4448d007b524f3ca3f454650282241, type: 3}
-  bombSound: {fileID: 8300000, guid: 26ffcf4716d82425a910cd17567530f3, type: 3}
   winSound: {fileID: 8300000, guid: 10ecb72f7cb594c378637e18bb61f52c, type: 3}
   loseSound: {fileID: 8300000, guid: 950bd83ce61ec4bc29065cc30832f5e4, type: 3}
   dataText: {fileID: 516530486416174388}
@@ -2448,7 +2447,7 @@ MonoBehaviour:
   - shape: {fileID: 2665926777722749875, guid: cc16ecf9a361a435187ade3c5009b6a5, type: 3}
     chance: 2
   - shape: {fileID: 8043532601303266621, guid: 33d18b5998f7640a78af9b370cf118ab, type: 3}
-    chance: 2
+    chance: 1
   - shape: {fileID: 8247630796546623672, guid: 772ab514b35dd4e748416a47844e685e, type: 3}
     chance: 1
   allShapes:
@@ -2466,6 +2465,7 @@ MonoBehaviour:
   - {fileID: 3444846294682513344, guid: f6d696592e8294457bbe080745ac9b15, type: 3}
   - {fileID: 3593202905202532862, guid: 93ba6f37a332b49328a97d1b5a274709, type: 3}
   - {fileID: 2665926777722749875, guid: cc16ecf9a361a435187ade3c5009b6a5, type: 3}
+  mergeDeath: 150
   pv: {fileID: 5700913299117066173, guid: d817be641f2464bdaa47d0a4e0b6d381, type: 3}
   hideUI: {fileID: 3415852272800770083}
   mergedCrowns: 0

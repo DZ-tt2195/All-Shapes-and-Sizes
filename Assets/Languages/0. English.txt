@@ -2,47 +2,39 @@ All_Shapes_and_Sizes	All Shapes and Sizes
 Blank	
 Designer	by Thomas Tang (DZ)
 Inspiration	Inspired by Aladdin X's Suika Game
-Last_Update	Last Updated: Apr 06, 2026
+Last_Update	Last Updated: Apr 07, 2026
 Translator_Credit	Original Language
 Language	Language
 Sound_Credits	Sound Credits
 Clear_Data	Clear Data
-Merge_Crowns	Merge Crowns
-Drop_Shapes	Drop Shapes
-Endless_Drops	Endless Drops
-Endless_Scoring	Endless Scoring
 High_Score	High Score: $Num$
 Upload_Translation	Upload Translation
 Download_English	Download English
 Volume	Volume
-Basics	1. Basics
-Moving	2. Moving
-Bottleneck	3. Bottleneck
-Bouncy	4. Bouncy
 Give_Up	Give Up
 FPS	FPS: $Num$
 Hide_UI	Hide UI
 Next	Next
 You_Gave_Up	You Gave Up.
-You_Lost	You Lost.
+Game_Over	Game Over.
 You_Won	You Won!
 Title_Screen	Title Screen
 Replay	Replay
 Begin	Begin!
-Score_Text	Score: $Num1$ / $Num2$
-Score_Text_No_Limit	Score: $Num1$
+Score_Text	Score: $Num1$
 Drop_Text	Dropped: $Num1$ / $Num2$
 Time	Time: $Time$
 Tutorial_1	Click on the screen to drop shapes down the tube.
-Tutorial_3	When a shape touches another of the same shape, they merge into a larger one.
+Tutorial_2	When a shape touches another of the same shape, they merge into a larger one.
+Merge_Crown	Merge Crowns
 Merge_Crown_Tutorial	If you let any shapes go above the top, or drop more than $Num$ shapes, you lose.
 Merge_Crown_WinCon	To win, create 2 Crowns, and then have them merge with one another.
-Drop_Shape_Tutorial	If you let any shapes go above the top, or go above $Num$ points, you lose.
-Drop_Shape_WinCon	To win, drop $Num$ shapes.
-Drop_Endless_Tutorial	If you let any shapes go above the top, or go above $Num$ points, you lose.
-Merge_Endless_Tutorial	If you let any shapes go above the top, you lose.
+Time_Attack	Time Attack
+Time_Attack_Tutorial	If you let any shapes go above the top, you lose.
+Time_Attack_Wincon	Get as high a score as you can within 1 minute.
+Endless	Endless Mode
+Endless_Tutorial	If you let any shapes go above the top, you lose.
 Endless_Wincon	Play for as long as you are able to until you lose.
-Out_of_Shapes	You're Out of Shapes.
 Close	Close
 Wall	Gets in the way; destroy it with a Bomb.
 GhostStar	Merges with another Star; disappears after you drop 5 shapes.
@@ -56,5 +48,5 @@ Update_1	Dec 28, 2025
 Update_1_Text	New translation features - you can download the English translation file and upload your own translation
 Update_2	Jan 28, 2026
 Update_2_Text	Added fonts to support more languages \nFixed a ui issue
-Update_3	Apr 06, 2026
-Update_3_Text	During gameplay, you always have circles, squares, arrows, diamonds, bombs, as well as (just) 3 bonus shapes \nGame begins with a popup explaining what the 2 bonus shapes will be this game \nBonus shapes count towards the number of shapes you've dropped \nGravity inverter doesn't stop you from dropping shapes
+Update_3	Apr 07, 2026
+Update_3_Text	During gameplay, you always have circles, squares, arrows, diamonds, bombs, as well as (just) 3 bonus shapes \nGame begins with a popup explaining what the 2 bonus shapes will be this game \nBonus shapes count towards the number of shapes you've dropped \nGravity inverter doesn't stop you from dropping shapes \nDropped some game modes
