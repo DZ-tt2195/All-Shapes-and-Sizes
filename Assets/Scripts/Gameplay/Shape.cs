@@ -90,11 +90,14 @@ public class Shape : MonoBehaviour
     protected virtual void HitOtherShape(Shape otherShape)
     {
     }
-    protected virtual void Upgrade(Shape otherShape)
+    protected void ScoreShapes(Shape otherShape)
     {
         ShapeManager.instance.AddScore(value, this.transform.position, spriterenderer.color);
         ShapeManager.instance.ReturnShape(otherShape);
-        ShapeManager.instance.ReturnShape(this);
+        ShapeManager.instance.ReturnShape(this);        
+    }
+    protected virtual void Upgrade(Shape otherShape)
+    {
     }
     private void OnTriggerExit2D(Collider2D collision)
     {

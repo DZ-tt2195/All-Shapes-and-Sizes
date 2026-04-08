@@ -18,7 +18,7 @@ public class Crown : Shape
     protected override void Upgrade(Shape otherShape)
     {
         ShapeManager.instance.mergedCrowns = true;
-        base.Upgrade(otherShape);
+        ScoreShapes(otherShape);
         if (PrefManager.GetSetting() == Setting.Merge_Crown)
             ShapeManager.instance.GameOver(AutoTranslate.You_Won());
     }

@@ -6,7 +6,6 @@ using System;
 using UnityEngine.UI;
 using TMPro;
 using System.Diagnostics;
-using NUnit.Framework.Constraints;
 public enum CreationType {None, Drop, Merge}
 [Serializable]
 public class ChanceOfDrop
@@ -142,8 +141,7 @@ public class ShapeManager : MonoBehaviour
         gravityArrow.transform.localEulerAngles = new Vector3(0, 0, -90);
 
         resign.onClick.AddListener(() => GameOver(AutoTranslate.You_Gave_Up()));
-        hideUI.onClick.AddListener(ToggleUI);
-        void ToggleUI() { tutorialText.transform.parent.gameObject.SetActive(!tutorialText.transform.parent.gameObject.activeSelf);}
+        hideUI.onClick.AddListener(() => tutorialText.transform.parent.gameObject.SetActive(!tutorialText.transform.parent.gameObject.activeSelf));
 
         ceiling.gameObject.SetActive(false);
         deathLine.transform.localPosition = new Vector3(0, ceiling.transform.localPosition.y + 0.15f, 0);
@@ -169,35 +167,25 @@ public class ShapeManager : MonoBehaviour
         }
         tutorialText.text = answer;
 
-        StartCoroutine(DropRandomly());
-    }
-    IEnumerator DropRandomly()
-    {
         dataText.transform.parent.gameObject.SetActive(false);
         nextImage1.transform.parent.gameObject.SetActive(false);
         nextImage2.transform.parent.gameObject.SetActive(false);
 
-        for (int i = 0; i < 75; i++)
-        {
-            yield return new WaitForSeconds(0.05f);
-            GenerateShape(typeof(Circle).Name, new Vector2(UnityEngine.Random.Range(leftWall.position.x + 0.6f, rightWall.position.x - 0.6f), deathLine.position.y - 0.15f), CreationType.Drop);
-        }
+        StartCoroutine(DropRandomly(typeof(Circle), 75));
+        Invoke(nameof(BeginGame), 6f);
+    }
+    void BeginGame()
+    {
+        if (hasEnded) return;
 
-        yield return new WaitForSeconds(2f);
         NewVisual(AutoTranslate.Begin(), 3, Vector3.zero, Color.white);
         AudioManager.instance.PlaySound(winSound, 0.2f);
-
-        yield return new WaitForSeconds(1f);
-
-        if (!hasEnded)
-        {
-            dataText.transform.parent.gameObject.SetActive(true);
-            InputManager.instance.enabled = true;
-            dropped = 0;
-            gameTimer = new Stopwatch();
-            gameTimer.Start();
-            ShapeUI();
-        }
+        InputManager.instance.enabled = true;
+        dataText.transform.parent.gameObject.SetActive(true);
+        
+        gameTimer = new Stopwatch();
+        gameTimer.Start();
+        ShapeUI();
     }
 
 #endregion
@@ -264,10 +252,8 @@ public class ShapeManager : MonoBehaviour
             return worldCoord;
         }
 
-        float yValue = (Physics2D.gravity.y > 0) ? deathLine.position.y + 0.5f : deathLine.position.y - 0.5f;
         float xValue = GetWorldCoordinates(screenPosition).x;
-
-        if (xValue > (leftWall.position.x + 0.5f) && xValue < (rightWall.position.x - 0.5f))
+        if (xValue > XSpawnRange().Item1 && xValue < XSpawnRange().Item2)
         {
             dropped++;
             if (PrefManager.GetSetting() == Setting.Merge_Crown && mergeDeath-dropped <= 50)
@@ -278,7 +264,7 @@ public class ShapeManager : MonoBehaviour
                     StartCoroutine(WaitForEnd(AutoTranslate.Game_Over()));
             }
 
-            GenerateShape(nextShape1.GetType().Name, new Vector2(xValue, yValue), CreationType.Drop);
+            GenerateShape(nextShape1.GetType().Name, new Vector2(xValue, YSpawn()), CreationType.Drop);
             RollNextShape();
         }
     }
@@ -325,7 +311,15 @@ public class ShapeManager : MonoBehaviour
     #endregion
 
 #region New Shapes
-
+    
+    float YSpawn()
+    {
+        return (Physics2D.gravity.y > 0) ? deathLine.position.y + 0.5f : deathLine.position.y - 0.5f;
+    }
+    (float, float) XSpawnRange()
+    {
+        return (leftWall.position.x + 0.5f, rightWall.position.x - 0.5f);
+    }
     void RollNextShape()
     {
         nextShape1 = nextShape2;
@@ -388,6 +382,19 @@ public class ShapeManager : MonoBehaviour
     {
         shapeStorage[shape.GetType().Name].Enqueue(shape);
         shape.gameObject.SetActive(false);
+    }
+    public IEnumerator DropRandomly(Type shapeToSpawn, int numDrop)
+    {
+        for (int i = 0; i < numDrop; i++)
+        {
+            yield return new WaitForSeconds(0.05f);
+            GenerateShape(shapeToSpawn.Name, new Vector2(RandomX(), YSpawn()), CreationType.Drop);
+
+            float RandomX()
+            {
+                return UnityEngine.Random.Range(XSpawnRange().Item1, XSpawnRange().Item2);
+            }
+        }
     }
 
 #endregion

@@ -585,8 +585,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -2852, y: -164}
-  m_SizeDelta: {x: 1800, y: 900}
+  m_AnchoredPosition: {x: -2789.597, y: 0}
+  m_SizeDelta: {x: 2000, y: 1000}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1955109914
 MonoBehaviour:
@@ -613,12 +613,7 @@ MonoBehaviour:
     Re-view the bonus shapes
 
     reward
-    for not combining shapes - wait 5 drops, turns into star - 1 per shape combined
-
-    drop
-    circles
-
-    get rid of drop mode, just crown and endless'
+    for not combining shapes - wait 5 drops, turns into star - 1 per shape combined'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}

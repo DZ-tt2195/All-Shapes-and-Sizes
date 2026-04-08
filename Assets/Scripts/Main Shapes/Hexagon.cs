@@ -18,6 +18,6 @@ public class Hexagon : Shape
     protected override void Upgrade(Shape otherShape)
     {
         ShapeManager.instance.GenerateShape(typeof(Heart).Name, this.transform.position, CreationType.Merge);
-        base.Upgrade(otherShape);
+        ScoreShapes(otherShape);
     }
 }

@@ -41,6 +41,7 @@ GhostStar	Merges with another Star; disappears after you drop 5 shapes.
 Multiply	Merges with itself to create a Star.
 Inverter	Changes the gravity of all shapes.
 Warp	Teleports a shape to the opposite side of the level.
+Bag	Spawns a bunch of blue Circles, which can only combine with red Circles.
 Update_History	Update History
 Update_0	Dec 23, 2025
 Update_0_Text	New item: Warp - Moves a shape to the other side of the screen \nBoth drop-shape modes have a higher points threshold \nShapes have a new spawning animation \nMinor physics changes
@@ -49,4 +50,4 @@ Update_1_Text	New translation features - you can download the English translatio
 Update_2	Jan 28, 2026
 Update_2_Text	Added fonts to support more languages \nFixed a ui issue
 Update_3	Apr 07, 2026
-Update_3_Text	During gameplay, you always have circles, squares, arrows, diamonds, bombs, as well as (just) 3 bonus shapes \nGame begins with a popup explaining what the 2 bonus shapes will be this game \nBonus shapes count towards the number of shapes you've dropped \nGravity inverter doesn't stop you from dropping shapes \nDropped some game modes
+Update_3_Text	You always have circles, squares, arrows, diamonds, bombs, as well as (just) 3 bonus shapes \nGame begins with a popup explaining what the bonus shapes will be this game \nBonus shapes count towards the number of shapes you've dropped \nGravity inverter doesn't stop you from dropping shapes \nDropped some game modes \nAdded more sound effects and volume control

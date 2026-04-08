@@ -2450,6 +2450,8 @@ MonoBehaviour:
     chance: 1
   - shape: {fileID: 8247630796546623672, guid: 772ab514b35dd4e748416a47844e685e, type: 3}
     chance: 1
+  - shape: {fileID: 4777776964738364110, guid: cafb735caa3e1469b97572bb81466c33, type: 3}
+    chance: 1
   allShapes:
   - {fileID: 3356794910223355920, guid: dd85d487a775d458eb300ca447948b58, type: 3}
   - {fileID: 1868776494839885762, guid: 62dd3b0f01c33438ea6360a85edff74f, type: 3}
@@ -2465,6 +2467,8 @@ MonoBehaviour:
   - {fileID: 3444846294682513344, guid: f6d696592e8294457bbe080745ac9b15, type: 3}
   - {fileID: 3593202905202532862, guid: 93ba6f37a332b49328a97d1b5a274709, type: 3}
   - {fileID: 2665926777722749875, guid: cc16ecf9a361a435187ade3c5009b6a5, type: 3}
+  - {fileID: 4777776964738364110, guid: cafb735caa3e1469b97572bb81466c33, type: 3}
+  - {fileID: 2098381586800603534, guid: e2c19ff3981a747c8920474b324723ea, type: 3}
   mergeDeath: 150
   pv: {fileID: 5700913299117066173, guid: d817be641f2464bdaa47d0a4e0b6d381, type: 3}
   hideUI: {fileID: 3415852272800770083}
