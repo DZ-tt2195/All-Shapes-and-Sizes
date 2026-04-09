@@ -14,7 +14,7 @@ public class LevelButton
     public Setting setting;
 }
 
-public enum Setting { Merge_Crown, Time_Attack, Endless };
+public enum Setting { Merge_Crown, Endless };
 
 public class TitleScreen : MonoBehaviour
 {
@@ -38,6 +38,7 @@ public class TitleScreen : MonoBehaviour
         [SerializeField] TMP_Text mergeCrowns;
         [SerializeField] TMP_Text endlessScoring;
         [SerializeField] TMP_Text soundCreditsText;
+        [SerializeField] TMP_Text tutorial;
 
     private void Start()
     {
@@ -48,6 +49,7 @@ public class TitleScreen : MonoBehaviour
         clearDataText.text = AutoTranslate.Clear_Data();
         soundCreditsText.text = AutoTranslate.Sound_Credits();
         volume.text = AutoTranslate.Volume();
+        tutorial.text = AutoTranslate.Tutorial_Text();
 
         clearData.onClick.AddListener(ResetData);
         sfxButton.onClick.AddListener(Credits);

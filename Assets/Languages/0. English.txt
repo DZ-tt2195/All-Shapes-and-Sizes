@@ -2,7 +2,7 @@ All_Shapes_and_Sizes	All Shapes and Sizes
 Blank	
 Designer	by Thomas Tang (DZ)
 Inspiration	Inspired by Aladdin X's Suika Game
-Last_Update	Last Updated: Apr 07, 2026
+Last_Update	Last Updated: Apr 08, 2026
 Translator_Credit	Original Language
 Language	Language
 Sound_Credits	Sound Credits
@@ -24,18 +24,13 @@ Begin	Begin!
 Score_Text	Score: $Num1$
 Drop_Text	Dropped: $Num1$ / $Num2$
 Time	Time: $Time$
-Tutorial_1	Click on the screen to drop shapes down the tube.
-Tutorial_2	When a shape touches another of the same shape, they merge into a larger one.
+Open_Guide	Open Guide
+Close_Guide	Close Guide
+Tutorial_Text	Click on the screen to drop shapes. \nMerge shapes together by having one shape touch another of the same shape. \nIf any shapes go above the top, you lose.
 Merge_Crown	Merge Crowns
-Merge_Crown_Tutorial	If you let any shapes go above the top, or drop more than $Num$ shapes, you lose.
-Merge_Crown_WinCon	To win, create 2 Crowns, and then have them merge with one another.
-Time_Attack	Time Attack
-Time_Attack_Tutorial	If you let any shapes go above the top, you lose.
-Time_Attack_Wincon	Get as high a score as you can within 1 minute.
+Merge_Crown_Tutorial	To win, create 2 Crowns, and then have them merge with one another. You cannot drop more than $Num$ shapes.
 Endless	Endless Mode
-Endless_Tutorial	If you let any shapes go above the top, you lose.
-Endless_Wincon	Play for as long as you are able to until you lose.
-Close	Close
+Endless_Tutorial	Play for as long as you are able to until you lose.
 Wall	Gets in the way; destroy it with a Bomb.
 GhostStar	Merges with another Star; disappears after you drop 5 shapes.
 Multiply	Merges with itself to create a Star.
@@ -49,5 +44,5 @@ Update_1	Dec 28, 2025
 Update_1_Text	New translation features - you can download the English translation file and upload your own translation
 Update_2	Jan 28, 2026
 Update_2_Text	Added fonts to support more languages \nFixed a ui issue
-Update_3	Apr 07, 2026
-Update_3_Text	You always have circles, squares, arrows, diamonds, bombs, as well as (just) 3 bonus shapes \nGame begins with a popup explaining what the bonus shapes will be this game \nBonus shapes count towards the number of shapes you've dropped \nGravity inverter doesn't stop you from dropping shapes \nDropped some game modes \nAdded more sound effects and volume control
+Update_3	Apr 08, 2026
+Update_3_Text	You always have circles, squares, arrows, diamonds, bombs, as well as (just) 3 bonus shapes  \nBonus shapes count towards the number of shapes you've dropped \nDropped some game modes and levels \nMoved around some UI explaining the game \nAdded more sound effects and volume control

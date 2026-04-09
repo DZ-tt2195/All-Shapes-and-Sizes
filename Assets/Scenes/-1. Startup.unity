@@ -585,8 +585,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -2789.597, y: 0}
-  m_SizeDelta: {x: 2000, y: 1000}
+  m_AnchoredPosition: {x: -2500, y: 0}
+  m_SizeDelta: {x: 2500, y: 1000}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1955109914
 MonoBehaviour:
@@ -610,10 +610,17 @@ MonoBehaviour:
       m_Calls: []
   m_text: 'Teleport shapes to the corner
 
-    Re-view the bonus shapes
+    reward for not combining shapes: wait
+    5 drops, turns into star - 1 per shape combined
 
-    reward
-    for not combining shapes - wait 5 drops, turns into star - 1 per shape combined'
+    Collects shapes it touches
+    for a reward
+
+    Transforms into shape after you score enough points
+
+
+    Sounds
+    for ghost star disappearing and warp'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}

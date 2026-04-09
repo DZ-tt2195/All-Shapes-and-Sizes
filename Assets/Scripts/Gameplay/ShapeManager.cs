@@ -32,19 +32,20 @@ public class ShapeManager : MonoBehaviour
 
     [Foldout("Text", true)]
         [SerializeField] TMP_Text dataText;
+        [SerializeField] TMP_Text headerText;
         [SerializeField] TMP_Text tutorialText;
         [SerializeField] TMP_Text warningText;
         [SerializeField] TMP_Text next;
-        [SerializeField] TMP_Text hideUIText;
         [SerializeField] TMP_Text giveUp;
         [SerializeField] TMP_Text replay;
         [SerializeField] TMP_Text titleScreen;
+        [SerializeField] TMP_Text guideText;
 
-    [Foldout("Shape explainer", true)]
-        [SerializeField] Image shapeExplainerBackground;
+    [Foldout("Tutorial", true)]
+        [SerializeField] Image tutorialBackground;
         [SerializeField] List<Image> bonusShapeList = new();
         [SerializeField] List<TMP_Text> bonusTextList = new();
-        [SerializeField] Button closeButton;
+        [SerializeField] Button guideButton;
 
     [Foldout("Next shapes", true)]
         [SerializeField] Image nextImage1;
@@ -65,7 +66,6 @@ public class ShapeManager : MonoBehaviour
         public int dropped {get; private set;}
         [SerializeField] PointsVisual pv;
         Queue<PointsVisual> visualStorage = new();
-        [SerializeField] Button hideUI;
 
     [Foldout("FPS", true)]
         int lastframe = 0;
@@ -99,10 +99,10 @@ public class ShapeManager : MonoBehaviour
         Physics2D.gravity = new(0, -10);
 
         next.text = AutoTranslate.Next();
-        hideUIText.text = AutoTranslate.Hide_UI();
         giveUp.text = AutoTranslate.Give_Up();
         replay.text = AutoTranslate.Replay();
         titleScreen.text = AutoTranslate.Title_Screen();
+        guideText.text = AutoTranslate.Close_Guide();
 
         foreach (Shape shape in allShapes)
         {
@@ -114,14 +114,26 @@ public class ShapeManager : MonoBehaviour
             int random = UnityEngine.Random.Range(0, bonusShapesToDrop.Count);
             bonusShapesToDrop.RemoveAt(random);
         }
-        shapeExplainerBackground.gameObject.SetActive(true);
+        tutorialBackground.gameObject.SetActive(true);
         for (int i = 0; i<3; i++)
         {
             Apply(bonusShapeList[i], bonusShapesToDrop[i].shape, true);
             bonusTextList[i].text = Translator.inst.Translate(bonusShapesToDrop[i].shape.GetType().Name);
         }
-        closeButton.transform.GetChild(0).GetComponent<TMP_Text>().text = AutoTranslate.Close();
-        closeButton.onClick.AddListener(() => shapeExplainerBackground.gameObject.SetActive(false));
+        guideButton.onClick.AddListener(ClickGuide);
+        void ClickGuide()
+        {
+            if (tutorialBackground.gameObject.activeSelf)
+            {
+                tutorialBackground.gameObject.SetActive(false);
+                guideText.text = AutoTranslate.Open_Guide();
+            }
+            else
+            {
+                tutorialBackground.gameObject.SetActive(true);
+                guideText.text = AutoTranslate.Close_Guide();                
+            }
+        }
     }
     private void OnEnable()
     {
@@ -141,51 +153,46 @@ public class ShapeManager : MonoBehaviour
         gravityArrow.transform.localEulerAngles = new Vector3(0, 0, -90);
 
         resign.onClick.AddListener(() => GameOver(AutoTranslate.You_Gave_Up()));
-        hideUI.onClick.AddListener(() => tutorialText.transform.parent.gameObject.SetActive(!tutorialText.transform.parent.gameObject.activeSelf));
-
         ceiling.gameObject.SetActive(false);
         deathLine.transform.localPosition = new Vector3(0, ceiling.transform.localPosition.y + 0.15f, 0);
 
         nextShape2 = AssignRandomShape();
         RollNextShape();
 
-        string answer = $"{AutoTranslate.Tutorial_1()}\n" + $"{AutoTranslate.Tutorial_2()}\n\n";
         switch (PrefManager.GetSetting())
         {
             case Setting.Merge_Crown:
-                answer += $"{AutoTranslate.Merge_Crown_Tutorial(mergeDeath.ToString())}\n";
-                answer += $"{AutoTranslate.Merge_Crown_WinCon()}";
-                break;
-            case Setting.Time_Attack:
-                answer += $"{AutoTranslate.Time_Attack_Tutorial()}\n";
-                answer += $"{AutoTranslate.Time_Attack_Wincon()}";
+                headerText.text = AutoTranslate.Merge_Crown();
+                tutorialText.text = AutoTranslate.Merge_Crown_Tutorial(mergeDeath.ToString());
                 break;
             case Setting.Endless:
-                answer += $"{AutoTranslate.Endless_Tutorial()}\n";
-                answer += $"{AutoTranslate.Endless_Wincon()}";
+                headerText.text = AutoTranslate.Endless();
+                tutorialText.text = AutoTranslate.Endless_Tutorial();
                 break;
         }
-        tutorialText.text = answer;
 
-        dataText.transform.parent.gameObject.SetActive(false);
         nextImage1.transform.parent.gameObject.SetActive(false);
         nextImage2.transform.parent.gameObject.SetActive(false);
 
         StartCoroutine(DropRandomly(typeof(Circle), 75));
-        Invoke(nameof(BeginGame), 6f);
-    }
-    void BeginGame()
-    {
-        if (hasEnded) return;
-
-        NewVisual(AutoTranslate.Begin(), 3, Vector3.zero, Color.white);
-        AudioManager.instance.PlaySound(winSound, 0.2f);
-        InputManager.instance.enabled = true;
-        dataText.transform.parent.gameObject.SetActive(true);
+        StartCoroutine(BeginGame());
+        IEnumerator BeginGame()
+        {
+            yield return new WaitForSeconds(6f);
+            while (tutorialBackground.gameObject.activeSelf)
+                yield return null;
+            if (hasEnded)
+                yield break;
+            
+            NewVisual(AutoTranslate.Begin(), 3, Vector3.zero, Color.white);
+            AudioManager.instance.PlaySound(winSound, 0.2f);
+            InputManager.instance.enabled = true;
+            dataText.transform.parent.gameObject.SetActive(true);
         
-        gameTimer = new Stopwatch();
-        gameTimer.Start();
-        ShapeUI();
+            gameTimer = new Stopwatch();
+            gameTimer.Start();
+            ShapeUI();
+        }
     }
 
 #endregion
@@ -203,29 +210,21 @@ public class ShapeManager : MonoBehaviour
         if (dropped == 0)
             score = 0;
 
-        if (!dataText.transform.parent.gameObject.activeSelf)
-            return;
-
-        dataText.text = AutoTranslate.Time(MyExtensions.StopwatchTime(gameTimer));
-        dataText.text += $"\n{AutoTranslate.FPS(CalculateFrames())}\n";
+        string answer = gameTimer == null ? AutoTranslate.Time("0:00:00") : AutoTranslate.Time(MyExtensions.StopwatchTime(gameTimer));
+        answer += $"\n{AutoTranslate.FPS(CalculateFrames())}\n";
         char infinitySymbol = '\u221E';
         switch (PrefManager.GetSetting())
         {
             case Setting.Endless:
-                dataText.text += AutoTranslate.Score_Text(score.ToString());
-                dataText.text += $"\n{AutoTranslate.Drop_Text(dropped.ToString(), infinitySymbol.ToString())}";
-                break;
-            case Setting.Time_Attack:
-                dataText.text += AutoTranslate.Score_Text(score.ToString());
-                dataText.text += $"\n{AutoTranslate.Drop_Text(dropped.ToString(), infinitySymbol.ToString())}";
-                if (gameTimer != null && gameTimer.Elapsed.TotalMinutes >= 1)
-                    GameOver(AutoTranslate.Game_Over());
+                answer += AutoTranslate.Score_Text(score.ToString());
+                answer += $"\n{AutoTranslate.Drop_Text(dropped.ToString(), infinitySymbol.ToString())}";
                 break;
             case Setting.Merge_Crown:
-                dataText.text += AutoTranslate.Score_Text(score.ToString());
-                dataText.text += $"\n{AutoTranslate.Drop_Text(dropped.ToString(), mergeDeath.ToString())}";
+                answer += AutoTranslate.Score_Text(score.ToString());
+                answer += $"\n{AutoTranslate.Drop_Text(dropped.ToString(), mergeDeath.ToString())}";
                 break;
         }
+        dataText.text = answer;
 
         string CalculateFrames()
         {
@@ -314,7 +313,7 @@ public class ShapeManager : MonoBehaviour
     
     float YSpawn()
     {
-        return (Physics2D.gravity.y > 0) ? deathLine.position.y + 0.5f : deathLine.position.y - 0.5f;
+        return (Physics2D.gravity.y > 0) ? deathLine.position.y + 0.25f : deathLine.position.y - 0.25f;
     }
     (float, float) XSpawnRange()
     {
@@ -496,6 +495,7 @@ public class ShapeManager : MonoBehaviour
         {
             gameTimer?.Stop();
             InputManager.instance.enabled = false;
+            tutorialBackground.gameObject.SetActive(false);
             gameOverTransform.SetActive(true);
             hasEnded = true;
 
@@ -507,11 +507,6 @@ public class ShapeManager : MonoBehaviour
                 won = mergedCrowns;
                 if (won && PrefManager.GetScore(currentSetting) < mergeDeath - dropped)
                     PrefManager.SetScore(currentSetting, mergeDeath-dropped);
-            }
-            else if (currentSetting == Setting.Time_Attack)
-            {
-                if (PrefManager.GetScore(currentSetting) < score)
-                    PrefManager.SetScore(currentSetting, score);                
             }
             else if (currentSetting == Setting.Endless)
             {
