@@ -104,4 +104,16 @@ public class Shape : MonoBehaviour
         if (collision.CompareTag("Death Line"))
             deathLineTouched = 0f;
     }
+    void Update()
+    {
+        Vector3 pos = transform.position;
+
+        pos.x = Mathf.Clamp(pos.x, ShapeManager.instance.leftWall.position.x, ShapeManager.instance.rightWall.position.x);
+        if (Physics2D.gravity.y < 0)
+            pos.y = Mathf.Max(pos.y, ShapeManager.instance.floor.position.y);
+        else if (Physics2D.gravity.y > 0)
+            pos.y = Mathf.Min(pos.y, ShapeManager.instance.ceiling.position.y);
+
+        transform.position = pos;
+    }
 }

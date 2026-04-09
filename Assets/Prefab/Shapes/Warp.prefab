@@ -228,4 +228,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Warp
   spriterenderer: {fileID: 5783274277680178189}
   value: 0
-  active: 0
+  canInteract: 0
+  warpSound: {fileID: 8300000, guid: 819720908868e40ff83c1750dcff189d, type: 3}

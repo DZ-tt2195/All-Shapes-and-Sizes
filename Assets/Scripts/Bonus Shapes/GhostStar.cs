@@ -4,6 +4,7 @@ public class GhostStar : Star
 {
     int disappearOn;
     [SerializeField] int increment;
+    [SerializeField] AudioClip vanishSound;
     public override void Setup(Vector2 start)
     {
         disappearOn = ShapeManager.instance.dropped + increment;
@@ -14,6 +15,9 @@ public class GhostStar : Star
         int currentCount = disappearOn-ShapeManager.instance.dropped;
         this.textBox.text = $"{currentCount}";
         if (this.canInteract && currentCount == 0)
+        {
+            AudioManager.instance.PlaySound(vanishSound, 0.3f);
             ShapeManager.instance.ReturnShape(this);
+        }
     }
 }

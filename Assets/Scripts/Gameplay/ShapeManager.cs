@@ -405,28 +405,21 @@ public class ShapeManager : MonoBehaviour
         if (InputManager.instance.enabled)
         {
             AudioManager.instance.PlaySound(gravitySound, 0.5f);
-            floor.gameObject.SetActive(true);
-            ceiling.gameObject.SetActive(true);
-
-            Physics2D.gravity = new Vector2(0, Physics2D.gravity.y*-1);
-            if (Physics2D.gravity.y > 0)
+            
+            if (Physics2D.gravity.y < 0)
             {
-                deathLine.transform.localEulerAngles = new Vector3(0, 0, -180);
-                deathLine.transform.localPosition = new Vector3(0, floor.transform.localPosition.y - 0.15f, 0);
+                deathLine.transform.localPosition = new Vector3(0, floor.transform.localPosition.y - 0.25f, 0);
+                ceiling.gameObject.SetActive(true);
                 floor.gameObject.SetActive(false);
             }
             else
             {
-                deathLine.transform.localEulerAngles = new Vector3(0, 0, 0);
-                deathLine.transform.localPosition = new Vector3(0, ceiling.transform.localPosition.y + 0.15f, 0);
+                deathLine.transform.localPosition = new Vector3(0, ceiling.transform.localPosition.y + 0.25f, 0);
+                floor.gameObject.SetActive(true);
                 ceiling.gameObject.SetActive(false);
             }
 
-            if (!hasEnded)
-            {
-                deathLine.gameObject.SetActive(true);
-                ShapeUI();
-            }
+            Physics2D.gravity = new Vector2(0, Physics2D.gravity.y*-1);
             StartCoroutine(ArrowAnimation());
         }
     }

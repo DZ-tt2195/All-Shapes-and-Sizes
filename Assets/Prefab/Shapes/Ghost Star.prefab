@@ -434,3 +434,4 @@ MonoBehaviour:
   value: 5
   canInteract: 0
   increment: 5
+  vanishSound: {fileID: 8300000, guid: 36f1e803bb2e74ee3acbdab6a704a8ce, type: 3}
