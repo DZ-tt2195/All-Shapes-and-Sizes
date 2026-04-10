@@ -432,4 +432,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Heart
   spriterenderer: {fileID: 943879734067713240}
   value: 7
-  active: 0
+  textBox: {fileID: 2657296402124601255}
+  canInteract: 0

@@ -432,6 +432,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GhostStar
   spriterenderer: {fileID: 6691901054399109830}
   value: 5
+  textBox: {fileID: 5194137347794210877}
   canInteract: 0
   increment: 5
   vanishSound: {fileID: 8300000, guid: 36f1e803bb2e74ee3acbdab6a704a8ce, type: 3}

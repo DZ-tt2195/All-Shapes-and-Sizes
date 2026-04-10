@@ -10,7 +10,7 @@ public class Shape : MonoBehaviour
     public SpriteRenderer spriterenderer;
     protected Rigidbody2D rb;
     [SerializeField] protected int value;
-    protected TMP_Text textBox;
+    [SerializeField] protected TMP_Text textBox;
     [ReadOnly] public bool canInteract;
     float deathLineTouched = 0f;
     Vector3 mySize;
@@ -24,7 +24,6 @@ public class Shape : MonoBehaviour
         rb.interpolation = RigidbodyInterpolation2D.Interpolate;
         if (IsMainShape())
         {
-            textBox = this.transform.GetComponentInChildren<TMP_Text>();
             value = (int)Mathf.Pow(value, 2);
             textBox.text = $"{value}";
         }

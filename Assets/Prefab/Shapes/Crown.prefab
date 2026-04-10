@@ -245,7 +245,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Crown
   spriterenderer: {fileID: 1493016017448104985}
   value: 8
-  active: 0
+  textBox: {fileID: 7224581876729181463}
+  canInteract: 0
 --- !u!1 &7424888025053765403
 GameObject:
   m_ObjectHideFlags: 0

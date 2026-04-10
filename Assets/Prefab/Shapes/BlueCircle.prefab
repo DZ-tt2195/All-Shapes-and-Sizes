@@ -209,6 +209,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BlueCircle
   spriterenderer: {fileID: 2140141328006623770}
   value: 1
+  textBox: {fileID: 8201832970920827437}
   canInteract: 0
 --- !u!1 &7395125086730802167
 GameObject:

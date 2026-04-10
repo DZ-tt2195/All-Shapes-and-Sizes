@@ -39,6 +39,7 @@ public static string Multiply () => Translator.inst.Translate("Multiply", new() 
 public static string Inverter () => Translator.inst.Translate("Inverter", new() {});
 public static string Warp () => Translator.inst.Translate("Warp", new() {});
 public static string Bag () => Translator.inst.Translate("Bag", new() {});
+public static string Egg () => Translator.inst.Translate("Egg", new() {});
 public static string Update_History () => Translator.inst.Translate("Update_History", new() {});
 public static string Update_0 () => Translator.inst.Translate("Update_0", new() {});
 public static string Update_0_Text () => Translator.inst.Translate("Update_0_Text", new() {});

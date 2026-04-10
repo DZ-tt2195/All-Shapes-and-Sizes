@@ -424,4 +424,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Hexagon
   spriterenderer: {fileID: 2210777265563657384}
   value: 6
-  active: 0
+  textBox: {fileID: 6182495352025634333}
+  canInteract: 0

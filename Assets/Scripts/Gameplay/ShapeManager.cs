@@ -62,7 +62,7 @@ public class ShapeManager : MonoBehaviour
 
     [Foldout("Score", true)]
         [SerializeField] int mergeDeath;
-        int score = 0;
+        [ReadOnly] public int score {get; private set;}
         public int dropped {get; private set;}
         [SerializeField] PointsVisual pv;
         Queue<PointsVisual> visualStorage = new();
@@ -379,6 +379,7 @@ public class ShapeManager : MonoBehaviour
     }
     public void ReturnShape(Shape shape)
     {
+        shape.canInteract = false;
         shapeStorage[shape.GetType().Name].Enqueue(shape);
         shape.gameObject.SetActive(false);
     }
