@@ -13,8 +13,10 @@ public class Warp : Shape
         otherShape.canInteract = false;
         AudioManager.instance.PlaySound(warpSound, 0.3f);
 
-        float newXPosition = otherShape.transform.position.x > 0 ? ShapeManager.instance.leftWall.transform.position.x + 1f : ShapeManager.instance.rightWall.transform.position.x - 1f;
+        (float leftSpawn, float rightSpawn) = ShapeManager.instance.XSpawnRange();
+        float newXPosition = otherShape.transform.position.x > 0 ? leftSpawn : rightSpawn;
         ShapeManager.instance.GenerateShape(otherShape.GetType().Name, new(newXPosition, otherShape.transform.position.y), CreationType.Drop);
+        
         ShapeManager.instance.ReturnShape(otherShape);
         ShapeManager.instance.ReturnShape(this);
     }

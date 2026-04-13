@@ -9,6 +9,7 @@ TagManager:
   - Right Wall
   - Out of Bounds
   - Warp
+  - BlackHole
   layers:
   - Default
   - TransparentFX

@@ -208,4 +208,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Inverter
   spriterenderer: {fileID: 5783274277680178189}
   value: 0
-  active: 0
+  textBox: {fileID: 0}
+  canInteract: 0
+  gravitySound: {fileID: 8300000, guid: ed4448d007b524f3ca3f454650282241, type: 3}

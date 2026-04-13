@@ -53,7 +53,7 @@ MonoBehaviour:
   value: 0
   textBox: {fileID: 7884950796790679022}
   canInteract: 0
-  increment: 5
+  increment: 6
   breakSound: {fileID: 8300000, guid: b32b04357694642dfb82947f25676720, type: 3}
 --- !u!212 &3872579020008058915
 SpriteRenderer:

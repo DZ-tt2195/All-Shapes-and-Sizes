@@ -9,7 +9,7 @@ public class Egg : Shape
     [SerializeField] AudioClip breakSound;
     public override void Setup(Vector2 start)
     {
-        disappearOn = ShapeManager.instance.dropped + 5;
+        disappearOn = ShapeManager.instance.dropped + increment;
         currentScore = ShapeManager.instance.score;
         base.Setup(start);
     }

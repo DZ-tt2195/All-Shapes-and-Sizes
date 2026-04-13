@@ -8,12 +8,13 @@ using TMPro;
 public class Shape : MonoBehaviour
 {
     public SpriteRenderer spriterenderer;
-    protected Rigidbody2D rb;
+    public Rigidbody2D rb {get; private set;}
     [SerializeField] protected int value;
     [SerializeField] protected TMP_Text textBox;
     [ReadOnly] public bool canInteract;
     float deathLineTouched = 0f;
     Vector3 mySize;
+    HashSet<Collider2D> blackHoleColliders = new();
     private void Awake()
     {
         mySize = transform.localScale;
@@ -58,11 +59,10 @@ public class Shape : MonoBehaviour
     }
     private void OnTriggerStay2D(Collider2D collision)
     {
-        if (!canInteract) return;
+        if (!canInteract || blackHoleColliders.Count >= 1) return;
         if (collision.TryGetComponent(out Shape otherShape) && otherShape.canInteract)
         {
-            if (this.IsMainShape() && otherShape.IsMainShape() && this.transform.position.y > otherShape.transform.position.y) 
-                return;
+            if (this.IsMainShape() && otherShape.IsMainShape() && this.transform.position.y > otherShape.transform.position.y) return;
             HitOtherShape(otherShape);
         }   
         else
@@ -71,6 +71,10 @@ public class Shape : MonoBehaviour
             {
                 Debug.Log("went out of bounds");
                 ShapeManager.instance.ReturnShape(this);
+            }
+            else if (collision.CompareTag("BlackHole"))
+            {
+                blackHoleColliders.Add(collision);
             }
             else if (IsMainShape() && collision.CompareTag("Death Line"))
             {
@@ -98,11 +102,18 @@ public class Shape : MonoBehaviour
     protected virtual void Upgrade(Shape otherShape)
     {
     }
-    private void OnTriggerExit2D(Collider2D collision)
+    void OnTriggerExit2D(Collider2D collision)
     {
         if (collision.CompareTag("Death Line"))
+        {
             deathLineTouched = 0f;
+        }
+        else if (collision.CompareTag("BlackHole"))
+        {
+            blackHoleColliders.Remove(collision);
+        }
     }
+    /*
     void Update()
     {
         Vector3 pos = transform.position;
@@ -115,4 +126,5 @@ public class Shape : MonoBehaviour
 
         transform.position = pos;
     }
+    */
 }
