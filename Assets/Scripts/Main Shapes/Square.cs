@@ -10,8 +10,6 @@ public class Square : Shape
     {
         if (otherShape is Square)
         {
-            this.canInteract = false;
-            otherShape.canInteract = false;
             Upgrade(otherShape);
         }
     }

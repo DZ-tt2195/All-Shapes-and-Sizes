@@ -8,39 +8,44 @@ using TMPro;
 public class Shape : MonoBehaviour
 {
     public SpriteRenderer spriterenderer;
-    public Rigidbody2D rb {get; private set;}
+    Rigidbody2D rb;
     [SerializeField] protected int value;
     [SerializeField] protected TMP_Text textBox;
     [ReadOnly] public bool canInteract;
     float deathLineTouched = 0f;
-    Vector3 mySize;
+    public bool cursed {get; private set;}
+    Color originalShapeColor;
+    Color originalFontColor;
+    Vector3 originalSize;
     HashSet<Collider2D> blackHoleColliders = new();
     private void Awake()
     {
-        mySize = transform.localScale;
         rb = GetComponent<Rigidbody2D>();
         rb.gravityScale = 2.75f;
         rb.angularDamping = 2;
         rb.collisionDetectionMode = CollisionDetectionMode2D.Discrete;
         rb.interpolation = RigidbodyInterpolation2D.Interpolate;
+        originalSize = transform.localScale;
+        originalShapeColor = spriterenderer.color;
+        if (textBox != null)
+            originalFontColor = textBox.color;
+
         if (IsMainShape())
-        {
             value = (int)Mathf.Pow(value, 2);
-            textBox.text = $"{value}";
-        }
     }
     public virtual Vector2 UISize(bool larger)
     {
         return Vector2.zero;
     }
     public bool IsMainShape() => value >= 1;
-    public virtual void Setup(Vector2 start)
+    public virtual void Setup(Vector2 start, bool cursed)
     {
         canInteract = false;
         this.transform.position = start;
         this.transform.localEulerAngles = Vector3.zero;
         this.transform.localScale = Vector3.zero;
         this.gameObject.SetActive(true);
+        CursedStatus(cursed);
         rb.WakeUp();
         
         StartCoroutine(BecomeActive());
@@ -51,18 +56,26 @@ public class Shape : MonoBehaviour
             while (elapsedTime < totalTime)
             {
                 elapsedTime += Time.deltaTime;
-                this.transform.localScale = Vector3.Lerp(Vector3.zero, mySize, elapsedTime/totalTime);
+                this.transform.localScale = Vector3.Lerp(Vector3.zero, originalSize, elapsedTime/totalTime);
                 yield return null;
             }
             canInteract = true;
         }
     }
+    public void CursedStatus(bool cursed)
+    {
+        this.cursed = cursed;
+        this.spriterenderer.color = cursed ? Color.black : originalShapeColor;
+        if (IsMainShape()) textBox.text = value.ToString();
+        if (textBox != null) textBox.color = cursed ? Color.white : originalFontColor;
+    }
     private void OnTriggerStay2D(Collider2D collision)
     {
-        if (!canInteract || blackHoleColliders.Count >= 1) return;
+        if (!HasAbility()) return;
         if (collision.TryGetComponent(out Shape otherShape) && otherShape.canInteract)
         {
             if (this.IsMainShape() && otherShape.IsMainShape() && this.transform.position.y > otherShape.transform.position.y) return;
+            if (this.cursed && otherShape.cursed) return;
             HitOtherShape(otherShape);
         }   
         else
@@ -113,18 +126,8 @@ public class Shape : MonoBehaviour
             blackHoleColliders.Remove(collision);
         }
     }
-    /*
-    void Update()
+    public bool HasAbility()
     {
-        Vector3 pos = transform.position;
-
-        pos.x = Mathf.Clamp(pos.x, ShapeManager.instance.leftWall.position.x, ShapeManager.instance.rightWall.position.x);
-        if (Physics2D.gravity.y < 0)
-            pos.y = Mathf.Max(pos.y, ShapeManager.instance.floor.position.y);
-        else if (Physics2D.gravity.y > 0)
-            pos.y = Mathf.Min(pos.y, ShapeManager.instance.ceiling.position.y);
-
-        transform.position = pos;
+        return blackHoleColliders.Count == 0 && canInteract;
     }
-    */
 }

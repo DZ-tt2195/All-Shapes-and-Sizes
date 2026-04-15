@@ -5,10 +5,10 @@ public class BlackHole : Shape
 {
     int disappearOn;
     [SerializeField] int increment;
-    public override void Setup(Vector2 start)
+    public override void Setup(Vector2 start, bool cursed)
     {
         disappearOn = ShapeManager.instance.merged + increment;
-        base.Setup(start);
+        base.Setup(start, cursed);
     }
     public override Vector2 UISize(bool larger)
     {

@@ -41,6 +41,7 @@ public class ShapeManager : MonoBehaviour
         [SerializeField] TMP_Text replay;
         [SerializeField] TMP_Text titleScreen;
         [SerializeField] TMP_Text guideText;
+        [SerializeField] TMP_Text bonusShapes;
 
     [Foldout("Tutorial", true)]
         [SerializeField] Image tutorialBackground;
@@ -49,10 +50,8 @@ public class ShapeManager : MonoBehaviour
         [SerializeField] Button guideButton;
 
     [Foldout("Next shapes", true)]
-        [SerializeField] Image nextImage1;
-        Shape nextShape1;
-        [SerializeField] Image nextImage2;
-        Shape nextShape2;
+        [SerializeField] List<Image> nextImages = new();
+        List<Shape> nextShapesToDrop = new();
         float waitForDrop = 0f;
 
     [Foldout("To drop", true)]
@@ -107,6 +106,7 @@ public class ShapeManager : MonoBehaviour
         replay.text = AutoTranslate.Replay();
         titleScreen.text = AutoTranslate.Title_Screen();
         guideText.text = AutoTranslate.Close_Guide();
+        bonusShapes.text = AutoTranslate.Bonus_Shapes();
 
         foreach (Shape shape in allShapes)
         {
@@ -159,9 +159,9 @@ public class ShapeManager : MonoBehaviour
         resign.onClick.AddListener(() => GameOver(AutoTranslate.You_Gave_Up()));
         ceiling.gameObject.SetActive(false);
         deathLine.transform.localPosition = new Vector3(0, ceiling.transform.localPosition.y + 0.15f, 0);
-
-        nextShape2 = AssignRandomShape();
         RollNextShape();
+        foreach (Image image in nextImages)
+            image.transform.parent.gameObject.SetActive(false);
 
         switch (PrefManager.GetSetting())
         {
@@ -175,10 +175,7 @@ public class ShapeManager : MonoBehaviour
                 break;
         }
 
-        nextImage1.transform.parent.gameObject.SetActive(false);
-        nextImage2.transform.parent.gameObject.SetActive(false);
-
-        StartCoroutine(DropRandomly(typeof(Circle), 75));
+        StartCoroutine(DropRandomly(typeof(Circle), 75, false));
         StartCoroutine(BeginGame());
         IEnumerator BeginGame()
         {
@@ -271,14 +268,15 @@ public class ShapeManager : MonoBehaviour
                     StartCoroutine(WaitForEnd(AutoTranslate.Game_Over()));
             }
 
-            GenerateShape(nextShape1.GetType().Name, new Vector2(xValue, YSpawn()), CreationType.Drop);
+            GenerateShape(nextShapesToDrop[0].GetType().Name, new Vector2(xValue, YSpawn()), CreationType.Drop);
+            nextShapesToDrop.RemoveAt(0);
             RollNextShape();
         }
     }
     IEnumerator WaitForEnd(string message)
     {
-        nextImage1.transform.parent.gameObject.SetActive(false);
-        nextImage2.transform.parent.gameObject.SetActive(false);
+        foreach (Image image in nextImages)
+            image.transform.parent.gameObject.SetActive(false);
         InputManager.instance.enabled = false;
         yield return new WaitForSeconds(2.5f);
         GameOver(message);
@@ -304,8 +302,8 @@ public class ShapeManager : MonoBehaviour
     }
     void ShapeUI()
     {
-        Apply(nextImage1, nextShape1, true);
-        Apply(nextImage2, nextShape2, false);
+        for (int i = 0 ; i<nextImages.Count; i++)
+            Apply(nextImages[i], nextShapesToDrop[i], i == 0);
     }
     void Apply(Image image, Shape shape, bool large)
     {
@@ -324,34 +322,29 @@ public class ShapeManager : MonoBehaviour
     }
     void RollNextShape()
     {
-        nextShape1 = nextShape2;
-        do
+        while (nextShapesToDrop.Count < nextImages.Count)
         {
-            nextShape2 = AssignRandomShape();
-        } while (nextShape1.name.Equals(typeof(Inverter).Name) && nextShape2.name.Equals(typeof(Inverter).Name));
+            if (toDrop.Count == 0)
+            {
+                foreach (ChanceOfDrop next in mainShapesToDrop)
+                {
+                    for (int i = 0; i < next.chance; i++)
+                        toDrop.Add(next.shape);
+                }
+                foreach (ChanceOfDrop next in bonusShapesToDrop)
+                {
+                    for (int i = 0; i < next.chance; i++)
+                        toDrop.Add(next.shape);
+                }
+            }
+            int randIndex = UnityEngine.Random.Range(0, toDrop.Count);
+            Shape newShape = toDrop[randIndex];
+            toDrop.RemoveAt(randIndex);
+            nextShapesToDrop.Add(newShape);
+        }
         ShapeUI();
     }
-    Shape AssignRandomShape()
-    {
-        if (toDrop.Count == 0)
-        {
-            foreach (ChanceOfDrop next in mainShapesToDrop)
-            {
-                for (int i = 0; i < next.chance; i++)
-                    toDrop.Add(next.shape);
-            }
-            foreach (ChanceOfDrop next in bonusShapesToDrop)
-            {
-                for (int i = 0; i < next.chance; i++)
-                    toDrop.Add(next.shape);
-            }
-        }
-        int randIndex = UnityEngine.Random.Range(0, toDrop.Count);
-        Shape shape = toDrop[randIndex];
-        toDrop.RemoveAt(randIndex);
-        return shape;
-    }
-    public void GenerateShape(string shape, Vector2 spawn, CreationType creationType)
+    public void GenerateShape(string shape, Vector2 spawn, CreationType creationType, bool cursed = false)
     {
         if (state == GameState.GameOver) 
             return;
@@ -375,7 +368,7 @@ public class ShapeManager : MonoBehaviour
                 break;
         }
         shapesInLevel.Add(toCreate);
-        toCreate.Setup(spawn);
+        toCreate.Setup(spawn, cursed);
     }
     public void ReturnShape(Shape shape)
     {
@@ -384,12 +377,12 @@ public class ShapeManager : MonoBehaviour
         shapesInLevel.Remove(shape);
         shape.gameObject.SetActive(false);
     }
-    public IEnumerator DropRandomly(Type shapeToSpawn, int numDrop)
+    public IEnumerator DropRandomly(Type shapeToSpawn, int numDrop, bool cursed)
     {
         for (int i = 0; i < numDrop; i++)
         {
             yield return new WaitForSeconds(0.05f);
-            GenerateShape(shapeToSpawn.Name, new Vector2(RandomX(), YSpawn()), CreationType.Drop);
+            GenerateShape(shapeToSpawn.Name, new Vector2(RandomX(), YSpawn()), CreationType.Drop, cursed);
 
             float RandomX()
             {

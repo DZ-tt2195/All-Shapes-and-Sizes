@@ -10,8 +10,6 @@ public class Star : Shape
     {
         if (otherShape is Star)
         {
-            this.canInteract = false;
-            otherShape.canInteract = false;
             Upgrade(otherShape);
         }
     }

@@ -9,13 +9,11 @@ public class Warp : Shape
     }
     protected override void HitOtherShape(Shape otherShape)
     {
-        canInteract = false;
-        otherShape.canInteract = false;
         AudioManager.instance.PlaySound(warpSound, 0.3f);
 
         (float leftSpawn, float rightSpawn) = ShapeManager.instance.XSpawnRange();
         float newXPosition = otherShape.transform.position.x > 0 ? leftSpawn : rightSpawn;
-        ShapeManager.instance.GenerateShape(otherShape.GetType().Name, new(newXPosition, otherShape.transform.position.y), CreationType.Drop);
+        ShapeManager.instance.GenerateShape(otherShape.GetType().Name, new(newXPosition, otherShape.transform.position.y), CreationType.Drop, otherShape.cursed);
         
         ShapeManager.instance.ReturnShape(otherShape);
         ShapeManager.instance.ReturnShape(this);

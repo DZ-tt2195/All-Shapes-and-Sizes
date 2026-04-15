@@ -10,8 +10,6 @@ public class Circle : Shape
     {
         if (otherShape is Circle)
         {
-            this.canInteract = false;
-            otherShape.canInteract = false;
             Upgrade(otherShape);
         }
     }

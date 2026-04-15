@@ -247,6 +247,7 @@ MonoBehaviour:
   value: 8
   textBox: {fileID: 7224581876729181463}
   canInteract: 0
+  cursed: 0
 --- !u!1 &7424888025053765403
 GameObject:
   m_ObjectHideFlags: 0

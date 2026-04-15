@@ -10,8 +10,6 @@ public class Arrow : Shape
     {
         if (otherShape is Arrow)
         {
-            this.canInteract = false;
-            otherShape.canInteract = false;
             Upgrade(otherShape);
         }
     }

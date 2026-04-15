@@ -10,8 +10,6 @@ public class Multiply : Shape
     {
         if (otherShape is Multiply)
         {
-            this.canInteract = false;
-            otherShape.canInteract = false;
             Upgrade(otherShape);
         }
     }

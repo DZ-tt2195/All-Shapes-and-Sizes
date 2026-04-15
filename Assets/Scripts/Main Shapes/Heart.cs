@@ -10,8 +10,6 @@ public class Heart : Shape
     {
         if (otherShape is Heart)
         {
-            this.canInteract = false;
-            otherShape.canInteract = false;
             Upgrade(otherShape);
         }
     }

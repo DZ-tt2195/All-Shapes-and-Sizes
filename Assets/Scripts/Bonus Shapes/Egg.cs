@@ -7,17 +7,17 @@ public class Egg : Shape
     int currentScore;
     [SerializeField] int increment;
     [SerializeField] AudioClip breakSound;
-    public override void Setup(Vector2 start)
+    public override void Setup(Vector2 start, bool cursed)
     {
         disappearOn = ShapeManager.instance.dropped + increment;
         currentScore = ShapeManager.instance.score;
-        base.Setup(start);
+        base.Setup(start, cursed);
     }
     void Update()
     {
         int currentCount = disappearOn - ShapeManager.instance.dropped;
         this.textBox.text = $"{currentCount}";
-        if (this.canInteract)
+        if (HasAbility())
         {
             if (ShapeManager.instance.score > currentScore)
             {

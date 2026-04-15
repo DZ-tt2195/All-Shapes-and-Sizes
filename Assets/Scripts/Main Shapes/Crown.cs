@@ -10,8 +10,6 @@ public class Crown : Shape
     {
         if (otherShape is Crown)
         {
-            this.canInteract = false;
-            otherShape.canInteract = false;
             Upgrade(otherShape);
         }
     }

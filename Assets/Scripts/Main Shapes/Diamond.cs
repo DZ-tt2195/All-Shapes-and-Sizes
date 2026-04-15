@@ -10,8 +10,6 @@ public class Diamond : Shape
     {
         if (otherShape is Diamond)
         {
-            this.canInteract = false;
-            otherShape.canInteract = false;
             Upgrade(otherShape);
         }
     }

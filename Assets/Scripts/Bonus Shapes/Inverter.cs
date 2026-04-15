@@ -11,7 +11,6 @@ public class Inverter : Shape
     }
     protected override void HitOtherShape(Shape otherShape)
     {
-        this.canInteract = false;
         AudioManager.instance.PlaySound(gravitySound, 0.5f);
         ShapeManager.instance.SwitchGravity();
         ShapeManager.instance.StartCoroutine(ArrowAnimation());

@@ -2,7 +2,7 @@ All_Shapes_and_Sizes	All Shapes and Sizes
 Blank	
 Designer	by Thomas Tang (DZ)
 Inspiration	Inspired by Aladdin X's Suika Game
-Last_Update	Last Updated: Apr 13, 2026
+Last_Update	Last Updated: Apr 14, 2026
 Translator_Credit	Original Language
 Language	Language
 Sound_Credits	Sound Credits
@@ -31,14 +31,16 @@ Merge_Crown	Merge Crowns
 Merge_Crown_Tutorial	To win, create 2 Crowns, and then have them merge with one another. You cannot drop more than $Num$ shapes.
 Endless	Endless Mode
 Endless_Tutorial	Play for as long as you are able to until you lose.
-Wall	Gets in the way; destroy it with a Bomb.
-GhostStar	Disappears after you drop 5 shapes; merge it with another Star before it does.
+Bonus_Shapes	Bonus Shapes
+Wall	Gets in the way; can only be removed with a Bomb.
+GhostStar	Merges with another Star, but disappears after you drop 5 shapes.
 Multiply	Merges with only itself to create a Star.
 Inverter	Changes the gravity of all shapes.
 Warp	Teleports a shape to the opposite side of the level.
-Bag	Spawns several blue Circles, which can only combine with red Circles.
+Bag	Creates multiple cursed Circles. (Cursed shapes can't merge with each other.)
 Egg	Transforms into a Star after dropping 6 shapes, but disappears if you score any points.
-BlackHole	Disables shapes around it from merging or disappearing. Merge 5 other shapes to remove it.
+BlackHole	Shapes that surround this cannot be merged or destroyed. Merge 5 shapes elsewhere to remove it.
+Duplicate	This curses the first shape it touches, and transforms into a cursed copy of that shape. (Cursed shapes can't merge with each other.)
 Update_History	Update History
 Update_0	Dec 23, 2025
 Update_0_Text	New item: Warp - Moves a shape to the other side of the screen \nBoth drop-shape modes have a higher points threshold \nShapes have a new spawning animation \nMinor physics changes
@@ -46,5 +48,5 @@ Update_1	Dec 28, 2025
 Update_1_Text	New translation features - you can download the English translation file and upload your own translation
 Update_2	Jan 28, 2026
 Update_2_Text	Added fonts to support more languages \nFixed a ui issue
-Update_3	Apr 13, 2026
-Update_3_Text	You always have circles, squares, arrows, diamonds, bombs, as well as (just) 3 bonus shapes  \nBonus shapes count towards the number of shapes you've dropped \nRemoved some game modes and levels \nMoved around some UI explaining the game \nAdded more sound effects and volume control
+Update_3	Apr 14, 2026
+Update_3_Text	You always have circles, squares, arrows, diamonds, bombs, as well as (just) 3 bonus shapes  \nBonus shapes count towards the number of shapes you've dropped \nRemoved some game modes and levels \nMoved around some UI explaining the game \nCan see the next 7 shapes in your queue \nAdded more sound effects and volume control

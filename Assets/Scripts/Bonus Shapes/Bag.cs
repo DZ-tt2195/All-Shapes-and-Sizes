@@ -9,8 +9,7 @@ public class Bag : Shape
     }
     protected override void HitOtherShape(Shape otherShape)
     {
-        this.canInteract = false;
-        ShapeManager.instance.StartCoroutine(ShapeManager.instance.DropRandomly(typeof(BlueCircle), spawnAmount));
+        ShapeManager.instance.StartCoroutine(ShapeManager.instance.DropRandomly(typeof(Circle), spawnAmount, true));
         ShapeManager.instance.ReturnShape(this);
     }
 }

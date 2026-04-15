@@ -10,8 +10,6 @@ public class Hexagon : Shape
     {
         if (otherShape is Hexagon)
         {
-            this.canInteract = false;
-            otherShape.canInteract = false;
             Upgrade(otherShape);
         }
     }
