@@ -9,13 +9,10 @@ public class Square : Shape
     protected override void HitOtherShape(Shape otherShape)
     {
         if (otherShape is Square)
-        {
             Upgrade(otherShape);
-        }
     }
     protected override void Upgrade(Shape otherShape)
     {
-        ShapeManager.instance.GenerateShape(typeof(Arrow).Name, this.transform.position, CreationType.Merge);
-        ScoreShapes(otherShape);
+        ScoreShapes(otherShape, typeof(Arrow).Name);
     }
 }

@@ -15,7 +15,6 @@ public class Heart : Shape
     }
     protected override void Upgrade(Shape otherShape)
     {
-        ShapeManager.instance.GenerateShape(typeof(Crown).Name, this.transform.position, CreationType.Merge);
-        ScoreShapes(otherShape);
+        ScoreShapes(otherShape, typeof(Crown).Name);
     }
 }

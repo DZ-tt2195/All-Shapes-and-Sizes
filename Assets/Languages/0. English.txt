@@ -1,4 +1,3 @@
-All_Shapes_and_Sizes	All Shapes and Sizes
 Blank	
 Designer	by Thomas Tang (DZ)
 Inspiration	Inspired by Aladdin X's Suika Game
@@ -36,11 +35,11 @@ Wall	Gets in the way; can only be removed with a Bomb.
 GhostStar	Merges with another Star, but disappears after you drop 5 shapes.
 Multiply	Merges with only itself to create a Star.
 Inverter	Changes the gravity of all shapes.
-Warp	Teleports a shape to the opposite side of the level.
-Bag	Creates multiple cursed Circles. (Cursed shapes can't merge with each other.)
+Portal	Moves a shape to the opposite side of the level.
+Bag	Creates multiple cursed Circles. (Cursed shapes can't merge with other cursed shapes.)
 Egg	Transforms into a Star after dropping 6 shapes, but disappears if you score any points.
-BlackHole	Shapes that surround this cannot be merged or destroyed. Merge 5 shapes elsewhere to remove it.
-Duplicate	This curses the first shape it touches, and transforms into a cursed copy of that shape. (Cursed shapes can't merge with each other.)
+Snowflake	Shapes that are near this cannot be merged or destroyed. Merge 5 shapes elsewhere to remove it.
+Duplicate	When this touches a shape, it becomes cursed, and this transforms into a cursed copy of it. (Cursed shapes can't merge with other cursed shapes.)
 Update_History	Update History
 Update_0	Dec 23, 2025
 Update_0_Text	New item: Warp - Moves a shape to the other side of the screen \nBoth drop-shape modes have a higher points threshold \nShapes have a new spawning animation \nMinor physics changes

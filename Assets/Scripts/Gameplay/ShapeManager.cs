@@ -22,7 +22,7 @@ public class ShapeManager : MonoBehaviour
 #region Variables
 
     public static ShapeManager instance;
-    [ReadOnly] public Camera mainCam;
+    Camera mainCam;
 
     [Foldout("Audio", true)]
         [SerializeField] AudioClip createSound;
@@ -113,13 +113,13 @@ public class ShapeManager : MonoBehaviour
             shapeStorage.Add(shape.GetType().Name, new Queue<Shape>());
         }
 
-        while (bonusShapesToDrop.Count > 3)
+        while (bonusShapesToDrop.Count > bonusShapeList.Count)
         {
             int random = UnityEngine.Random.Range(0, bonusShapesToDrop.Count);
             bonusShapesToDrop.RemoveAt(random);
         }
         tutorialBackground.gameObject.SetActive(true);
-        for (int i = 0; i<3; i++)
+        for (int i = 0; i<bonusShapeList.Count; i++)
         {
             Apply(bonusShapeList[i], bonusShapesToDrop[i].shape, true);
             bonusTextList[i].text = Translator.inst.Translate(bonusShapesToDrop[i].shape.GetType().Name);

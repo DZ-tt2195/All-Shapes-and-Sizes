@@ -1,11 +1,11 @@
 using UnityEngine;
 
-public class Warp : Shape
+public class Portal : Shape
 {
     [SerializeField] AudioClip warpSound;
     public override Vector2 UISize(bool larger)
     {
-        return larger ? new(90, 90) : new(60, 60);
+        return larger ? new(60, 90) : new(50, 70);
     }
     protected override void HitOtherShape(Shape otherShape)
     {

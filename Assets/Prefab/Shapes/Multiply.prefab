@@ -87,7 +87,7 @@ SpriteRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: 73a6446662c004c01be542f01f18c74d, type: 3}
-  m_Color: {r: 0.3584906, g: 0.3584906, b: 0.3584906, a: 1}
+  m_Color: {r: 0.5849056, g: 0.5849056, b: 0.5849056, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -257,7 +257,6 @@ MonoBehaviour:
   value: 4
   textBox: {fileID: 6638110015828285167}
   canInteract: 0
-  cursed: 0
 --- !u!1 &3329414881619113071
 GameObject:
   m_ObjectHideFlags: 0

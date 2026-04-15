@@ -15,7 +15,6 @@ public class Diamond : Shape
     }
     protected override void Upgrade(Shape otherShape)
     {
-        ShapeManager.instance.GenerateShape(typeof(Star).Name, this.transform.position, CreationType.Merge);
-        ScoreShapes(otherShape);
+        ScoreShapes(otherShape, typeof(Star).Name);
     }
 }

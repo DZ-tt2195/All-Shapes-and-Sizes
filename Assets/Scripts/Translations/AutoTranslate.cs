@@ -1,6 +1,5 @@
 public static class AutoTranslate 
 {
-public static string All_Shapes_and_Sizes () => Translator.inst.Translate("All_Shapes_and_Sizes", new() {});
 public static string Blank () => Translator.inst.Translate("Blank", new() {});
 public static string Designer () => Translator.inst.Translate("Designer", new() {});
 public static string Inspiration () => Translator.inst.Translate("Inspiration", new() {});
@@ -38,10 +37,10 @@ public static string Wall () => Translator.inst.Translate("Wall", new() {});
 public static string GhostStar () => Translator.inst.Translate("GhostStar", new() {});
 public static string Multiply () => Translator.inst.Translate("Multiply", new() {});
 public static string Inverter () => Translator.inst.Translate("Inverter", new() {});
-public static string Warp () => Translator.inst.Translate("Warp", new() {});
+public static string Portal () => Translator.inst.Translate("Portal", new() {});
 public static string Bag () => Translator.inst.Translate("Bag", new() {});
 public static string Egg () => Translator.inst.Translate("Egg", new() {});
-public static string BlackHole () => Translator.inst.Translate("BlackHole", new() {});
+public static string Snowflake () => Translator.inst.Translate("Snowflake", new() {});
 public static string Duplicate () => Translator.inst.Translate("Duplicate", new() {});
 public static string Update_History () => Translator.inst.Translate("Update_History", new() {});
 public static string Update_0 () => Translator.inst.Translate("Update_0", new() {});

@@ -8,7 +8,7 @@ public class Duplicate : Shape
     }
     protected override void HitOtherShape(Shape otherShape)
     {
-        if (otherShape.IsMainShape() && !otherShape.cursed)
+        if (otherShape.IsMainShape())
         {
             otherShape.CursedStatus(true);
             ShapeManager.instance.ReturnShape(this);

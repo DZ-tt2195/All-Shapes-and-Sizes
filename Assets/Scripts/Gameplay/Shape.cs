@@ -106,11 +106,13 @@ public class Shape : MonoBehaviour
     protected virtual void HitOtherShape(Shape otherShape)
     {
     }
-    protected void ScoreShapes(Shape otherShape)
+    protected void ScoreShapes(Shape otherShape, string newShape)
     {
         ShapeManager.instance.AddScore(value, this.transform.position, spriterenderer.color);
+        if (newShape != "")
+            ShapeManager.instance.GenerateShape(newShape, Vector2.Lerp(this.transform.position, otherShape.transform.position, 0.5f), CreationType.Merge);
         ShapeManager.instance.ReturnShape(otherShape);
-        ShapeManager.instance.ReturnShape(this);        
+        ShapeManager.instance.ReturnShape(this);
     }
     protected virtual void Upgrade(Shape otherShape)
     {

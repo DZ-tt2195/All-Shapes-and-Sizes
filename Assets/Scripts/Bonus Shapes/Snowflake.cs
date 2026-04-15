@@ -1,10 +1,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BlackHole : Shape
+public class Snowflake : Shape
 {
     int disappearOn;
     [SerializeField] int increment;
+    [SerializeField] AudioClip dingSound;
     public override void Setup(Vector2 start, bool cursed)
     {
         disappearOn = ShapeManager.instance.merged + increment;
@@ -19,6 +20,9 @@ public class BlackHole : Shape
         int currentCount = disappearOn - ShapeManager.instance.merged;
         this.textBox.text = $"{currentCount}";
         if (currentCount <= 0)
+        {
             ShapeManager.instance.ReturnShape(this);
+            AudioManager.instance.PlaySound(dingSound, 0.3f);
+        }
     }
 }

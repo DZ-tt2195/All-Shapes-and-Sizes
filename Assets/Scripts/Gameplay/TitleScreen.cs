@@ -30,7 +30,6 @@ public class TitleScreen : MonoBehaviour
 
     [Foldout("Text and images", true)]
         [SerializeField] TMP_Text volume;
-        [SerializeField] TMP_Text title;
         [SerializeField] TMP_Text gameDesigner;
         [SerializeField] TMP_Text lastUpdate;
         [SerializeField] TMP_Text inspiration;
@@ -42,7 +41,6 @@ public class TitleScreen : MonoBehaviour
 
     private void Start()
     {
-        title.text = AutoTranslate.All_Shapes_and_Sizes();
         gameDesigner.text = AutoTranslate.Designer();
         lastUpdate.text = AutoTranslate.Last_Update();
         inspiration.text = AutoTranslate.Inspiration();

@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 938321804d5dd41cb976854f3dcdefc0
+guid: 8b3a9a19c94b64a46b4d890326f6bfe9
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 3301238525455117042
-    second: Warp_0
+      213: 2189510010676529607
+    second: Portal_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -51,7 +51,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 600
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -111,7 +111,7 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 4
     buildTarget: iOS
-    maxTextureSize: 512
+    maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
@@ -126,13 +126,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Warp_0
+      name: Portal_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 1165
-        height: 1148
+        width: 656
+        height: 1011
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -141,8 +141,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 2fa269cb2fa50dd20800000000000000
-      internalID: 3301238525455117042
+      spriteID: 7c9498211c3b26e10800000000000000
+      internalID: 2189510010676529607
       vertices: []
       indices: 
       edges: []
@@ -161,7 +161,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Warp_0: 3301238525455117042
+      Portal_0: 2189510010676529607
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

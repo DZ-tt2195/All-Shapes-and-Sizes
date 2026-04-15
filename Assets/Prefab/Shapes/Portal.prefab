@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 2615127201543193395}
   - component: {fileID: 2665926777722749875}
   m_Layer: 0
-  m_Name: Warp
+  m_Name: Portal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -31,7 +31,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -11.14, y: 2.34, z: 0}
-  m_LocalScale: {x: 0.09, y: 0.09, z: 0.09}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
@@ -85,12 +85,12 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 21300000, guid: 938321804d5dd41cb976854f3dcdefc0, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Sprite: {fileID: 21300000, guid: 8b3a9a19c94b64a46b4d890326f6bfe9, type: 3}
+  m_Color: {r: 1, g: 0.7154994, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 6.56, y: 10.116626}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -107,7 +107,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 1
-  m_Mass: 1.0843221
+  m_Mass: 1.8700001
   m_LinearDamping: 0
   m_AngularDamping: 0.05
   m_GravityScale: 1
@@ -160,13 +160,13 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 11.65, y: 11.490723}
-    newSize: {x: 1, y: 1}
+    oldSize: {x: 1.0933334, y: 1.6861043}
+    newSize: {x: 6.56, y: 10.116626}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 11.65, y: 11.490723}
+  m_Size: {x: 1.1, y: 1.7}
   m_EdgeRadius: 0
 --- !u!61 &2615127201543193395
 BoxCollider2D:
@@ -206,13 +206,13 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 11.65, y: 11.490723}
-    newSize: {x: 1, y: 1}
+    oldSize: {x: 1.0933334, y: 1.6861043}
+    newSize: {x: 6.56, y: 10.116626}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 12.5, y: 12.5}
+  m_Size: {x: 1.25, y: 1.85}
   m_EdgeRadius: 0
 --- !u!114 &2665926777722749875
 MonoBehaviour:
@@ -228,5 +228,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Warp
   spriterenderer: {fileID: 5783274277680178189}
   value: 0
+  textBox: {fileID: 0}
   canInteract: 0
   warpSound: {fileID: 8300000, guid: 819720908868e40ff83c1750dcff189d, type: 3}
