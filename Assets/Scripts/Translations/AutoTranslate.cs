@@ -42,6 +42,7 @@ public static string Bag () => Translator.inst.Translate("Bag", new() {});
 public static string Egg () => Translator.inst.Translate("Egg", new() {});
 public static string Snowflake () => Translator.inst.Translate("Snowflake", new() {});
 public static string Duplicate () => Translator.inst.Translate("Duplicate", new() {});
+public static string Chest () => Translator.inst.Translate("Chest", new() {});
 public static string Update_History () => Translator.inst.Translate("Update_History", new() {});
 public static string Update_0 () => Translator.inst.Translate("Update_0", new() {});
 public static string Update_0_Text () => Translator.inst.Translate("Update_0_Text", new() {});

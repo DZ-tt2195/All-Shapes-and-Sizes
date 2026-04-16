@@ -9,12 +9,6 @@ public class Heart : Shape
     protected override void HitOtherShape(Shape otherShape)
     {
         if (otherShape is Heart)
-        {
-            Upgrade(otherShape);
-        }
-    }
-    protected override void Upgrade(Shape otherShape)
-    {
-        ScoreShapes(otherShape, typeof(Crown).Name);
+            ScoreShapes(otherShape, typeof(Crown).Name);
     }
 }

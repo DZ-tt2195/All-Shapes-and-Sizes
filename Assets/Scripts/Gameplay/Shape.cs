@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using MyBox;
 using TMPro;
-
 [RequireComponent(typeof(Rigidbody2D))]
 public class Shape : MonoBehaviour
 {
@@ -17,7 +16,7 @@ public class Shape : MonoBehaviour
     Color originalShapeColor;
     Color originalFontColor;
     Vector3 originalSize;
-    HashSet<Collider2D> blackHoleColliders = new();
+    HashSet<GameObject> blackHoleColliders = new();
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -33,11 +32,9 @@ public class Shape : MonoBehaviour
         if (IsMainShape())
             value = (int)Mathf.Pow(value, 2);
     }
-    public virtual Vector2 UISize(bool larger)
-    {
-        return Vector2.zero;
-    }
+    public virtual Vector2 UISize(bool larger) => Vector2.zero;
     public bool IsMainShape() => value >= 1;
+    public bool HasAbility() => blackHoleColliders.Count == 0 && canInteract;
     public virtual void Setup(Vector2 start, bool cursed)
     {
         canInteract = false;
@@ -69,10 +66,10 @@ public class Shape : MonoBehaviour
         if (IsMainShape()) textBox.text = value.ToString();
         if (textBox != null) textBox.color = cursed ? Color.white : originalFontColor;
     }
-    private void OnTriggerStay2D(Collider2D collision)
+    protected virtual void OnTriggerStay2D(Collider2D collision)
     {
         if (!HasAbility()) return;
-        if (collision.TryGetComponent(out Shape otherShape) && otherShape.canInteract)
+        if (collision.TryGetComponent(out Shape otherShape) && otherShape.HasAbility())
         {
             if (this.IsMainShape() && otherShape.IsMainShape() && this.transform.position.y > otherShape.transform.position.y) return;
             if (this.cursed && otherShape.cursed) return;
@@ -87,7 +84,7 @@ public class Shape : MonoBehaviour
             }
             else if (collision.CompareTag("BlackHole"))
             {
-                blackHoleColliders.Add(collision);
+                blackHoleColliders.Add(collision.gameObject);
             }
             else if (IsMainShape() && collision.CompareTag("Death Line"))
             {
@@ -106,30 +103,30 @@ public class Shape : MonoBehaviour
     protected virtual void HitOtherShape(Shape otherShape)
     {
     }
-    protected void ScoreShapes(Shape otherShape, string newShape)
-    {
-        ShapeManager.instance.AddScore(value, this.transform.position, spriterenderer.color);
-        if (newShape != "")
-            ShapeManager.instance.GenerateShape(newShape, Vector2.Lerp(this.transform.position, otherShape.transform.position, 0.5f), CreationType.Merge);
-        ShapeManager.instance.ReturnShape(otherShape);
-        ShapeManager.instance.ReturnShape(this);
-    }
-    protected virtual void Upgrade(Shape otherShape)
-    {
-    }
-    void OnTriggerExit2D(Collider2D collision)
+    protected virtual void OnTriggerExit2D(Collider2D collision)
     {
         if (collision.CompareTag("Death Line"))
-        {
             deathLineTouched = 0f;
-        }
         else if (collision.CompareTag("BlackHole"))
-        {
-            blackHoleColliders.Remove(collision);
-        }
+            blackHoleColliders.Remove(collision.gameObject);
     }
-    public bool HasAbility()
+    public void ScoreShapes(Shape otherShape, string newShape)
     {
-        return blackHoleColliders.Count == 0 && canInteract;
+        ShapeManager.instance.AddScore(value, this.transform.position, spriterenderer.color);
+        if (otherShape != null)
+        {
+            CreateShape(Vector2.Lerp(this.transform.position, otherShape.transform.position, 0.5f));
+            ShapeManager.instance.ReturnShape(otherShape);
+        }
+        else
+        {
+            CreateShape(this.transform.position);
+        }
+        void CreateShape(Vector2 spawn)
+        {
+            if (newShape != "")
+                ShapeManager.instance.GenerateShape(newShape, spawn, CreationType.Merge);
+        }
+        ShapeManager.instance.ReturnShape(this);
     }
 }

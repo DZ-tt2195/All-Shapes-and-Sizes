@@ -9,12 +9,6 @@ public class Circle : Shape
     protected override void HitOtherShape(Shape otherShape)
     {
         if (otherShape is Circle)
-        {
-            Upgrade(otherShape);
-        }
-    }
-    protected override void Upgrade(Shape otherShape)
-    {
-        ScoreShapes(otherShape, typeof(Square).Name);
+            ScoreShapes(otherShape, typeof(Square).Name);
     }
 }

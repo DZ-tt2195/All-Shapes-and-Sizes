@@ -9,12 +9,6 @@ public class Arrow : Shape
     protected override void HitOtherShape(Shape otherShape)
     {
         if (otherShape is Arrow)
-        {
-            Upgrade(otherShape);
-        }
-    }
-    protected override void Upgrade(Shape otherShape)
-    {
-        ScoreShapes(otherShape, typeof(Diamond).Name);
+            ScoreShapes(otherShape, typeof(Diamond).Name);
     }
 }

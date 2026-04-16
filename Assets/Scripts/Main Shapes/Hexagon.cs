@@ -9,12 +9,6 @@ public class Hexagon : Shape
     protected override void HitOtherShape(Shape otherShape)
     {
         if (otherShape is Hexagon)
-        {
-            Upgrade(otherShape);
-        }
-    }
-    protected override void Upgrade(Shape otherShape)
-    {
-        ScoreShapes(otherShape, typeof(Heart).Name);
+            ScoreShapes(otherShape, typeof(Heart).Name);
     }
 }

@@ -9,12 +9,6 @@ public class Diamond : Shape
     protected override void HitOtherShape(Shape otherShape)
     {
         if (otherShape is Diamond)
-        {
-            Upgrade(otherShape);
-        }
-    }
-    protected override void Upgrade(Shape otherShape)
-    {
-        ScoreShapes(otherShape, typeof(Star).Name);
+            ScoreShapes(otherShape, typeof(Star).Name);
     }
 }

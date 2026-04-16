@@ -10,14 +10,10 @@ public class Crown : Shape
     {
         if (otherShape is Crown)
         {
-            Upgrade(otherShape);
+            ShapeManager.instance.mergedCrowns = true;
+            ScoreShapes(otherShape, "");
+            if (PrefManager.GetSetting() == Setting.Merge_Crown)
+                ShapeManager.instance.GameOver(AutoTranslate.You_Won());
         }
-    }
-    protected override void Upgrade(Shape otherShape)
-    {
-        ShapeManager.instance.mergedCrowns = true;
-        ScoreShapes(otherShape, "");
-        if (PrefManager.GetSetting() == Setting.Merge_Crown)
-            ShapeManager.instance.GameOver(AutoTranslate.You_Won());
     }
 }

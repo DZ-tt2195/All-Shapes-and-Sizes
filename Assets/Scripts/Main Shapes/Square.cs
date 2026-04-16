@@ -9,10 +9,6 @@ public class Square : Shape
     protected override void HitOtherShape(Shape otherShape)
     {
         if (otherShape is Square)
-            Upgrade(otherShape);
-    }
-    protected override void Upgrade(Shape otherShape)
-    {
-        ScoreShapes(otherShape, typeof(Arrow).Name);
+            ScoreShapes(otherShape, typeof(Arrow).Name);
     }
 }

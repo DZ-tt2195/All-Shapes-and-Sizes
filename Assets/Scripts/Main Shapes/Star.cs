@@ -9,12 +9,6 @@ public class Star : Shape
     protected override void HitOtherShape(Shape otherShape)
     {
         if (otherShape is Star)
-        {
-            Upgrade(otherShape);
-        }
-    }
-    protected override void Upgrade(Shape otherShape)
-    {
-        ScoreShapes(otherShape, typeof(Hexagon).Name);
+            ScoreShapes(otherShape, typeof(Hexagon).Name);
     }
 }
