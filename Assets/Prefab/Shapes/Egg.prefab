@@ -50,6 +50,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Egg
   spriterenderer: {fileID: 3872579020008058915}
+  dropChance: 1
   value: 0
   textBox: {fileID: 7884950796790679022}
   canInteract: 0

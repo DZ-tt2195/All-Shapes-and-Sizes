@@ -18,10 +18,6 @@ public enum Setting { Merge_Crown, Endless };
 
 public class TitleScreen : MonoBehaviour
 {
-    [Foldout("Sound effects", true)]
-        [SerializeField] AudioClip menuSound;
-        [SerializeField] Slider volumeSlider;
-
     [Foldout("Buttons", true)]
         [SerializeField] Button sfxButton;
         [SerializeField] Button clearData;
@@ -29,7 +25,6 @@ public class TitleScreen : MonoBehaviour
         [SerializeField] List<LevelButton> allLevelButtons = new();
 
     [Foldout("Text and images", true)]
-        [SerializeField] TMP_Text volume;
         [SerializeField] TMP_Text gameDesigner;
         [SerializeField] TMP_Text lastUpdate;
         [SerializeField] TMP_Text inspiration;
@@ -46,22 +41,11 @@ public class TitleScreen : MonoBehaviour
         inspiration.text = AutoTranslate.Inspiration();
         clearDataText.text = AutoTranslate.Clear_Data();
         soundCreditsText.text = AutoTranslate.Sound_Credits();
-        volume.text = AutoTranslate.Volume();
         tutorial.text = AutoTranslate.Tutorial_Text();
 
         clearData.onClick.AddListener(ResetData);
         sfxButton.onClick.AddListener(Credits);
         sfxCredits.SetActive(false);
-
-        volumeSlider.value = PlayerPrefs.GetFloat("Volume");
-        volumeSlider.onValueChanged.AddListener(SetLevel);
-        SetLevel(PlayerPrefs.GetFloat("Volume"));
-
-        void SetLevel(float value)
-        {
-            AudioManager.instance.mixer.SetFloat("Volume", (Mathf.Log10(volumeSlider.value) * 20));
-            PlayerPrefs.SetFloat("Volume", volumeSlider.value);
-        }
 
         foreach (LevelButton thing in allLevelButtons)
         {
@@ -73,10 +57,6 @@ public class TitleScreen : MonoBehaviour
             }
         }
         DisplayScores();
-    }
-    void PlaySound()
-    {
-        AudioManager.instance.PlaySound(menuSound, 0.4f);
     }
     void DisplayScores()
     {
@@ -90,12 +70,12 @@ public class TitleScreen : MonoBehaviour
     {
         foreach (LevelButton thing in allLevelButtons)
             PrefManager.SetScore(thing.setting, 0);
-        PlaySound();
+        AudioManager.instance.Menu();
         DisplayScores();
     }
     void Credits()
     {
-        PlaySound();
+        AudioManager.instance.Menu();
         if (sfxCredits.activeSelf)
             sfxCredits.SetActive(false);
         else

@@ -207,7 +207,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Duplicate
   spriterenderer: {fileID: 4141029062799107452}
+  dropChance: 1
   value: 0
   textBox: {fileID: 0}
   canInteract: 0
-  cursed: 0

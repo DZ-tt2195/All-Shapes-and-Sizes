@@ -208,6 +208,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Circle
   spriterenderer: {fileID: 2140141328006623770}
+  dropChance: 5
   value: 1
   textBox: {fileID: 8201832970920827437}
   canInteract: 0

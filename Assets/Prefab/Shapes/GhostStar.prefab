@@ -196,7 +196,7 @@ GameObject:
   - component: {fileID: 8200267975027176386}
   - component: {fileID: 8247630796546623672}
   m_Layer: 0
-  m_Name: Ghost Star
+  m_Name: GhostStar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -431,9 +431,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GhostStar
   spriterenderer: {fileID: 6691901054399109830}
+  dropChance: 1
   value: 5
   textBox: {fileID: 5194137347794210877}
   canInteract: 0
-  cursed: 0
   increment: 5
   vanishSound: {fileID: 8300000, guid: 36f1e803bb2e74ee3acbdab6a704a8ce, type: 3}

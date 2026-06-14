@@ -7,6 +7,7 @@ using TMPro;
 public class Shape : MonoBehaviour
 {
     public SpriteRenderer spriterenderer;
+    [SerializeField] int dropChance; public int DropChance => dropChance;
     Rigidbody2D rb;
     [SerializeField] protected int value;
     [SerializeField] protected TMP_Text textBox;

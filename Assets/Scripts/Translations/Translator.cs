@@ -66,7 +66,7 @@ public class Translator : MonoBehaviour
         {
             int index = line.IndexOf('\t');
             string partOne = line[..index].Trim();
-            string partTwo = line[(index + 1)..].Trim();
+            string partTwo = /*partOne.Equals("Blank") ? "" :*/ line[(index + 1)..].Trim();
             toReturn.Add(partOne, partTwo);
         }
         return toReturn;

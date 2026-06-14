@@ -1,7 +1,7 @@
 Blank	
 Designer	by Thomas Tang (DZ)
 Inspiration	Inspired by Aladdin X's Suika Game
-Last_Update	Last Updated: Apr 17, 2026
+Last_Update	Last Updated: June 14, 2026
 Translator_Credit	Original Language
 Language	Language
 Sound_Credits	Sound Credits
@@ -18,6 +18,7 @@ You_Gave_Up	You Gave Up.
 Game_Over	Game Over.
 You_Won	You Won!
 Title_Screen	Title Screen
+Confirm	Confirm
 Replay	Replay
 Begin	Begin!
 Score_Text	Score: $Num1$
@@ -30,7 +31,7 @@ Merge_Crown	Merge Crowns
 Merge_Crown_Tutorial	To win, merge 2 Crowns with each other. You cannot drop more than $Num$ shapes.
 Endless	Endless Mode
 Endless_Tutorial	Play for as long as you are able to until you lose.
-Bonus_Shapes	Bonus Shapes
+Choose_Bonuses	Choose up to $Num$ bonus shapes.
 Wall	Gets in the way; can only be destroyed with a Bomb.
 GhostStar	Merges with another Star, but disappears after you drop 5 shapes.
 Multiply	Merges with only itself to create a Star.
@@ -49,4 +50,6 @@ Update_1_Text	New translation features - you can download the English translatio
 Update_2	Jan 28, 2026
 Update_2_Text	Added fonts to support more languages \nFixed a ui issue
 Update_3	Apr 17, 2026
-Update_3_Text	You always have circles, squares, arrows, diamonds, bombs, as well as (just) 3 bonus shapes  \nBonus shapes count towards the number of shapes you've dropped \nRemoved some game modes and levels \nMoved around some UI explaining the game \nCan see the next 7 shapes in your queue \nAdded more sound effects and volume control
+Update_3_Text	You always have circles, squares, arrows, diamonds, bombs, as well as (just) 3 bonus shapes  \nAdded more bonus shapes (there are now 10) \nRemoved some game modes and levels \nMoved around some UI explaining the game \nCan see the next 7 shapes in your queue \nAdded more sound effects and volume control
+Update_4	June 14, 2026
+Update_4_Text	Changed some sounds and sprites \nYou can choose your bonus shapes before the game starts \nCan change volume mid-game

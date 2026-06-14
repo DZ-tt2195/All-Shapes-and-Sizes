@@ -390,6 +390,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BlackHole
   spriterenderer: {fileID: 4141029062799107452}
+  dropChance: 1
   value: 0
   textBox: {fileID: 4295134816466291399}
   canInteract: 0

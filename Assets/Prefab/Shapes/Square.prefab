@@ -409,6 +409,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Square
   spriterenderer: {fileID: 6963065821979641074}
+  dropChance: 4
   value: 2
   textBox: {fileID: 108575497730885654}
   canInteract: 0

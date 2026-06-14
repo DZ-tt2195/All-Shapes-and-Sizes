@@ -419,6 +419,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Diamond
   spriterenderer: {fileID: 6220482175659235991}
+  dropChance: 1
   value: 4
   textBox: {fileID: 4906960107042611533}
   canInteract: 0

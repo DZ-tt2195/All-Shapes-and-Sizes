@@ -6,15 +6,8 @@ using System;
 using UnityEngine.UI;
 using TMPro;
 using System.Diagnostics;
-using System.Linq;
 public enum CreationType {None, Drop, Merge}
 public enum GameState {SettingUp, GameOn, GameOver}
-[Serializable]
-public class ChanceOfDrop
-{
-    public Shape shape;
-    public int chance;
-}
 
 public class ShapeManager : MonoBehaviour
 {
@@ -26,7 +19,6 @@ public class ShapeManager : MonoBehaviour
 
     [Foldout("Audio", true)]
         [SerializeField] AudioClip createSound;
-        [SerializeField] AudioClip dropSound;
         [SerializeField] AudioClip timerSound;
         [SerializeField] AudioClip winSound;
         [SerializeField] AudioClip loseSound;
@@ -40,14 +32,6 @@ public class ShapeManager : MonoBehaviour
         [SerializeField] TMP_Text giveUp;
         [SerializeField] TMP_Text replay;
         [SerializeField] TMP_Text titleScreen;
-        [SerializeField] TMP_Text guideText;
-        [SerializeField] TMP_Text bonusShapes;
-
-    [Foldout("Tutorial", true)]
-        [SerializeField] Image tutorialBackground;
-        [SerializeField] List<Image> bonusShapeList = new();
-        [SerializeField] List<TMP_Text> bonusTextList = new();
-        [SerializeField] Button guideButton;
 
     [Foldout("Next shapes", true)]
         [SerializeField] List<Image> nextImages = new();
@@ -55,10 +39,8 @@ public class ShapeManager : MonoBehaviour
         float waitForDrop = 0f;
 
     [Foldout("To drop", true)]
-        [SerializeField] List<ChanceOfDrop> mainShapesToDrop = new();
-        [SerializeField] List<ChanceOfDrop> bonusShapesToDrop = new();
-        [SerializeField] List<Shape> allShapes = new();
         List<Shape> toDrop = new();
+        HashSet<Shape> bonusShapes;
         Dictionary<string, Queue<Shape>> shapeStorage = new();
         HashSet<Shape> shapesInLevel = new();
 
@@ -105,52 +87,7 @@ public class ShapeManager : MonoBehaviour
         giveUp.text = AutoTranslate.Give_Up();
         replay.text = AutoTranslate.Replay();
         titleScreen.text = AutoTranslate.Title_Screen();
-        guideText.text = AutoTranslate.Close_Guide();
-        bonusShapes.text = AutoTranslate.Bonus_Shapes();
 
-        foreach (Shape shape in allShapes)
-        {
-            shapeStorage.Add(shape.GetType().Name, new Queue<Shape>());
-        }
-
-        while (bonusShapesToDrop.Count > bonusShapeList.Count)
-        {
-            int random = UnityEngine.Random.Range(0, bonusShapesToDrop.Count);
-            bonusShapesToDrop.RemoveAt(random);
-        }
-        tutorialBackground.gameObject.SetActive(true);
-        for (int i = 0; i<bonusShapeList.Count; i++)
-        {
-            Apply(bonusShapeList[i], bonusShapesToDrop[i].shape, true);
-            bonusTextList[i].text = Translator.inst.Translate(bonusShapesToDrop[i].shape.GetType().Name);
-        }
-        guideButton.onClick.AddListener(ClickGuide);
-        void ClickGuide()
-        {
-            if (tutorialBackground.gameObject.activeSelf)
-            {
-                tutorialBackground.gameObject.SetActive(false);
-                guideText.text = AutoTranslate.Open_Guide();
-            }
-            else
-            {
-                tutorialBackground.gameObject.SetActive(true);
-                guideText.text = AutoTranslate.Close_Guide();                
-            }
-        }
-    }
-    private void OnEnable()
-    {
-        if (Application.isMobilePlatform)
-            InputManager.instance.OnStartTouch += DropShape;
-    }
-    private void OnDisable()
-    {
-        if (Application.isMobilePlatform)
-            InputManager.instance.OnStartTouch -= DropShape;
-    }
-    private void Start()
-    {
         warningText.transform.localScale = new Vector2(0, 0);
         InputManager.instance.enabled = false;
         gravityArrow.transform.localScale = new Vector2(0, 0);
@@ -159,7 +96,6 @@ public class ShapeManager : MonoBehaviour
         resign.onClick.AddListener(() => GameOver(AutoTranslate.You_Gave_Up()));
         ceiling.gameObject.SetActive(false);
         deathLine.transform.localPosition = new Vector3(0, ceiling.transform.localPosition.y + 0.15f, 0);
-        RollNextShape();
         foreach (Image image in nextImages)
             image.transform.parent.gameObject.SetActive(false);
 
@@ -174,13 +110,25 @@ public class ShapeManager : MonoBehaviour
                 tutorialText.text = AutoTranslate.Endless_Tutorial();
                 break;
         }
-
+    }
+    private void OnEnable()
+    {
+        if (Application.isMobilePlatform)
+            InputManager.instance.OnStartTouch += DropShape;
+    }
+    private void OnDisable()
+    {
+        if (Application.isMobilePlatform)
+            InputManager.instance.OnStartTouch -= DropShape;
+    }
+    private void Start()
+    {
         StartCoroutine(DropRandomly(typeof(Circle), 75, false));
         StartCoroutine(BeginGame());
         IEnumerator BeginGame()
         {
             yield return new WaitForSeconds(6f);
-            while (tutorialBackground.gameObject.activeSelf)
+            while (Customizer.inst.GetBackground.gameObject.activeSelf)
                 yield return null;
             if (state == GameState.GameOver)
                 yield break;
@@ -195,6 +143,11 @@ public class ShapeManager : MonoBehaviour
             gameTimer.Start();
             ShapeUI();
         }
+    }
+    public void ChosenShapes(HashSet<Shape> chosenBonuses)
+    {
+        bonusShapes = chosenBonuses;
+        RollNextShape();        
     }
 
 #endregion
@@ -303,9 +256,9 @@ public class ShapeManager : MonoBehaviour
     void ShapeUI()
     {
         for (int i = 0 ; i<nextImages.Count; i++)
-            Apply(nextImages[i], nextShapesToDrop[i], i == 0);
+            ApplySprite(nextImages[i], nextShapesToDrop[i], i == 0);
     }
-    void Apply(Image image, Shape shape, bool large)
+    public static void ApplySprite(Image image, Shape shape, bool large)
     {
         image.transform.parent.gameObject.SetActive(true);
         image.sprite = shape.spriterenderer.sprite;
@@ -326,15 +279,15 @@ public class ShapeManager : MonoBehaviour
         {
             if (toDrop.Count == 0)
             {
-                foreach (ChanceOfDrop next in mainShapesToDrop)
+                foreach (Shape shape in GameFiles.inst.AllMains())
                 {
-                    for (int i = 0; i < next.chance; i++)
-                        toDrop.Add(next.shape);
+                    for (int i = 0; i < shape.DropChance; i++)
+                        toDrop.Add(shape);
                 }
-                foreach (ChanceOfDrop next in bonusShapesToDrop)
+                foreach (Shape shape in bonusShapes)
                 {
-                    for (int i = 0; i < next.chance; i++)
-                        toDrop.Add(next.shape);
+                    for (int i = 0; i < shape.DropChance; i++)
+                        toDrop.Add(shape);
                 }
             }
             int randIndex = UnityEngine.Random.Range(0, toDrop.Count);
@@ -350,15 +303,17 @@ public class ShapeManager : MonoBehaviour
             return;
 
         Shape toCreate = null;
+        if (!shapeStorage.ContainsKey(shape))
+            shapeStorage.Add(shape, new Queue<Shape>());
         if (shapeStorage[shape].Count > 0)
             toCreate = shapeStorage[shape].Dequeue();
         else
-            toCreate = Instantiate(allShapes.FirstOrDefault(s => s.GetType().Name.Equals(shape)));
+            toCreate = Instantiate(GameFiles.inst.GetShape(shape));
 
         switch (creationType)
         {
             case CreationType.Drop:
-                AudioManager.instance.PlaySound(dropSound, 0.25f); 
+                AudioManager.instance.Menu(); 
                 break;
             case CreationType.Merge:
                 AudioManager.instance.PlaySound(createSound, 0.25f); 
@@ -421,7 +376,7 @@ public class ShapeManager : MonoBehaviour
         {
             gameTimer?.Stop();
             InputManager.instance.enabled = false;
-            tutorialBackground.gameObject.SetActive(false);
+            Customizer.inst.GetBackground.gameObject.SetActive(false);
             gameOverTransform.SetActive(true);
             state = GameState.GameOver;
 

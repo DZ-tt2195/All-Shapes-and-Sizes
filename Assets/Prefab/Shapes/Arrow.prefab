@@ -190,11 +190,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5365030708377842052}
+  - component: {fileID: 3356794910223355920}
   - component: {fileID: 6373194041509575051}
   - component: {fileID: 4113243258322885124}
   - component: {fileID: 6745284790168648266}
   - component: {fileID: 4860002659925363277}
-  - component: {fileID: 3356794910223355920}
   m_Layer: 0
   m_Name: Arrow
   m_TagString: Untagged
@@ -218,6 +218,23 @@ Transform:
   - {fileID: 162983054742611550}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3356794910223355920
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5189177110999605849}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 768bd7be3dfe24b608f48aca3ad1b662, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Arrow
+  spriterenderer: {fileID: 6373194041509575051}
+  dropChance: 3
+  value: 3
+  textBox: {fileID: 8681432570752030762}
+  canInteract: 0
 --- !u!212 &6373194041509575051
 SpriteRenderer:
   serializedVersion: 2
@@ -412,19 +429,3 @@ PolygonCollider2D:
       - {x: -2.7, y: -0.8}
       - {x: -2.7, y: 0.8}
   m_UseDelaunayMesh: 0
---- !u!114 &3356794910223355920
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5189177110999605849}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 768bd7be3dfe24b608f48aca3ad1b662, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Arrow
-  spriterenderer: {fileID: 6373194041509575051}
-  value: 3
-  textBox: {fileID: 8681432570752030762}
-  canInteract: 0
