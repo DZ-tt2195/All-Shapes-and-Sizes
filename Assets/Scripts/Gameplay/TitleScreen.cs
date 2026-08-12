@@ -11,10 +11,10 @@ public class LevelButton
     public Button button;
     public TMP_Text settingName;
     public TMP_Text highScoreText;
-    public Setting setting;
+    public GameMode mode;
 }
 
-public enum Setting { Merge_Crown, Endless };
+public enum GameMode { Merge_Crown, Endless };
 
 public class TitleScreen : MonoBehaviour
 {
@@ -23,6 +23,8 @@ public class TitleScreen : MonoBehaviour
         [SerializeField] Button clearData;
         [SerializeField] GameObject sfxCredits;
         [SerializeField] List<LevelButton> allLevelButtons = new();
+        [SerializeField] Button extrasButton;
+        [SerializeField] Transform extrasScreen;
 
     [Foldout("Text and images", true)]
         [SerializeField] TMP_Text gameDesigner;
@@ -42,17 +44,25 @@ public class TitleScreen : MonoBehaviour
         clearDataText.text = AutoTranslate.Clear_Data();
         soundCreditsText.text = AutoTranslate.Sound_Credits();
         tutorial.text = AutoTranslate.Tutorial_Text();
+        extrasButton.GetComponentInChildren<TMP_Text>().text = AutoTranslate.Extras();
 
         clearData.onClick.AddListener(ResetData);
         sfxButton.onClick.AddListener(Credits);
         sfxCredits.SetActive(false);
+        extrasButton.onClick.AddListener(OpenExtras);
+
+        void OpenExtras()
+        {
+            extrasButton.gameObject.SetActive(false);
+            extrasScreen.gameObject.SetActive(true);
+        }
 
         foreach (LevelButton thing in allLevelButtons)
         {
-            thing.button.onClick.AddListener(() => LoadWithSetting(thing.setting));
-            void LoadWithSetting(Setting setting)
+            thing.button.onClick.AddListener(() => LoadWithSetting(thing.mode));
+            void LoadWithSetting(GameMode setting)
             {
-                PrefManager.SetSetting(setting);
+                PrefManager.SetMode(setting);
                 SceneManager.LoadScene("1. Level");
             }
         }
@@ -62,15 +72,20 @@ public class TitleScreen : MonoBehaviour
     {
         foreach (LevelButton thing in allLevelButtons)
         {
-            thing.settingName.text = Translator.inst.Translate(thing.setting.ToString());
-            thing.highScoreText.text = AutoTranslate.High_Score(PrefManager.GetScore(thing.setting).ToString());
+            GameMode mode = thing.mode;
+            thing.settingName.text = Translator.inst.Translate(mode.ToString());
+            if (PrefManager.GetScore(mode) < 0)
+                thing.highScoreText.text = AutoTranslate.No_Score();
+            else
+                thing.highScoreText.text = Translator.inst.Translate($"{mode}_Score", new(){("Num", PrefManager.GetScore(mode).ToString())});
         }
     }
     void ResetData()
     {
         foreach (LevelButton thing in allLevelButtons)
-            PrefManager.SetScore(thing.setting, 0);
+            PlayerPrefs.DeleteKey(thing.mode.ToString());
         AudioManager.instance.Menu();
+        PlayerPrefs.Save();
         DisplayScores();
     }
     void Credits()
