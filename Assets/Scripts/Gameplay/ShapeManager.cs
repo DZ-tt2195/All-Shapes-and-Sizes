@@ -6,6 +6,7 @@ using System;
 using UnityEngine.UI;
 using TMPro;
 using System.Diagnostics;
+using System.Linq;
 public enum CreationType {None, Drop, Merge}
 public enum GameState {SettingUp, GameOn, GameOver}
 
@@ -32,17 +33,27 @@ public class ShapeManager : MonoBehaviour
         [SerializeField] TMP_Text giveUp;
         [SerializeField] TMP_Text replay;
         [SerializeField] TMP_Text titleScreen;
+        [SerializeField] Button resign;
 
     [Foldout("Next shapes", true)]
         [SerializeField] List<Image> nextImages = new();
         List<Shape> nextShapesToDrop = new();
         float waitForDrop = 0f;
 
+    [Foldout("Guide", true)]
+        [SerializeField] Image tutorialBackground;
+        [SerializeField] Button guideButton;
+        Vector3 guideOriginal;
+        [SerializeField] TMP_Text guideText;
+        [SerializeField] List<ShapeDisplay> displaysOnScreen;
+
     [Foldout("To drop", true)]
         List<Shape> toDrop = new();
         HashSet<Shape> bonusShapes;
         Dictionary<string, Queue<Shape>> shapeStorage = new();
         HashSet<Shape> shapesInLevel = new();
+        [ReadOnly] public bool mergedCrowns = false;
+        public GameState state {get; private set;}
 
     [Foldout("Score", true)]
         [SerializeField] int mergeDeath;
@@ -58,12 +69,6 @@ public class ShapeManager : MonoBehaviour
         float[] framearray = new float[60];
         Stopwatch gameTimer;
 
-    [Foldout("Game end", true)]
-        [ReadOnly] public bool mergedCrowns = false;
-        [SerializeField] GameObject gameOverTransform;
-        [SerializeField] Button resign;
-        public GameState state {get; private set;}
-
     [Foldout("Level geometry", true)]
         [SerializeField] Transform deathLine;
         [SerializeField] Transform floor;
@@ -78,7 +83,6 @@ public class ShapeManager : MonoBehaviour
 
     private void Awake()
     {
-        gameOverTransform.SetActive(false);
         instance = this;
         mainCam = Camera.main;
         Physics2D.gravity = new(0, -10);
@@ -99,16 +103,37 @@ public class ShapeManager : MonoBehaviour
         foreach (Image image in nextImages)
             image.transform.parent.gameObject.SetActive(false);
 
-        switch (PrefManager.GetSetting())
+        switch (PrefManager.GetMode())
         {
-            case Setting.Merge_Crown:
+            case GameMode.Merge_Crown:
                 headerText.text = AutoTranslate.Merge_Crown();
                 tutorialText.text = AutoTranslate.Merge_Crown_Tutorial(mergeDeath.ToString());
                 break;
-            case Setting.Endless:
+            case GameMode.Endless:
                 headerText.text = AutoTranslate.Endless();
                 tutorialText.text = AutoTranslate.Endless_Tutorial();
                 break;
+        }
+
+        guideOriginal = guideButton.transform.localPosition;
+        guideButton.onClick.AddListener(ClickGuide);
+        tutorialBackground.gameObject.SetActive(false);
+        ClickGuide();
+
+        void ClickGuide()
+        {
+            if (tutorialBackground.gameObject.activeSelf)
+            {
+                tutorialBackground.gameObject.SetActive(false);
+                guideText.text = AutoTranslate.Open_Guide();
+                guideButton.transform.localPosition = guideOriginal;
+            }
+            else
+            {
+                tutorialBackground.gameObject.SetActive(true);
+                guideText.text = AutoTranslate.Close_Guide();                
+                guideButton.transform.localPosition = Vector3.zero;
+            }
         }
     }
     private void OnEnable()
@@ -123,12 +148,17 @@ public class ShapeManager : MonoBehaviour
     }
     private void Start()
     {
+        bonusShapes = GameFiles.inst.SavedBonusShapes();
+        List<Shape> selectedShapes = bonusShapes.ToList();
+        for (int i = 0; i<selectedShapes.Count; i++)
+            displaysOnScreen[i].AssignShape(selectedShapes[i]);
+
         StartCoroutine(DropRandomly(typeof(Circle), 75, false));
         StartCoroutine(BeginGame());
         IEnumerator BeginGame()
         {
             yield return new WaitForSeconds(6f);
-            while (Customizer.inst.GetBackground.gameObject.activeSelf)
+            while (tutorialBackground.gameObject.activeSelf)
                 yield return null;
             if (state == GameState.GameOver)
                 yield break;
@@ -138,16 +168,12 @@ public class ShapeManager : MonoBehaviour
             AudioManager.instance.PlaySound(winSound, 0.2f);
             InputManager.instance.enabled = true;
             dataText.transform.parent.gameObject.SetActive(true);
-        
+            
+            RollNextShape();        
             gameTimer = new Stopwatch();
             gameTimer.Start();
             ShapeUI();
         }
-    }
-    public void ChosenShapes(HashSet<Shape> chosenBonuses)
-    {
-        bonusShapes = chosenBonuses;
-        RollNextShape();        
     }
 
 #endregion
@@ -159,7 +185,7 @@ public class ShapeManager : MonoBehaviour
         waitForDrop -= Time.deltaTime;
         if (waitForDrop <= 0f && InputManager.instance.enabled && !Application.isMobilePlatform)
         {
-            if (Input.GetMouseButtonDown(0) && state == GameState.GameOn)
+            if (Input.GetMouseButtonDown(0) && state == GameState.GameOn && !tutorialBackground.gameObject.activeSelf)
             {
                 waitForDrop = 0.15f;
                 DropShape(Input.mousePosition);
@@ -171,13 +197,13 @@ public class ShapeManager : MonoBehaviour
         string answer = gameTimer == null ? AutoTranslate.Time("0:00:00") : AutoTranslate.Time(MyExtensions.StopwatchTime(gameTimer));
         answer += $"\n{AutoTranslate.FPS(CalculateFrames())}\n";
         char infinitySymbol = '\u221E';
-        switch (PrefManager.GetSetting())
+        switch (PrefManager.GetMode())
         {
-            case Setting.Endless:
+            case GameMode.Endless:
                 answer += AutoTranslate.Score_Text(score.ToString());
                 answer += $"\n{AutoTranslate.Drop_Text(dropped.ToString(), infinitySymbol.ToString())}";
                 break;
-            case Setting.Merge_Crown:
+            case GameMode.Merge_Crown:
                 answer += AutoTranslate.Score_Text(score.ToString());
                 answer += $"\n{AutoTranslate.Drop_Text(dropped.ToString(), mergeDeath.ToString())}";
                 break;
@@ -213,7 +239,7 @@ public class ShapeManager : MonoBehaviour
         if (xValue > XSpawnRange().Item1 && xValue < XSpawnRange().Item2)
         {
             dropped++;
-            if (PrefManager.GetSetting() == Setting.Merge_Crown && mergeDeath-dropped <= 50)
+            if (PrefManager.GetMode() == GameMode.Merge_Crown && mergeDeath-dropped <= 50)
             {
                 StopCoroutine(FlashWarning(mergeDeath - dropped));
                 StartCoroutine(FlashWarning(mergeDeath - dropped));
@@ -376,35 +402,40 @@ public class ShapeManager : MonoBehaviour
         {
             gameTimer?.Stop();
             InputManager.instance.enabled = false;
-            Customizer.inst.GetBackground.gameObject.SetActive(false);
-            gameOverTransform.SetActive(true);
+            tutorialBackground.gameObject.SetActive(true);
+            guideButton.gameObject.SetActive(false);
+            replay.transform.parent.gameObject.SetActive(true);
+            titleScreen.transform.parent.gameObject.SetActive(true);
             state = GameState.GameOver;
 
             bool won = false;
-            Setting currentSetting = PrefManager.GetSetting();
+            GameMode currentSetting = PrefManager.GetMode();
 
-            if (currentSetting == Setting.Merge_Crown)
+            if (currentSetting == GameMode.Merge_Crown)
             {
                 won = mergedCrowns;
-                if (won && PrefManager.GetScore(currentSetting) < mergeDeath - dropped)
-                    PrefManager.SetScore(currentSetting, mergeDeath-dropped);
+                if (won)
+                {
+                    if (PrefManager.GetScore(currentSetting) < 0 || PrefManager.GetScore(currentSetting) > dropped)
+                        PrefManager.SetScore(currentSetting, dropped);
+                }
             }
-            else if (currentSetting == Setting.Endless)
+            else if (currentSetting == GameMode.Endless)
             {
                 if (PrefManager.GetScore(currentSetting) < score)
                     PrefManager.SetScore(currentSetting, score);
             }
+            PlayerPrefs.Save();
 
-            TMP_Text textBox = gameOverTransform.transform.GetChild(0).GetComponent<TMP_Text>();
             if (won)
             {
                 AudioManager.instance.PlaySound(winSound, 0.5f);
-                textBox.text = AutoTranslate.You_Won();
+                tutorialText.text = AutoTranslate.You_Won(dropped.ToString());
             }
             else
             {
                 AudioManager.instance.PlaySound(loseSound, 0.5f);
-                textBox.text = loseMessage;
+                tutorialText.text = loseMessage;
             }
         }
     }

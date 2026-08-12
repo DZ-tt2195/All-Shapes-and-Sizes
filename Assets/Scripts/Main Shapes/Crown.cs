@@ -12,8 +12,8 @@ public class Crown : Shape
         {
             ShapeManager.instance.mergedCrowns = true;
             ScoreShapes(otherShape, "");
-            if (PrefManager.GetSetting() == Setting.Merge_Crown)
-                ShapeManager.instance.GameOver(AutoTranslate.You_Won());
+            if (PrefManager.GetMode() == GameMode.Merge_Crown)
+                ShapeManager.instance.GameOver(AutoTranslate.Blank());
         }
     }
 }

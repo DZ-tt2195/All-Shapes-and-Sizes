@@ -22,6 +22,7 @@ public class Shape : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         rb.gravityScale = 2.75f;
+        rb.sleepMode = RigidbodySleepMode2D.NeverSleep;
         rb.angularDamping = 2;
         rb.collisionDetectionMode = CollisionDetectionMode2D.Discrete;
         rb.interpolation = RigidbodyInterpolation2D.Interpolate;
