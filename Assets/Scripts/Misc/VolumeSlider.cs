@@ -17,6 +17,7 @@ public class VolumeSlider : MonoBehaviour
         {
             AudioManager.instance.mixer.SetFloat("Volume", (Mathf.Log10(slider.value) * 20));
             PlayerPrefs.SetFloat("Volume", slider.value);
+            PlayerPrefs.Save();
         }                
     }
 }

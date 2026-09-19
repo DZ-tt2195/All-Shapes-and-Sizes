@@ -118,6 +118,7 @@ public class Translator : MonoBehaviour
         if (!PlayerPrefs.GetString("Language").Equals(newLanguage))
         {
             PlayerPrefs.SetString("Language", newLanguage);
+            PlayerPrefs.Save();
             SceneManager.LoadScene(toLoad);
         }
     }

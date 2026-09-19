@@ -190,11 +190,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5207567100666171858}
+  - component: {fileID: 7789470370418034270}
   - component: {fileID: 6220482175659235991}
   - component: {fileID: 2634452694099790022}
   - component: {fileID: 4307233763307470404}
   - component: {fileID: 2735035742248785220}
-  - component: {fileID: 7789470370418034270}
   m_Layer: 0
   m_Name: Diamond
   m_TagString: Untagged
@@ -218,6 +218,23 @@ Transform:
   - {fileID: 5551522348207243462}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7789470370418034270
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9063514190670151809}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3cf469c8f917460f83e7cc8d08bdc01, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Diamond
+  spriterenderer: {fileID: 6220482175659235991}
+  dropChance: 1
+  value: 4
+  textBox: {fileID: 4906960107042611533}
+  canInteract: 0
 --- !u!212 &6220482175659235991
 SpriteRenderer:
   serializedVersion: 2
@@ -406,20 +423,3 @@ PolygonCollider2D:
       - {x: 0, y: -0.27}
       - {x: 0.52, y: 0}
   m_UseDelaunayMesh: 0
---- !u!114 &7789470370418034270
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9063514190670151809}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c3cf469c8f917460f83e7cc8d08bdc01, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Diamond
-  spriterenderer: {fileID: 6220482175659235991}
-  dropChance: 1
-  value: 4
-  textBox: {fileID: 4906960107042611533}
-  canInteract: 0

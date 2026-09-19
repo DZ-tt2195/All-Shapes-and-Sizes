@@ -17,7 +17,7 @@ public class Shape : MonoBehaviour
     Color originalShapeColor;
     Color originalFontColor;
     Vector3 originalSize;
-    HashSet<GameObject> blackHoleColliders = new();
+    HashSet<GameObject> snowflakeColliders = new();
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -28,15 +28,12 @@ public class Shape : MonoBehaviour
         rb.interpolation = RigidbodyInterpolation2D.Interpolate;
         originalSize = transform.localScale;
         originalShapeColor = spriterenderer.color;
-        if (textBox != null)
-            originalFontColor = textBox.color;
-
-        if (IsMainShape())
-            value = (int)Mathf.Pow(value, 2);
+        if (textBox != null) originalFontColor = textBox.color;
+        if (IsMainShape()) value = (int)Mathf.Pow(value, 2);
     }
     public virtual Vector2 UISize(bool larger) => Vector2.zero;
     public bool IsMainShape() => value >= 1;
-    public bool HasAbility() => blackHoleColliders.Count == 0 && canInteract;
+    public bool HasAbility() => snowflakeColliders.Count == 0 && canInteract;
     public virtual void Setup(Vector2 start, bool cursed)
     {
         canInteract = false;
@@ -84,9 +81,9 @@ public class Shape : MonoBehaviour
                 Debug.Log("went out of bounds");
                 ShapeManager.instance.ReturnShape(this);
             }
-            else if (collision.CompareTag("BlackHole"))
+            else if (collision.CompareTag("Snowflake"))
             {
-                blackHoleColliders.Add(collision.gameObject);
+                snowflakeColliders.Add(collision.gameObject);
             }
             else if (IsMainShape() && collision.CompareTag("Death Line"))
             {
@@ -109,8 +106,8 @@ public class Shape : MonoBehaviour
     {
         if (collision.CompareTag("Death Line"))
             deathLineTouched = 0f;
-        else if (collision.CompareTag("BlackHole"))
-            blackHoleColliders.Remove(collision.gameObject);
+        else if (collision.CompareTag("Snowflake"))
+            snowflakeColliders.Remove(collision.gameObject);
     }
     public void ScoreShapes(Shape otherShape, string newShape)
     {

@@ -231,7 +231,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Arrow
   spriterenderer: {fileID: 6373194041509575051}
-  dropChance: 3
+  dropChance: 2
   value: 3
   textBox: {fileID: 8681432570752030762}
   canInteract: 0

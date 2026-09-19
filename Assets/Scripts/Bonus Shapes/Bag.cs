@@ -9,7 +9,8 @@ public class Bag : Shape
     }
     protected override void HitOtherShape(Shape otherShape)
     {
-        ShapeManager.instance.StartCoroutine(ShapeManager.instance.DropRandomly(typeof(Circle), spawnAmount, true));
+        for (int i = 0; i<spawnAmount; i++)
+            ShapeManager.instance.GenerateShape(typeof(Circle).Name, this.transform.position, CreationType.Drop, true);
         ShapeManager.instance.ReturnShape(this);
     }
 }

@@ -190,11 +190,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 668933097003888942}
+  - component: {fileID: 8756471970967134029}
   - component: {fileID: 6963065821979641074}
   - component: {fileID: 8070362497226178942}
   - component: {fileID: 5888883060609021984}
   - component: {fileID: 8464563861551907548}
-  - component: {fileID: 8756471970967134029}
   m_Layer: 0
   m_Name: Square
   m_TagString: Untagged
@@ -218,6 +218,23 @@ Transform:
   - {fileID: 7761123046086239}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8756471970967134029
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8935902790464763489}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc2a571837e83402d972e20d46258af4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Square
+  spriterenderer: {fileID: 6963065821979641074}
+  dropChance: 3
+  value: 2
+  textBox: {fileID: 108575497730885654}
+  canInteract: 0
 --- !u!212 &6963065821979641074
 SpriteRenderer:
   serializedVersion: 2
@@ -396,20 +413,3 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &8756471970967134029
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8935902790464763489}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bc2a571837e83402d972e20d46258af4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Square
-  spriterenderer: {fileID: 6963065821979641074}
-  dropChance: 4
-  value: 2
-  textBox: {fileID: 108575497730885654}
-  canInteract: 0

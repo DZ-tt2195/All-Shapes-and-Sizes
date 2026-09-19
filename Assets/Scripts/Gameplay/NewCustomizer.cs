@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 public class NewCustomizer : MonoBehaviour
 {
-    public static int numBonusShapes = 3;
+    public static int numBonusShapes = 4;
     [Foldout("UI", true)]
         [SerializeField] Button openCustomizer;
         [SerializeField] TMP_Text customizerText;

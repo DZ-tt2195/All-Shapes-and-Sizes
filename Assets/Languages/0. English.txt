@@ -37,15 +37,15 @@ Endless_Tutorial	Play for as long as you are able to until you lose.
 Endless_Score	High score of $Num$ points
 No_Score	No score found.
 Wall	Gets in the way; can only be destroyed with a Bomb.
-GhostStar	Merges with another Star, but disappears after you drop 5 shapes.
-Multiply	Merges with only itself to create a Star.
+GhostStar	Merges with another Star, but disappears after you drop 5 more shapes.
+Multiply	Merges with itself to create a Star.
 Inverter	Changes the gravity of all shapes.
 Portal	Moves a shape to the opposite side of the level.
-Bag	Creates multiple cursed Circles. (Cursed shapes can't merge with other cursed shapes.)
-Egg	Transforms into a Star after dropping 6 shapes, but disappears if you score any points.
-Snowflake	Any shape that is surrounding this cannot be merged or destroyed. Merge 5 shapes to destroy this.
-Duplicate	Curses the first shape it touches and then transforms into a cursed copy of that shape. (Cursed shapes can't merge with other cursed shapes.)
-Chest	Transforms the first 4 Squares it touches into Arrows.
+Bag	Creates 5 cursed Circles on landing. (Cursed shapes can't merge with other cursed shapes.)
+Egg	Transforms into a Star after dropping 5 more shapes, but disappears if you score any points.
+Snowflake	Any shape surrounding this cannot be merged or destroyed. Merge 5 shapes outside the radius to destroy this.
+Duplicate	This curses the first shape it touches, and transforms into a cursed copy of it. (Cursed shapes can't merge with other cursed shapes.)
+Chest	Transforms the first 4 Squares this touches into Arrows.
 Update_History	Update History
 Update_0	Dec 23, 2025
 Update_0_Text	New item: Warp - Moves a shape to the other side of the screen \nBoth drop-shape modes have a higher points threshold \nShapes have a new spawning animation \nMinor physics changes
