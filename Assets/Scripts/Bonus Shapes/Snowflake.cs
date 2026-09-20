@@ -8,7 +8,7 @@ public class Snowflake : Shape
     [SerializeField] AudioClip dingSound;
     public override void Setup(Vector2 start, bool cursed)
     {
-        disappearOn = ShapeManager.instance.merged + increment;
+        disappearOn = ShapeManager.instance.TotalCombines + increment;
         base.Setup(start, cursed);
     }
     public override Vector2 UISize(bool larger)
@@ -17,7 +17,7 @@ public class Snowflake : Shape
     }
     void Update()
     {
-        int currentCount = disappearOn - ShapeManager.instance.merged;
+        int currentCount = disappearOn - ShapeManager.instance.TotalCombines;
         this.textBox.text = $"{currentCount}";
         if (currentCount <= 0)
         {

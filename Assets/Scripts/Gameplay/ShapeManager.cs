@@ -7,7 +7,7 @@ using UnityEngine.UI;
 using TMPro;
 using System.Diagnostics;
 using System.Linq;
-public enum CreationType {None, Drop, Merge}
+public enum CreationType {None, Drop, Combine}
 public enum GameState {SettingUp, GameOn, GameOver}
 
 public class ShapeManager : MonoBehaviour
@@ -56,10 +56,11 @@ public class ShapeManager : MonoBehaviour
         public GameState state {get; private set;}
 
     [Foldout("Score", true)]
-        [SerializeField] int mergeDeath;
-        public int score {get; private set;}
-        public int dropped {get; private set;}
-        public int merged {get; private set;}
+        [SerializeField] int combineCrownGameOver;
+        int score; public int ScoreCount => score;
+        int dropped; public int DropCount => dropped;
+        int totalCombined; public int TotalCombines => totalCombined;
+        int streakCombined; public int StreakCombines => streakCombined;
         [SerializeField] PointsVisual pv;
         Queue<PointsVisual> visualStorage = new();
 
@@ -105,9 +106,9 @@ public class ShapeManager : MonoBehaviour
 
         switch (PrefManager.GetMode())
         {
-            case GameMode.Merge_Crown:
-                headerText.text = AutoTranslate.Merge_Crown();
-                tutorialText.text = AutoTranslate.Merge_Crown_Tutorial(mergeDeath.ToString());
+            case GameMode.Combine_Crown:
+                headerText.text = AutoTranslate.Combine_Crown();
+                tutorialText.text = AutoTranslate.Combine_Crown_Tutorial(combineCrownGameOver.ToString());
                 break;
             case GameMode.Endless:
                 headerText.text = AutoTranslate.Endless();
@@ -188,6 +189,7 @@ public class ShapeManager : MonoBehaviour
             if (Input.GetMouseButtonDown(0) && state == GameState.GameOn && !tutorialBackground.gameObject.activeSelf)
             {
                 waitForDrop = 0.15f;
+                streakCombined = 0;
                 DropShape(Input.mousePosition);
             }
         }
@@ -203,9 +205,9 @@ public class ShapeManager : MonoBehaviour
                 answer += AutoTranslate.Score_Text(score.ToString());
                 answer += $"\n{AutoTranslate.Drop_Text(dropped.ToString(), infinitySymbol.ToString())}";
                 break;
-            case GameMode.Merge_Crown:
+            case GameMode.Combine_Crown:
                 answer += AutoTranslate.Score_Text(score.ToString());
-                answer += $"\n{AutoTranslate.Drop_Text(dropped.ToString(), mergeDeath.ToString())}";
+                answer += $"\n{AutoTranslate.Drop_Text(dropped.ToString(), combineCrownGameOver.ToString())}";
                 break;
         }
         dataText.text = answer;
@@ -239,11 +241,11 @@ public class ShapeManager : MonoBehaviour
         if (xValue > XSpawnRange().Item1 && xValue < XSpawnRange().Item2)
         {
             dropped++;
-            if (PrefManager.GetMode() == GameMode.Merge_Crown && mergeDeath-dropped <= 50)
+            if (PrefManager.GetMode() == GameMode.Combine_Crown && combineCrownGameOver-dropped <= 50)
             {
-                StopCoroutine(FlashWarning(mergeDeath - dropped));
-                StartCoroutine(FlashWarning(mergeDeath - dropped));
-                if (mergeDeath - dropped <= 0)
+                StopCoroutine(FlashWarning(combineCrownGameOver - dropped));
+                StartCoroutine(FlashWarning(combineCrownGameOver - dropped));
+                if (combineCrownGameOver - dropped <= 0)
                     StartCoroutine(WaitForEnd(AutoTranslate.Game_Over()));
             }
 
@@ -341,9 +343,10 @@ public class ShapeManager : MonoBehaviour
             case CreationType.Drop:
                 AudioManager.instance.Menu(); 
                 break;
-            case CreationType.Merge:
+            case CreationType.Combine:
                 AudioManager.instance.PlaySound(createSound, 0.25f); 
-                merged++;
+                streakCombined++;
+                totalCombined++;
                 break;
             case CreationType.None:
                 break;
@@ -411,7 +414,7 @@ public class ShapeManager : MonoBehaviour
             bool won = false;
             GameMode currentSetting = PrefManager.GetMode();
 
-            if (currentSetting == GameMode.Merge_Crown)
+            if (currentSetting == GameMode.Combine_Crown)
             {
                 won = mergedCrowns;
                 if (won)

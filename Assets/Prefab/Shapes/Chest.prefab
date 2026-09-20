@@ -27,8 +27,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2, y: 2, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 2.5, y: 2.5, z: 1.25}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 2423608689325285343}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -100,11 +100,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2423608689325285343}
+  - component: {fileID: 8856731172875392985}
   - component: {fileID: 5362325279416469434}
   - component: {fileID: 8916438644296172411}
   - component: {fileID: 4202826511275420182}
   - component: {fileID: 6840280273300505367}
-  - component: {fileID: 8856731172875392985}
   m_Layer: 0
   m_Name: Chest
   m_TagString: Untagged
@@ -121,7 +121,7 @@ Transform:
   m_GameObject: {fileID: 3507314187957990999}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -31.06, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -129,6 +129,24 @@ Transform:
   - {fileID: 5962299582477731620}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8856731172875392985
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3507314187957990999}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c2f6b87cd333c49aea0bf56e48a652e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::New
+  spriterenderer: {fileID: 5362325279416469434}
+  dropChance: 1
+  value: 0
+  textBox: {fileID: 5780637002646618503}
+  canInteract: 0
+  maxUpgrade: 4
 --- !u!212 &5362325279416469434
 SpriteRenderer:
   serializedVersion: 2
@@ -278,7 +296,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 2, y: 2}
+  m_Size: {x: 2.5, y: 2.5}
   m_EdgeRadius: 0
 --- !u!50 &6840280273300505367
 Rigidbody2D:
@@ -307,24 +325,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &8856731172875392985
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3507314187957990999}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c2f6b87cd333c49aea0bf56e48a652e5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::New
-  spriterenderer: {fileID: 5362325279416469434}
-  dropChance: 1
-  value: 0
-  textBox: {fileID: 5780637002646618503}
-  canInteract: 0
-  maxUpgrade: 4
 --- !u!1 &5155363440179502241
 GameObject:
   m_ObjectHideFlags: 0

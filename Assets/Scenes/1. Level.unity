@@ -3375,7 +3375,7 @@ MonoBehaviour:
   - {fileID: 674880046}
   - {fileID: 1138690242}
   mergedCrowns: 0
-  mergeDeath: 150
+  combineCrownGameOver: 150
   pv: {fileID: 5700913299117066173, guid: d817be641f2464bdaa47d0a4e0b6d381, type: 3}
   deathLine: {fileID: 5498579637663083787}
   floor: {fileID: 8420676500706374266}

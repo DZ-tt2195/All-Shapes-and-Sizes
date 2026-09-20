@@ -31,7 +31,7 @@ public class Shape : MonoBehaviour
         if (textBox != null) originalFontColor = textBox.color;
         if (IsMainShape()) value = (int)Mathf.Pow(value, 2);
     }
-    public virtual Vector2 UISize(bool larger) => Vector2.zero;
+    public virtual Vector2 UISize(bool larger) => new Vector2(50, 50);
     public bool IsMainShape() => value >= 1;
     public bool HasAbility() => snowflakeColliders.Count == 0 && canInteract;
     public virtual void Setup(Vector2 start, bool cursed)
@@ -40,8 +40,8 @@ public class Shape : MonoBehaviour
         this.transform.position = start;
         this.transform.localEulerAngles = Vector3.zero;
         this.transform.localScale = Vector3.zero;
-        this.gameObject.SetActive(true);
         CursedStatus(cursed);
+        this.gameObject.SetActive(true);
         rb.WakeUp();
         
         StartCoroutine(BecomeActive());
@@ -124,7 +124,7 @@ public class Shape : MonoBehaviour
         void CreateShape(Vector2 spawn)
         {
             if (newShape != "")
-                ShapeManager.instance.GenerateShape(newShape, spawn, CreationType.Merge);
+                ShapeManager.instance.GenerateShape(newShape, spawn, CreationType.Combine);
         }
         ShapeManager.instance.ReturnShape(this);
     }

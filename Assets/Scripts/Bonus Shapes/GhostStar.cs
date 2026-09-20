@@ -7,12 +7,12 @@ public class GhostStar : Star
     [SerializeField] AudioClip vanishSound;
     public override void Setup(Vector2 start, bool cursed)
     {
-        disappearOn = ShapeManager.instance.dropped + increment;
+        disappearOn = ShapeManager.instance.DropCount + increment;
         base.Setup(start, cursed);
     }
     void Update()
     {
-        int currentCount = disappearOn-ShapeManager.instance.dropped;
+        int currentCount = disappearOn-ShapeManager.instance.DropCount;
         this.textBox.text = $"{currentCount}";
         if (HasAbility() && currentCount == 0)
         {

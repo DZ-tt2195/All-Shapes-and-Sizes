@@ -12,7 +12,7 @@ public class Crown : Shape
         {
             ShapeManager.instance.mergedCrowns = true;
             ScoreShapes(otherShape, "");
-            if (PrefManager.GetMode() == GameMode.Merge_Crown)
+            if (PrefManager.GetMode() == GameMode.Combine_Crown)
                 ShapeManager.instance.GameOver(AutoTranslate.Blank());
         }
     }

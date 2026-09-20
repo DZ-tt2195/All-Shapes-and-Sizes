@@ -30,7 +30,7 @@ Transform:
   m_GameObject: {fileID: 1733716940557391168}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -11.14, y: 2.34, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.9, y: 0.9, z: 0.9}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -53,7 +53,7 @@ MonoBehaviour:
   value: 0
   textBox: {fileID: 0}
   canInteract: 0
-  spawnAmount: 5
+  spawnAmount: 4
 --- !u!212 &5783274277680178189
 SpriteRenderer:
   serializedVersion: 2

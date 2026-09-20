@@ -28,24 +28,25 @@ Drop_Text	Dropped: $Num1$ / $Num2$
 Time	Time: $Time$
 Open_Guide	Open Guide
 Close_Guide	Close Guide
-Tutorial_Text	Click on the screen to drop shapes. \nShapes merge into larger shapes when they touch another of the same shape. \nIf any shapes go above the top of the level, you lose.
-Merge_Crown	Merge Crowns
-Merge_Crown_Tutorial	To win, merge 2 Crowns with each other. You cannot drop more than $Num$ shapes.
-Merge_Crown_Score	Won with only $Num$ shapes
+Tutorial_Text	Click on the screen to drop shapes. \nShapes combine into larger shapes when they touch another of the same shape. \nIf any shapes go above the top of the level, you lose.
+Combine_Crown	Combine Crowns
+Combine_Crown_Tutorial	To win, combine 2 Crowns with each other. You cannot drop more than $Num$ shapes.
+Combine_Crown_Score	Won with only $Num$ shapes
 Endless	Endless Mode
 Endless_Tutorial	Play for as long as you are able to until you lose.
 Endless_Score	High score of $Num$ points
 No_Score	No score found.
 Wall	Gets in the way; can only be destroyed with a Bomb.
-GhostStar	Merges with another Star, but disappears after you drop 5 more shapes.
-Multiply	Merges with itself to create a Star.
+GhostStar	Combines with another Star, but disappears after you drop 5 more shapes.
+Multiply	Combines with itself to create a Star.
 Inverter	Changes the gravity of all shapes.
-Portal	Moves a shape to the opposite side of the level.
-Bag	Creates 5 cursed Circles on landing. (Cursed shapes can't merge with other cursed shapes.)
-Egg	Transforms into a Star after dropping 5 more shapes, but disappears if you score any points.
-Snowflake	Any shape surrounding this cannot be merged or destroyed. Merge 5 shapes outside the radius to destroy this.
-Duplicate	This curses the first shape it touches, and transforms into a cursed copy of it. (Cursed shapes can't merge with other cursed shapes.)
-Chest	Transforms the first 4 Squares this touches into Arrows.
+Portal	Destroys a shape, then creates a copy of it at the other side of the level.
+Bag	Creates 6 Cursed Circles on landing. (Cursed shapes can't combine with each other.)
+Egg	Becomes a Star after you drop 5 more shapes, but disappears if you combine any shapes.
+Snowflake	Disappears when you combine 5 shapes; shapes around this cannot be combined or destroyed.
+Duplicate	Curses a shape, then this becomes a Cursed copy of that shape. (Cursed shapes can't combine with each other.)
+Chest	Transforms 4 Squares around this into Arrows.
+New1	Transforms 6 Circles around this into Cursed Squares. (Cursed shapes can't combine with each other.)
 Update_History	Update History
 Update_0	Dec 23, 2025
 Update_0_Text	New item: Warp - Moves a shape to the other side of the screen \nBoth drop-shape modes have a higher points threshold \nShapes have a new spawning animation \nMinor physics changes
@@ -59,3 +60,5 @@ Update_4	June 14, 2026
 Update_4_Text	Changed some sounds and sprites \nYou can choose your bonus shapes before the game starts \nCan change volume mid-game
 Update_5	Aug 27, 2026
 Update_5_Text	Hidden optional stuff on the title screen behind the extras button \nYou customize bonus shapes on title screen instead \nThe game will remember which shapes you chose \nChanged how high scores are saved/displayed
+Update_6	Next
+Update_6_Text	Added 10 more bonus shapes \nTweaked the numbers and radius's of some existing bonus shapes

@@ -30,7 +30,7 @@ Transform:
   m_GameObject: {fileID: 6211883115867789121}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.6721034, y: 4, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.6, y: 0.6, z: 0.6}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -50,7 +50,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Circle
   spriterenderer: {fileID: 2140141328006623770}
-  dropChance: 5
+  dropChance: 4
   value: 1
   textBox: {fileID: 8201832970920827437}
   canInteract: 0

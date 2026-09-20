@@ -41,7 +41,6 @@ public class NewCustomizer : MonoBehaviour
             nextDisplay.AssignShape(allBonuses[i]);
             int number = i;
 
-            nextDisplay.toggle.onValueChanged.AddListener(ShapeToggle);
             if (AlreadySaved(number))
             {
                 nextDisplay.toggle.isOn = true;
@@ -51,6 +50,7 @@ public class NewCustomizer : MonoBehaviour
             {
                 nextDisplay.toggle.isOn = false;
             }
+            nextDisplay.toggle.onValueChanged.AddListener(ShapeToggle);
 
             void ShapeToggle(bool enabled)
             {
@@ -77,9 +77,15 @@ public class NewCustomizer : MonoBehaviour
             for (int i = 0; i<numBonusShapes; i++)
             {
                 if (i < currentBonusShapes.Count)
+                {
                     PrefManager.SetShape(i, currentBonusShapes[i]);
+                    Debug.Log($"saved {currentBonusShapes[i]}");
+                }
                 else
+                {
                     PrefManager.SetShape(i, -1);
+                    Debug.Log($"saved null");
+                }
             }
             PlayerPrefs.Save();
             customizerScreen.gameObject.SetActive(false);

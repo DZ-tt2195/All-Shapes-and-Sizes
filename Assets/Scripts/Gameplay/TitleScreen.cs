@@ -14,7 +14,7 @@ public class LevelButton
     public GameMode mode;
 }
 
-public enum GameMode { Merge_Crown, Endless };
+public enum GameMode { Combine_Crown, Endless };
 
 public class TitleScreen : MonoBehaviour
 {
