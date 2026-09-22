@@ -11,8 +11,8 @@ public class Duplicate : Shape
         if (otherShape.IsMainShape())
         {
             otherShape.CursedStatus(true);
-            ShapeManager.instance.ReturnShape(this);
-            ShapeManager.instance.GenerateShape(otherShape.GetType().Name, this.transform.position, CreationType.Drop, true);
+            ShapeManager.inst.ReturnShape(this);
+            ShapeManager.inst.GenerateShape(otherShape.GetType().Name, this.transform.position, CreationType.Drop, true);
         }
     }
 }

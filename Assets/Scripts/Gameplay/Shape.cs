@@ -79,7 +79,7 @@ public class Shape : MonoBehaviour
             if (collision.CompareTag("Out of Bounds"))
             {
                 Debug.Log("went out of bounds");
-                ShapeManager.instance.ReturnShape(this);
+                ShapeManager.inst.ReturnShape(this);
             }
             else if (collision.CompareTag("Snowflake"))
             {
@@ -94,7 +94,7 @@ public class Shape : MonoBehaviour
                 else
                 {
                     canInteract = false;
-                    ShapeManager.instance.GameOver(AutoTranslate.Game_Over());
+                    ShapeManager.inst.GameOver(AutoTranslate.Game_Over());
                 }
             }
         }
@@ -111,11 +111,11 @@ public class Shape : MonoBehaviour
     }
     public void ScoreShapes(Shape otherShape, string newShape)
     {
-        ShapeManager.instance.AddScore(value, this.transform.position, spriterenderer.color);
+        ShapeManager.inst.AddScore(value, this.transform.position, spriterenderer.color);
         if (otherShape != null)
         {
             CreateShape(Vector2.Lerp(this.transform.position, otherShape.transform.position, 0.5f));
-            ShapeManager.instance.ReturnShape(otherShape);
+            ShapeManager.inst.ReturnShape(otherShape);
         }
         else
         {
@@ -124,8 +124,8 @@ public class Shape : MonoBehaviour
         void CreateShape(Vector2 spawn)
         {
             if (newShape != "")
-                ShapeManager.instance.GenerateShape(newShape, spawn, CreationType.Combine);
+                ShapeManager.inst.GenerateShape(newShape, spawn, CreationType.Combine);
         }
-        ShapeManager.instance.ReturnShape(this);
+        ShapeManager.inst.ReturnShape(this);
     }
 }

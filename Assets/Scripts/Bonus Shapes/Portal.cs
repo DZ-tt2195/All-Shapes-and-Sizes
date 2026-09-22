@@ -11,11 +11,11 @@ public class Portal : Shape
     {
         AudioManager.instance.PlaySound(warpSound, 0.3f);
 
-        (float leftSpawn, float rightSpawn) = ShapeManager.instance.XSpawnRange();
+        (float leftSpawn, float rightSpawn) = ShapeManager.inst.XSpawnRange();
         float newXPosition = otherShape.transform.position.x > 0 ? leftSpawn : rightSpawn;
-        ShapeManager.instance.GenerateShape(otherShape.GetType().Name, new(newXPosition, otherShape.transform.position.y), CreationType.Drop, otherShape.cursed);
+        ShapeManager.inst.GenerateShape(otherShape.GetType().Name, new(newXPosition, otherShape.transform.position.y), CreationType.Drop, otherShape.cursed);
         
-        ShapeManager.instance.ReturnShape(otherShape);
-        ShapeManager.instance.ReturnShape(this);
+        ShapeManager.inst.ReturnShape(otherShape);
+        ShapeManager.inst.ReturnShape(this);
     }
 }

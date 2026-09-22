@@ -10,7 +10,7 @@ public class Bag : Shape
     protected override void HitOtherShape(Shape otherShape)
     {
         for (int i = 0; i<spawnAmount; i++)
-            ShapeManager.instance.GenerateShape(typeof(Circle).Name, this.transform.position, CreationType.Drop, true);
-        ShapeManager.instance.ReturnShape(this);
+            ShapeManager.inst.GenerateShape(typeof(Circle).Name, this.transform.position, CreationType.Drop, true);
+        ShapeManager.inst.ReturnShape(this);
     }
 }

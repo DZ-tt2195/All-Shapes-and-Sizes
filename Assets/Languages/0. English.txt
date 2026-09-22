@@ -41,7 +41,7 @@ GhostStar	Combines with another Star, but disappears after you drop 5 more shape
 Multiply	Combines with itself to create a Star.
 Inverter	Changes the gravity of all shapes.
 Portal	Destroys a shape, then creates a copy of it at the other side of the level.
-Bag	Creates 6 Cursed Circles on landing. (Cursed shapes can't combine with each other.)
+Bag	Creates 4 Cursed Circles on landing. (Cursed shapes can't combine with each other.)
 Egg	Becomes a Star after you drop 5 more shapes, but disappears if you combine any shapes.
 Snowflake	Disappears when you combine 5 shapes; shapes around this cannot be combined or destroyed.
 Duplicate	Curses a shape, then this becomes a Cursed copy of that shape. (Cursed shapes can't combine with each other.)
@@ -61,4 +61,4 @@ Update_4_Text	Changed some sounds and sprites \nYou can choose your bonus shapes
 Update_5	Aug 27, 2026
 Update_5_Text	Hidden optional stuff on the title screen behind the extras button \nYou customize bonus shapes on title screen instead \nThe game will remember which shapes you chose \nChanged how high scores are saved/displayed
 Update_6	Next
-Update_6_Text	Added 10 more bonus shapes \nTweaked the numbers and radius's of some existing bonus shapes
+Update_6_Text	Added 10 more bonus shapes \nTweaked the numbers and radius's of some existing shapes

@@ -12,13 +12,13 @@ public class Inverter : Shape
     protected override void HitOtherShape(Shape otherShape)
     {
         AudioManager.instance.PlaySound(gravitySound, 0.5f);
-        ShapeManager.instance.SwitchGravity();
-        ShapeManager.instance.StartCoroutine(ArrowAnimation());
-        ShapeManager.instance.ReturnShape(this);
+        ShapeManager.inst.SwitchGravity();
+        ShapeManager.inst.StartCoroutine(ArrowAnimation());
+        ShapeManager.inst.ReturnShape(this);
     }
     IEnumerator ArrowAnimation()
     {
-        Transform gravityArrow = ShapeManager.instance.GetGravityArrow();
+        Transform gravityArrow = ShapeManager.inst.GetGravityArrow();
 
         Vector2 zeroSize = new(0, 0);
         Vector2 maxSize = new(3, 3);

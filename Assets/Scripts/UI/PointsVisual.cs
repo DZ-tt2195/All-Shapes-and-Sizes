@@ -43,7 +43,7 @@ public class PointsVisual : MonoBehaviour
                 yield return null;
             }
 
-            ShapeManager.instance.ReturnVisual(this);
+            ShapeManager.inst.ReturnVisual(this);
         }
     }
 }

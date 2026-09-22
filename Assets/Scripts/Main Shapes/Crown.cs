@@ -10,10 +10,10 @@ public class Crown : Shape
     {
         if (otherShape is Crown)
         {
-            ShapeManager.instance.mergedCrowns = true;
+            ShapeManager.inst.mergedCrowns = true;
             ScoreShapes(otherShape, "");
             if (PrefManager.GetMode() == GameMode.Combine_Crown)
-                ShapeManager.instance.GameOver(AutoTranslate.Blank());
+                ShapeManager.inst.GameOver(AutoTranslate.Blank());
         }
     }
 }

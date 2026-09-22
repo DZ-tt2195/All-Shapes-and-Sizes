@@ -8,24 +8,24 @@ public class Egg : Shape
     [SerializeField] AudioClip breakSound;
     public override void Setup(Vector2 start, bool cursed)
     {
-        disappearOn = ShapeManager.instance.DropCount + increment;
+        disappearOn = ShapeManager.inst.DropCount + increment;
         base.Setup(start, cursed);
     }
     void Update()
     {
-        int currentCount = disappearOn - ShapeManager.instance.DropCount;
+        int currentCount = disappearOn - ShapeManager.inst.DropCount;
         this.textBox.text = $"{currentCount}";
         if (HasAbility())
         {
-            if (ShapeManager.instance.StreakCombines >= 1)
+            if (ShapeManager.inst.StreakCombines >= 1)
             {
                 AudioManager.instance.PlaySound(breakSound, 0.3f);
-                ShapeManager.instance.ReturnShape(this);
+                ShapeManager.inst.ReturnShape(this);
             }
             else if (currentCount == 0)
             {
-                ShapeManager.instance.GenerateShape(typeof(Star).Name, this.transform.position, CreationType.Drop);
-                ShapeManager.instance.ReturnShape(this);
+                ShapeManager.inst.GenerateShape(typeof(Star).Name, this.transform.position, CreationType.Drop);
+                ShapeManager.inst.ReturnShape(this);
             }
         }
     }

@@ -7,15 +7,43 @@ using UnityEngine.UI;
 using TMPro;
 using System.Diagnostics;
 using System.Linq;
+public enum ColumnDrop {Top, Bottom, Any}
 public enum CreationType {None, Drop, Combine}
 public enum GameState {SettingUp, GameOn, GameOver}
+[Serializable]
+public class SpawnColumn
+{
+    int columnNumber; public int ColumnNumber() => columnNumber;
+    [SerializeField] Transform parent;
+    List<SpawnButton> listOfButtons = new();
+    public void Setup(int columnNumber)
+    {
+        this.columnNumber = columnNumber;
+        foreach (Transform child in parent)
+        {
+            SpawnButton button = child.GetComponent<SpawnButton>();
+            listOfButtons.Add(button);
+            button.Setup(columnNumber);
+        }
+    }
+    public void EnableButtons(FindNumber toFind, int number)
+    {
+        for (int i = 0; i<listOfButtons.Count; i++)
+            listOfButtons[i].gameObject.SetActive(MyExtensions.Comparison(toFind, i, number));
+    }
+    public int MaxCount() => listOfButtons.Count-1;
+    public void EnableAll() => EnableButtons(FindNumber.Minimum, -1);
+    public void DisableAll() => EnableButtons(FindNumber.Exact, -1);
+    public SpawnButton First() => listOfButtons[0];
+    public SpawnButton Last() => listOfButtons[MaxCount()];
+}
 
 public class ShapeManager : MonoBehaviour
 {
 
 #region Variables
 
-    public static ShapeManager instance;
+    public static ShapeManager inst;
     Camera mainCam;
 
     [Foldout("Audio", true)]
@@ -39,6 +67,7 @@ public class ShapeManager : MonoBehaviour
         [SerializeField] List<Image> nextImages = new();
         List<Shape> nextShapesToDrop = new();
         float waitForDrop = 0f;
+        Dictionary<string, HashSet<Shape>> allShapesInLevel = new(); public Dictionary<string, HashSet<Shape>> GetExistingShapes => allShapesInLevel;
 
     [Foldout("Guide", true)]
         [SerializeField] Image tutorialBackground;
@@ -48,10 +77,11 @@ public class ShapeManager : MonoBehaviour
         [SerializeField] List<ShapeDisplay> displaysOnScreen;
 
     [Foldout("To drop", true)]
+        public static ColumnDrop dropState {get; private set;}
+        [SerializeField] List<SpawnColumn> listOfSpawnColumns = new();
         List<Shape> toDrop = new();
         HashSet<Shape> bonusShapes;
         Dictionary<string, Queue<Shape>> shapeStorage = new();
-        HashSet<Shape> shapesInLevel = new();
         [ReadOnly] public bool mergedCrowns = false;
         public GameState state {get; private set;}
 
@@ -84,9 +114,10 @@ public class ShapeManager : MonoBehaviour
 
     private void Awake()
     {
-        instance = this;
+        inst = this;
         mainCam = Camera.main;
         Physics2D.gravity = new(0, -10);
+        dropState = ColumnDrop.Top;
 
         next.text = AutoTranslate.Next();
         giveUp.text = AutoTranslate.Give_Up();
@@ -94,7 +125,7 @@ public class ShapeManager : MonoBehaviour
         titleScreen.text = AutoTranslate.Title_Screen();
 
         warningText.transform.localScale = new Vector2(0, 0);
-        InputManager.instance.enabled = false;
+        //InputManager.instance.enabled = false;
         gravityArrow.transform.localScale = new Vector2(0, 0);
         gravityArrow.transform.localEulerAngles = new Vector3(0, 0, -90);
 
@@ -103,6 +134,8 @@ public class ShapeManager : MonoBehaviour
         deathLine.transform.localPosition = new Vector3(0, ceiling.transform.localPosition.y + 0.15f, 0);
         foreach (Image image in nextImages)
             image.transform.parent.gameObject.SetActive(false);
+        for (int i = 0; i<listOfSpawnColumns.Count; i++)
+            listOfSpawnColumns[i].Setup(i);
 
         switch (PrefManager.GetMode())
         {
@@ -137,6 +170,7 @@ public class ShapeManager : MonoBehaviour
             }
         }
     }
+    /*
     private void OnEnable()
     {
         if (Application.isMobilePlatform)
@@ -147,6 +181,7 @@ public class ShapeManager : MonoBehaviour
         if (Application.isMobilePlatform)
             InputManager.instance.OnStartTouch -= DropShape;
     }
+    */
     private void Start()
     {
         bonusShapes = GameFiles.inst.SavedBonusShapes();
@@ -167,7 +202,9 @@ public class ShapeManager : MonoBehaviour
             state = GameState.GameOn;
             NewVisual(AutoTranslate.Begin(), 3, Vector3.zero, Color.white);
             AudioManager.instance.PlaySound(winSound, 0.2f);
-            InputManager.instance.enabled = true;
+            //InputManager.instance.enabled = true;
+            foreach (SpawnColumn column in listOfSpawnColumns)
+                column.EnableAll();
             dataText.transform.parent.gameObject.SetActive(true);
             
             RollNextShape();        
@@ -184,16 +221,6 @@ public class ShapeManager : MonoBehaviour
     private void Update()
     {
         waitForDrop -= Time.deltaTime;
-        if (waitForDrop <= 0f && InputManager.instance.enabled && !Application.isMobilePlatform)
-        {
-            if (Input.GetMouseButtonDown(0) && state == GameState.GameOn && !tutorialBackground.gameObject.activeSelf)
-            {
-                waitForDrop = 0.15f;
-                streakCombined = 0;
-                DropShape(Input.mousePosition);
-            }
-        }
-
         if (dropped == 0) score = 0;
 
         string answer = gameTimer == null ? AutoTranslate.Time("0:00:00") : AutoTranslate.Time(MyExtensions.StopwatchTime(gameTimer));
@@ -228,19 +255,14 @@ public class ShapeManager : MonoBehaviour
             return (lastupdate > Application.targetFrameRate) ? Application.targetFrameRate.ToString() : lastupdate.ToString();
         }
     }
-    void DropShape(Vector2 screenPosition)
+    public void DropNewShape(Vector2 screenPosition, int columnNumber)
     {
-        Vector2 GetWorldCoordinates(Vector2 screenPos)
-        {
-            Vector2 screenCoord = new(screenPos.x, screenPos.y);
-            Vector2 worldCoord = mainCam.ScreenToWorldPoint(screenCoord);
-            return worldCoord;
-        }
-
-        float xValue = GetWorldCoordinates(screenPosition).x;
-        if (xValue > XSpawnRange().Item1 && xValue < XSpawnRange().Item2)
+        if (waitForDrop <= 0f && state == GameState.GameOn && !tutorialBackground.gameObject.activeSelf)
         {
             dropped++;
+            waitForDrop = 0.15f;
+            streakCombined = 0;
+
             if (PrefManager.GetMode() == GameMode.Combine_Crown && combineCrownGameOver-dropped <= 50)
             {
                 StopCoroutine(FlashWarning(combineCrownGameOver - dropped));
@@ -248,8 +270,27 @@ public class ShapeManager : MonoBehaviour
                 if (combineCrownGameOver - dropped <= 0)
                     StartCoroutine(WaitForEnd(AutoTranslate.Game_Over()));
             }
+            Vector2 spawn = screenPosition;
+            switch (dropState)
+            {
+                case ColumnDrop.Top:
+                    spawn = listOfSpawnColumns[columnNumber].First().transform.position;
+                    break;
+                case ColumnDrop.Bottom:
+                    spawn = listOfSpawnColumns[columnNumber].Last().transform.position;
+                    break;
+                case ColumnDrop.Any:
+                    spawn = screenPosition;
+                    break;
+            }
+            Vector3 UIToWorld(Vector3 position)
+            {
+                Vector3 screenPos = RectTransformUtility.WorldToScreenPoint(null,position);
+                screenPos.z = Mathf.Abs(mainCam.transform.position.z);
+                return mainCam.ScreenToWorldPoint(screenPos);
+            }
 
-            GenerateShape(nextShapesToDrop[0].GetType().Name, new Vector2(xValue, YSpawn()), CreationType.Drop);
+            GenerateShape(nextShapesToDrop[0].GetType().Name, UIToWorld(spawn), CreationType.Drop);
             nextShapesToDrop.RemoveAt(0);
             RollNextShape();
         }
@@ -258,7 +299,9 @@ public class ShapeManager : MonoBehaviour
     {
         foreach (Image image in nextImages)
             image.transform.parent.gameObject.SetActive(false);
-        InputManager.instance.enabled = false;
+        foreach (SpawnColumn column in listOfSpawnColumns)
+            column.DisableAll();
+        //InputManager.instance.enabled = false;
         yield return new WaitForSeconds(2.5f);
         GameOver(message);
     }
@@ -333,6 +376,9 @@ public class ShapeManager : MonoBehaviour
         Shape toCreate = null;
         if (!shapeStorage.ContainsKey(shape))
             shapeStorage.Add(shape, new Queue<Shape>());
+        if (!allShapesInLevel.ContainsKey(shape))
+            allShapesInLevel.Add(shape, new HashSet<Shape>());
+
         if (shapeStorage[shape].Count > 0)
             toCreate = shapeStorage[shape].Dequeue();
         else
@@ -351,14 +397,14 @@ public class ShapeManager : MonoBehaviour
             case CreationType.None:
                 break;
         }
-        shapesInLevel.Add(toCreate);
+        allShapesInLevel[shape].Add(toCreate);
         toCreate.Setup(spawn, cursed);
     }
     public void ReturnShape(Shape shape)
     {
         shape.canInteract = false;
         shapeStorage[shape.GetType().Name].Enqueue(shape);
-        shapesInLevel.Remove(shape);
+        allShapesInLevel[shape.GetType().Name].Remove(shape);
         shape.gameObject.SetActive(false);
     }
     public IEnumerator DropRandomly(Type shapeToSpawn, int numDrop, bool cursed)
@@ -377,7 +423,7 @@ public class ShapeManager : MonoBehaviour
 
 #endregion
 
-#region Other
+#region UI
     public void AddScore(int toAdd, Vector3 spawn, Color textColor)
     {
         if (dropped > 0)
@@ -404,7 +450,7 @@ public class ShapeManager : MonoBehaviour
         if (state != GameState.GameOver)
         {
             gameTimer?.Stop();
-            InputManager.instance.enabled = false;
+            //InputManager.instance.enabled = false;
             tutorialBackground.gameObject.SetActive(true);
             guideButton.gameObject.SetActive(false);
             replay.transform.parent.gameObject.SetActive(true);
@@ -446,14 +492,16 @@ public class ShapeManager : MonoBehaviour
     public void SwitchGravity()
     {
         Physics2D.gravity = new Vector2(0, Physics2D.gravity.y*-1);
-        if (Physics2D.gravity.y > 0)
+        if (Physics2D.gravity.y > 0) // fall upwards
         {
+            dropState = ColumnDrop.Bottom;
             deathLine.transform.localPosition = new Vector3(0, floor.transform.localPosition.y - 0.25f, 0);
             ceiling.gameObject.SetActive(true);
             floor.gameObject.SetActive(false);
         }
-        else
+        else //fall down
         {
+            dropState = ColumnDrop.Top;
             deathLine.transform.localPosition = new Vector3(0, ceiling.transform.localPosition.y + 0.25f, 0);
             floor.gameObject.SetActive(true);
             ceiling.gameObject.SetActive(false);
