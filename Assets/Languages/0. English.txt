@@ -40,13 +40,15 @@ Wall	Gets in the way; can only be destroyed with a Bomb.
 GhostStar	Combines with another Star, but disappears after you drop 5 more shapes.
 Multiply	Combines with itself to create a Star.
 Inverter	Changes the gravity of all shapes.
-Portal	Destroys a shape, then creates a copy of it at the other side of the level.
+TrainTrack	Moves a shape to the very left or right of the level and resets it.
 Bag	Creates 4 Cursed Circles on landing. (Cursed shapes can't combine with each other.)
 Egg	Becomes a Star after you drop 5 more shapes, but disappears if you combine any shapes.
-Snowflake	Disappears when you combine 5 shapes; shapes around this cannot be combined or destroyed.
-Duplicate	Curses a shape, then this becomes a Cursed copy of that shape. (Cursed shapes can't combine with each other.)
+Snowflake	Disappears when you combine 4 shapes; shapes around this cannot be combined or destroyed.
+Mirror	Curses a shape, then this becomes a Cursed copy of that shape. (Cursed shapes can't combine with each other.)
 Chest	Transforms 4 Squares around this into Arrows.
-New1	Transforms 6 Circles around this into Cursed Squares. (Cursed shapes can't combine with each other.)
+BlackHole	Transforms 6 Circles around this into Cursed Squares. (Cursed shapes can't combine with each other.)
+Cage	When 3 shapes combine at once, this transforms into a Circle, Square, and Arrow.
+Tube	Moves a shape to the very top or bottom of the level and resets it.
 Update_History	Update History
 Update_0	Dec 23, 2025
 Update_0_Text	New item: Warp - Moves a shape to the other side of the screen \nBoth drop-shape modes have a higher points threshold \nShapes have a new spawning animation \nMinor physics changes
@@ -61,4 +63,4 @@ Update_4_Text	Changed some sounds and sprites \nYou can choose your bonus shapes
 Update_5	Aug 27, 2026
 Update_5_Text	Hidden optional stuff on the title screen behind the extras button \nYou customize bonus shapes on title screen instead \nThe game will remember which shapes you chose \nChanged how high scores are saved/displayed
 Update_6	Next
-Update_6_Text	Added 10 more bonus shapes \nTweaked the numbers and radius's of some existing shapes
+Update_6_Text	Added 10 more bonus shapes \nTweaked the numbers and radius's of some existing shapes \nAdded a sound effect for Cursing a shape

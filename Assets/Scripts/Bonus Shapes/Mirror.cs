@@ -1,10 +1,10 @@
 using UnityEngine;
 
-public class Duplicate : Shape
+public class Mirror : Shape
 {
     public override Vector2 UISize(bool larger)
     {
-        return larger ? new(90, 90) : new(60, 60);
+        return larger ? new(60, 90) : new(50, 80);
     }
     protected override void HitOtherShape(Shape otherShape)
     {

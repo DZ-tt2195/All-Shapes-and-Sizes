@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 8b3a9a19c94b64a46b4d890326f6bfe9
+guid: 1a4043da6446649c7bacf904934702ba
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 2189510010676529607
-    second: Portal_0
+      213: 4409793707526386056
+    second: TrainTrack_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -51,7 +51,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 600
+  spritePixelsToUnits: 750
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -126,13 +126,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Portal_0
+      name: TrainTrack_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 656
-        height: 1011
+        width: 1621
+        height: 388
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -141,8 +141,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 7c9498211c3b26e10800000000000000
-      internalID: 2189510010676529607
+      spriteID: 881fcdd430cb23d30800000000000000
+      internalID: 4409793707526386056
       vertices: []
       indices: 
       edges: []
@@ -161,7 +161,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Portal_0: 2189510010676529607
+      TrainTrack_0: 4409793707526386056
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

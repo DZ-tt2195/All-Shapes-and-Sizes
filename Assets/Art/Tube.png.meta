@@ -1,10 +1,13 @@
 fileFormatVersion: 2
-guid: f662241004f8c452a8097bb9a115008a
+guid: ca66e2e426855486a9c7bccb4ff56f63
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 6380508436900141574
-    second: Black Hole_0
+      213: -127744156057749641
+    second: Tube_0
+  - first:
+      213: 3028906756253841477
+    second: Tube_1
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -51,7 +54,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 650
+  spritePixelsToUnits: 750
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -126,13 +129,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Black Hole_0
+      name: Tube_0
       rect:
         serializedVersion: 2
         x: 0
-        y: 0
-        width: 646
-        height: 646
+        y: 765
+        width: 437
+        height: 233
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -141,8 +144,30 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 60ad0d33e9e1c8850800000000000000
-      internalID: 6380508436900141574
+      spriteID: 777bb0ced592a3ef0800000000000000
+      internalID: -127744156057749641
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tube_1
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 437
+        height: 839
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5487a40a5a6d80a20800000000000000
+      internalID: 3028906756253841477
       vertices: []
       indices: 
       edges: []
@@ -161,7 +186,8 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Black Hole_0: 6380508436900141574
+      Tube_0: -127744156057749641
+      Tube_1: 3028906756253841477
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

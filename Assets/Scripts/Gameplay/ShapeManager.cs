@@ -336,13 +336,13 @@ public class ShapeManager : MonoBehaviour
         image.color = shape.spriterenderer.color;
         image.rectTransform.sizeDelta = shape.UISize(large);
     }
-    public float YSpawn()
-    {
-        return (Physics2D.gravity.y > 0) ? deathLine.position.y + 0.25f : deathLine.position.y - 0.25f;
-    }
     public (float, float) XSpawnRange()
     {
         return (leftWall.position.x + 0.5f, rightWall.position.x - 0.5f);
+    }
+    public (float, float) YSpawnRange()
+    {
+        return (floor.position.y + 0.5f, ceiling.position.y - 0.5f);
     }
     void RollNextShape()
     {
@@ -409,6 +409,7 @@ public class ShapeManager : MonoBehaviour
     }
     public IEnumerator DropRandomly(Type shapeToSpawn, int numDrop, bool cursed)
     {
+
         for (int i = 0; i < numDrop; i++)
         {
             yield return new WaitForSeconds(0.05f);
@@ -417,6 +418,10 @@ public class ShapeManager : MonoBehaviour
             float RandomX()
             {
                 return UnityEngine.Random.Range(XSpawnRange().Item1, XSpawnRange().Item2);
+            }
+            float YSpawn()
+            {
+                return dropState == ColumnDrop.Top ? YSpawnRange().Item2 : YSpawnRange().Item1;
             }
         }
     }

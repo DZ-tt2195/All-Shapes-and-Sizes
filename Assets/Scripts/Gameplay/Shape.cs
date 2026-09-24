@@ -109,7 +109,7 @@ public class Shape : MonoBehaviour
         else if (collision.CompareTag("Snowflake"))
             snowflakeColliders.Remove(collision.gameObject);
     }
-    public void ScoreShapes(Shape otherShape, string newShape)
+    public void ScoreShapes(Shape otherShape, string newShape, bool cursed = false)
     {
         ShapeManager.inst.AddScore(value, this.transform.position, spriterenderer.color);
         if (otherShape != null)
@@ -124,7 +124,7 @@ public class Shape : MonoBehaviour
         void CreateShape(Vector2 spawn)
         {
             if (newShape != "")
-                ShapeManager.inst.GenerateShape(newShape, spawn, CreationType.Combine);
+                ShapeManager.inst.GenerateShape(newShape, spawn, CreationType.Combine, cursed);
         }
         ShapeManager.inst.ReturnShape(this);
     }
