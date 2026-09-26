@@ -51,6 +51,7 @@ public static string Chest () => Translator.inst.Translate("Chest", new() {});
 public static string BlackHole () => Translator.inst.Translate("BlackHole", new() {});
 public static string Cage () => Translator.inst.Translate("Cage", new() {});
 public static string Tube () => Translator.inst.Translate("Tube", new() {});
+public static string Flashlight () => Translator.inst.Translate("Flashlight", new() {});
 public static string Update_History () => Translator.inst.Translate("Update_History", new() {});
 public static string Update_0 () => Translator.inst.Translate("Update_0", new() {});
 public static string Update_0_Text () => Translator.inst.Translate("Update_0_Text", new() {});

@@ -4,29 +4,31 @@ using TMPro;
 public class Egg : Shape
 {
     int disappearOn;
-    [SerializeField] int increment;
+    [SerializeField] int starting;
     [SerializeField] AudioClip breakSound;
     public override void Setup(Vector2 start, bool cursed)
     {
-        disappearOn = ShapeManager.inst.DropCount + increment;
         base.Setup(start, cursed);
+        disappearOn = starting;
+        textBox.text = $"{disappearOn}";
     }
-    void Update()
+    public override bool TrackNewShapes() => true;
+    public override void OnNewShape(Shape newShape, CreationType creationType)
     {
-        int currentCount = disappearOn - ShapeManager.inst.DropCount;
-        this.textBox.text = $"{currentCount}";
-        if (HasAbility())
+        if (creationType == CreationType.Drop)
         {
-            if (ShapeManager.inst.StreakCombines >= 1)
+            disappearOn = Mathf.Max(0, disappearOn-1);
+            this.textBox.text = $"{disappearOn}";
+            if (disappearOn == 0 && this.HasAbility())
             {
-                AudioManager.instance.PlaySound(breakSound, 0.3f);
                 ShapeManager.inst.ReturnShape(this);
+                ShapeManager.inst.GenerateShape(typeof(Star).Name, this.transform.position, CreationType.Other);
             }
-            else if (currentCount == 0)
-            {
-                ShapeManager.inst.GenerateShape(typeof(Star).Name, this.transform.position, CreationType.Drop);
-                ShapeManager.inst.ReturnShape(this);
-            }
+        }
+        else if (creationType == CreationType.Combine)
+        {
+            AudioManager.instance.PlaySound(breakSound, 0.3f);
+            ShapeManager.inst.ReturnShape(this);            
         }
     }
     public override Vector2 UISize(bool larger)

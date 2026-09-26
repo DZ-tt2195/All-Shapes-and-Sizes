@@ -1,7 +1,7 @@
 Blank	
 Designer	by Thomas Tang (DZ)
 Inspiration	Inspired by Aladdin X's Suika Game
-Last_Update	Last Updated: August 27, 2026
+Last_Update	Last Updated: NEXT DATE
 Extras	Extras
 Open_Customizer	Open Customizer
 Choose_Bonuses	Choose up to $Num$ bonus shapes.
@@ -49,6 +49,7 @@ Chest	Transforms 4 Squares around this into Arrows.
 BlackHole	Transforms 6 Circles around this into Cursed Squares. (Cursed shapes can't combine with each other.)
 Cage	When 3 shapes combine at once, this transforms into a Circle, Square, and Arrow.
 Tube	Moves a shape to the very top or bottom of the level and resets it.
+Flashlight	When there are 10 shapes in the range, this transforms into a Star.
 Update_History	Update History
 Update_0	Dec 23, 2025
 Update_0_Text	New item: Warp - Moves a shape to the other side of the screen \nBoth drop-shape modes have a higher points threshold \nShapes have a new spawning animation \nMinor physics changes
@@ -62,5 +63,5 @@ Update_4	June 14, 2026
 Update_4_Text	Changed some sounds and sprites \nYou can choose your bonus shapes before the game starts \nCan change volume mid-game
 Update_5	Aug 27, 2026
 Update_5_Text	Hidden optional stuff on the title screen behind the extras button \nYou customize bonus shapes on title screen instead \nThe game will remember which shapes you chose \nChanged how high scores are saved/displayed
-Update_6	Next
-Update_6_Text	Added 10 more bonus shapes \nTweaked the numbers and radius's of some existing shapes \nAdded a sound effect for Cursing a shape
+Update_6	Next Dte
+Update_6_Text	Added 10 more bonus shapes \nTweaked the numbers, art, and hitboxes of some existing bonus shapes \nAdded a few more sounds

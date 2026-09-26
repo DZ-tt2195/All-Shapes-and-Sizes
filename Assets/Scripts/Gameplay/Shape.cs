@@ -6,6 +6,8 @@ using TMPro;
 [RequireComponent(typeof(Rigidbody2D))]
 public class Shape : MonoBehaviour
 {
+
+#region Setup
     public SpriteRenderer spriterenderer;
     [SerializeField] int dropChance; public int DropChance => dropChance;
     Rigidbody2D rb;
@@ -17,7 +19,8 @@ public class Shape : MonoBehaviour
     Color originalShapeColor;
     Color originalFontColor;
     Vector3 originalSize;
-    HashSet<GameObject> snowflakeColliders = new();
+    HashSet<GameObject> disableColliders = new();
+    protected Dictionary<GameObject, Shape> shapesTouchingThis = new();
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -33,10 +36,11 @@ public class Shape : MonoBehaviour
     }
     public virtual Vector2 UISize(bool larger) => new Vector2(50, 50);
     public bool IsMainShape() => value >= 1;
-    public bool HasAbility() => snowflakeColliders.Count == 0 && canInteract;
+    public bool HasAbility() => disableColliders.Count == 0 && canInteract;
     public virtual void Setup(Vector2 start, bool cursed)
     {
         canInteract = false;
+        shapesTouchingThis = new();
         this.transform.position = start;
         this.transform.localEulerAngles = Vector3.zero;
         this.transform.localScale = Vector3.zero;
@@ -58,18 +62,34 @@ public class Shape : MonoBehaviour
             canInteract = true;
         }
     }
+#endregion
+
+#region Gameplay
     public void CursedStatus(bool cursed)
     {
+        if (cursed == true && !this.IsMainShape()) return;
         this.cursed = cursed;
         this.spriterenderer.color = cursed ? Color.black : originalShapeColor;
-        if (IsMainShape()) textBox.text = value.ToString();
-        if (textBox != null) textBox.color = cursed ? Color.white : originalFontColor;
-    }
-    protected virtual void OnTriggerStay2D(Collider2D collision)
-    {
-        if (!HasAbility()) return;
-        if (collision.TryGetComponent(out Shape otherShape) && otherShape.HasAbility())
+        if (textBox != null)
         {
+            if (IsMainShape()) textBox.text = value.ToString();
+            textBox.color = cursed ? Color.white : originalFontColor;
+        }
+    }
+    void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (!shapesTouchingThis.ContainsKey(collision.gameObject) && collision.TryGetComponent(out Shape shape))
+            shapesTouchingThis.Add(collision.gameObject, shape);
+        else if (!disableColliders.Contains(collision.gameObject) && collision.CompareTag("Disable"))
+            disableColliders.Add(collision.gameObject);
+    }
+    void OnTriggerStay2D(Collider2D collision)
+    {
+        if (!this.HasAbility()) return;
+        if (shapesTouchingThis.ContainsKey(collision.gameObject))
+        {
+            Shape otherShape = shapesTouchingThis[collision.gameObject];
+            if (!otherShape.HasAbility()) return;
             if (this.IsMainShape() && otherShape.IsMainShape() && this.transform.position.y > otherShape.transform.position.y) return;
             if (this.cursed && otherShape.cursed) return;
             HitOtherShape(otherShape);
@@ -80,10 +100,6 @@ public class Shape : MonoBehaviour
             {
                 Debug.Log("went out of bounds");
                 ShapeManager.inst.ReturnShape(this);
-            }
-            else if (collision.CompareTag("Snowflake"))
-            {
-                snowflakeColliders.Add(collision.gameObject);
             }
             else if (IsMainShape() && collision.CompareTag("Death Line"))
             {
@@ -102,12 +118,14 @@ public class Shape : MonoBehaviour
     protected virtual void HitOtherShape(Shape otherShape)
     {
     }
-    protected virtual void OnTriggerExit2D(Collider2D collision)
+    void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.CompareTag("Death Line"))
+        if (shapesTouchingThis.ContainsKey(collision.gameObject))
+            shapesTouchingThis.Remove(collision.gameObject);
+        else if (collision.CompareTag("Death Line"))
             deathLineTouched = 0f;
-        else if (collision.CompareTag("Snowflake"))
-            snowflakeColliders.Remove(collision.gameObject);
+        else if (disableColliders.Contains(collision.gameObject))
+            disableColliders.Remove(collision.gameObject);
     }
     public void ScoreShapes(Shape otherShape, string newShape, bool cursed = false)
     {
@@ -128,4 +146,10 @@ public class Shape : MonoBehaviour
         }
         ShapeManager.inst.ReturnShape(this);
     }
+    public virtual bool TrackNewShapes() => false;
+    public virtual void OnNewShape(Shape newShape, CreationType creationType)
+    {
+    }
+#endregion
+
 }

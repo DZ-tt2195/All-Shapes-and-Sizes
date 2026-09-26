@@ -409,7 +409,7 @@ GameObject:
   - component: {fileID: 2208791493731375409}
   m_Layer: 0
   m_Name: Visual
-  m_TagString: Snowflake
+  m_TagString: Disable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

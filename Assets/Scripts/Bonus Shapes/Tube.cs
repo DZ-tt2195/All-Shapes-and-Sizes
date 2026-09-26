@@ -13,7 +13,7 @@ public class Tube : Shape
 
         (float bottomSpawn, float topSpawn) = ShapeManager.inst.YSpawnRange();
         float newYPosition = ShapeManager.dropState == ColumnDrop.Top ? bottomSpawn : topSpawn;
-        ShapeManager.inst.GenerateShape(otherShape.GetType().Name, new(otherShape.transform.position.x, newYPosition), CreationType.Drop);
+        ShapeManager.inst.GenerateShape(otherShape.GetType().Name, new(otherShape.transform.position.x, newYPosition), CreationType.Other);
         
         ShapeManager.inst.ReturnShape(otherShape);
         ShapeManager.inst.ReturnShape(this);

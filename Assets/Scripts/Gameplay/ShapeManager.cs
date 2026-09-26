@@ -7,8 +7,8 @@ using UnityEngine.UI;
 using TMPro;
 using System.Diagnostics;
 using System.Linq;
-public enum ColumnDrop {Top, Bottom, Any}
-public enum CreationType {None, Drop, Combine}
+public enum ColumnDrop {Top, Bottom}
+public enum CreationType {Drop, Combine, Other}
 public enum GameState {SettingUp, GameOn, GameOver}
 [Serializable]
 public class SpawnColumn
@@ -45,6 +45,7 @@ public class ShapeManager : MonoBehaviour
 
     public static ShapeManager inst;
     Camera mainCam;
+    public GameState state {get; private set;}
 
     [Foldout("Audio", true)]
         [SerializeField] AudioClip createSound;
@@ -63,12 +64,6 @@ public class ShapeManager : MonoBehaviour
         [SerializeField] TMP_Text titleScreen;
         [SerializeField] Button resign;
 
-    [Foldout("Next shapes", true)]
-        [SerializeField] List<Image> nextImages = new();
-        List<Shape> nextShapesToDrop = new();
-        float waitForDrop = 0f;
-        Dictionary<string, HashSet<Shape>> allShapesInLevel = new(); public Dictionary<string, HashSet<Shape>> GetExistingShapes => allShapesInLevel;
-
     [Foldout("Guide", true)]
         [SerializeField] Image tutorialBackground;
         [SerializeField] Button guideButton;
@@ -76,21 +71,22 @@ public class ShapeManager : MonoBehaviour
         [SerializeField] TMP_Text guideText;
         [SerializeField] List<ShapeDisplay> displaysOnScreen;
 
-    [Foldout("To drop", true)]
+    [Foldout("Shapes", true)]
         public static ColumnDrop dropState {get; private set;}
         [SerializeField] List<SpawnColumn> listOfSpawnColumns = new();
-        List<Shape> toDrop = new();
-        HashSet<Shape> bonusShapes;
+        [SerializeField] List<Image> nextImages = new();
+        List<Shape> nextShapesToDrop = new();
+        float waitForDrop = 0f;
+        HashSet<Shape> selectedBonusShapes;
+        HashSet<Shape> willReact = new();
         Dictionary<string, Queue<Shape>> shapeStorage = new();
-        [ReadOnly] public bool mergedCrowns = false;
-        public GameState state {get; private set;}
+        Dictionary<string, HashSet<Shape>> allShapesInLevel = new(); public Dictionary<string, HashSet<Shape>> GetExistingShapes => allShapesInLevel;
 
     [Foldout("Score", true)]
+        [ReadOnly] public bool mergedCrowns = false;
         [SerializeField] int combineCrownGameOver;
-        int score; public int ScoreCount => score;
-        int dropped; public int DropCount => dropped;
-        int totalCombined; public int TotalCombines => totalCombined;
-        int streakCombined; public int StreakCombines => streakCombined;
+        int score;
+        int dropped;
         [SerializeField] PointsVisual pv;
         Queue<PointsVisual> visualStorage = new();
 
@@ -116,18 +112,18 @@ public class ShapeManager : MonoBehaviour
     {
         inst = this;
         mainCam = Camera.main;
+
         Physics2D.gravity = new(0, -10);
         dropState = ColumnDrop.Top;
+        warningText.transform.localScale = new Vector2(0, 0);
+        //InputManager.instance.enabled = false;
+        gravityArrow.transform.localScale = new Vector2(0, 0);
+        gravityArrow.transform.localEulerAngles = new Vector3(0, 0, -90);
 
         next.text = AutoTranslate.Next();
         giveUp.text = AutoTranslate.Give_Up();
         replay.text = AutoTranslate.Replay();
         titleScreen.text = AutoTranslate.Title_Screen();
-
-        warningText.transform.localScale = new Vector2(0, 0);
-        //InputManager.instance.enabled = false;
-        gravityArrow.transform.localScale = new Vector2(0, 0);
-        gravityArrow.transform.localEulerAngles = new Vector3(0, 0, -90);
 
         resign.onClick.AddListener(() => GameOver(AutoTranslate.You_Gave_Up()));
         ceiling.gameObject.SetActive(false);
@@ -184,8 +180,8 @@ public class ShapeManager : MonoBehaviour
     */
     private void Start()
     {
-        bonusShapes = GameFiles.inst.SavedBonusShapes();
-        List<Shape> selectedShapes = bonusShapes.ToList();
+        selectedBonusShapes = GameFiles.inst.SavedBonusShapes();
+        List<Shape> selectedShapes = selectedBonusShapes.ToList();
         for (int i = 0; i<selectedShapes.Count; i++)
             displaysOnScreen[i].AssignShape(selectedShapes[i]);
 
@@ -207,16 +203,15 @@ public class ShapeManager : MonoBehaviour
                 column.EnableAll();
             dataText.transform.parent.gameObject.SetActive(true);
             
-            RollNextShape();        
+            FutureShapes();        
             gameTimer = new Stopwatch();
             gameTimer.Start();
-            ShapeUI();
         }
     }
 
 #endregion
 
-#region Shapes
+#region New Shapes
 
     private void Update()
     {
@@ -261,7 +256,6 @@ public class ShapeManager : MonoBehaviour
         {
             dropped++;
             waitForDrop = 0.15f;
-            streakCombined = 0;
 
             if (PrefManager.GetMode() == GameMode.Combine_Crown && combineCrownGameOver-dropped <= 50)
             {
@@ -279,9 +273,6 @@ public class ShapeManager : MonoBehaviour
                 case ColumnDrop.Bottom:
                     spawn = listOfSpawnColumns[columnNumber].Last().transform.position;
                     break;
-                case ColumnDrop.Any:
-                    spawn = screenPosition;
-                    break;
             }
             Vector3 UIToWorld(Vector3 position)
             {
@@ -292,81 +283,30 @@ public class ShapeManager : MonoBehaviour
 
             GenerateShape(nextShapesToDrop[0].GetType().Name, UIToWorld(spawn), CreationType.Drop);
             nextShapesToDrop.RemoveAt(0);
-            RollNextShape();
+            FutureShapes();
         }
     }
-    IEnumerator WaitForEnd(string message)
+    void FutureShapes()
     {
-        foreach (Image image in nextImages)
-            image.transform.parent.gameObject.SetActive(false);
-        foreach (SpawnColumn column in listOfSpawnColumns)
-            column.DisableAll();
-        //InputManager.instance.enabled = false;
-        yield return new WaitForSeconds(2.5f);
-        GameOver(message);
-    }
-    IEnumerator FlashWarning(int number)
-    {
-        AudioManager.instance.PlaySound(timerSound, 0.5f);
-        Vector2 zeroSize = new(0, 0);
-        Vector2 maxSize = new(1, 1);
-
-        warningText.transform.localScale = zeroSize;
-        warningText.text = $"{number}";
-
-        float elapsedTime = 0f;
-        float waitTime = 0.5f;
-        while (elapsedTime < waitTime)
+        if (nextShapesToDrop.Count < nextImages.Count)
         {
-            warningText.transform.localScale = Vector3.Lerp(zeroSize, maxSize, elapsedTime / waitTime);
-            elapsedTime += Time.deltaTime;
-            yield return null;
+            UnityEngine.Debug.Log("shuffling bag of shapes");
+            List<Shape> upcomingShapes = new();
+            foreach (Shape shape in GameFiles.inst.AllMains())
+            {
+                for (int i = 0; i < shape.DropChance; i++)
+                    upcomingShapes.Add(shape);
+            }
+            foreach (Shape shape in selectedBonusShapes)
+            {
+                for (int i = 0; i < shape.DropChance; i++)
+                    upcomingShapes.Add(shape);
+            }
+            upcomingShapes = upcomingShapes.Shuffle();
+            nextShapesToDrop.AddRange(upcomingShapes);
         }
-        warningText.transform.localScale = maxSize;
-    }
-    void ShapeUI()
-    {
         for (int i = 0 ; i<nextImages.Count; i++)
             ApplySprite(nextImages[i], nextShapesToDrop[i], i == 0);
-    }
-    public static void ApplySprite(Image image, Shape shape, bool large)
-    {
-        image.transform.parent.gameObject.SetActive(true);
-        image.sprite = shape.spriterenderer.sprite;
-        image.color = shape.spriterenderer.color;
-        image.rectTransform.sizeDelta = shape.UISize(large);
-    }
-    public (float, float) XSpawnRange()
-    {
-        return (leftWall.position.x + 0.5f, rightWall.position.x - 0.5f);
-    }
-    public (float, float) YSpawnRange()
-    {
-        return (floor.position.y + 0.5f, ceiling.position.y - 0.5f);
-    }
-    void RollNextShape()
-    {
-        while (nextShapesToDrop.Count < nextImages.Count)
-        {
-            if (toDrop.Count == 0)
-            {
-                foreach (Shape shape in GameFiles.inst.AllMains())
-                {
-                    for (int i = 0; i < shape.DropChance; i++)
-                        toDrop.Add(shape);
-                }
-                foreach (Shape shape in bonusShapes)
-                {
-                    for (int i = 0; i < shape.DropChance; i++)
-                        toDrop.Add(shape);
-                }
-            }
-            int randIndex = UnityEngine.Random.Range(0, toDrop.Count);
-            Shape newShape = toDrop[randIndex];
-            toDrop.RemoveAt(randIndex);
-            nextShapesToDrop.Add(newShape);
-        }
-        ShapeUI();
     }
     public void GenerateShape(string shape, Vector2 spawn, CreationType creationType, bool cursed = false)
     {
@@ -389,15 +329,21 @@ public class ShapeManager : MonoBehaviour
             case CreationType.Drop:
                 AudioManager.instance.Menu(); 
                 break;
+            case CreationType.Other:
+                AudioManager.instance.Menu(); 
+                break;
             case CreationType.Combine:
                 AudioManager.instance.PlaySound(createSound, 0.25f); 
-                streakCombined++;
-                totalCombined++;
-                break;
-            case CreationType.None:
                 break;
         }
         allShapesInLevel[shape].Add(toCreate);
+        foreach (Shape reacting in new HashSet<Shape>(willReact))
+        {
+            if (reacting.gameObject.activeSelf)
+                reacting.OnNewShape(toCreate, creationType);
+        }
+        if (toCreate.TrackNewShapes())
+            willReact.Add(toCreate);
         toCreate.Setup(spawn, cursed);
     }
     public void ReturnShape(Shape shape)
@@ -405,11 +351,11 @@ public class ShapeManager : MonoBehaviour
         shape.canInteract = false;
         shapeStorage[shape.GetType().Name].Enqueue(shape);
         allShapesInLevel[shape.GetType().Name].Remove(shape);
+        willReact.Remove(shape);
         shape.gameObject.SetActive(false);
     }
     public IEnumerator DropRandomly(Type shapeToSpawn, int numDrop, bool cursed)
     {
-
         for (int i = 0; i < numDrop; i++)
         {
             yield return new WaitForSeconds(0.05f);
@@ -496,21 +442,66 @@ public class ShapeManager : MonoBehaviour
     public Transform GetGravityArrow() => gravityArrow;
     public void SwitchGravity()
     {
-        Physics2D.gravity = new Vector2(0, Physics2D.gravity.y*-1);
-        if (Physics2D.gravity.y > 0) // fall upwards
+        if (dropState == ColumnDrop.Top)
         {
-            dropState = ColumnDrop.Bottom;
             deathLine.transform.localPosition = new Vector3(0, floor.transform.localPosition.y - 0.25f, 0);
             ceiling.gameObject.SetActive(true);
             floor.gameObject.SetActive(false);
+            Physics2D.gravity = new Vector2(0, Mathf.Abs(Physics2D.gravity.y));
+            dropState = ColumnDrop.Bottom;
         }
-        else //fall down
+        else if (dropState == ColumnDrop.Bottom)
         {
-            dropState = ColumnDrop.Top;
             deathLine.transform.localPosition = new Vector3(0, ceiling.transform.localPosition.y + 0.25f, 0);
-            floor.gameObject.SetActive(true);
             ceiling.gameObject.SetActive(false);
+            floor.gameObject.SetActive(true);
+            Physics2D.gravity = new Vector2(0, -1*Mathf.Abs(Physics2D.gravity.y));
+            dropState = ColumnDrop.Top;
         }
+    }
+    IEnumerator WaitForEnd(string message)
+    {
+        foreach (Image image in nextImages)
+            image.transform.parent.gameObject.SetActive(false);
+        foreach (SpawnColumn column in listOfSpawnColumns)
+            column.DisableAll();
+        //InputManager.instance.enabled = false;
+        yield return new WaitForSeconds(2.5f);
+        GameOver(message);
+    }
+    IEnumerator FlashWarning(int number)
+    {
+        AudioManager.instance.PlaySound(timerSound, 0.5f);
+        Vector2 zeroSize = new(0, 0);
+        Vector2 maxSize = new(1, 1);
+
+        warningText.transform.localScale = zeroSize;
+        warningText.text = $"{number}";
+
+        float elapsedTime = 0f;
+        float waitTime = 0.5f;
+        while (elapsedTime < waitTime)
+        {
+            warningText.transform.localScale = Vector3.Lerp(zeroSize, maxSize, elapsedTime / waitTime);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+        warningText.transform.localScale = maxSize;
+    }
+    public static void ApplySprite(Image image, Shape shape, bool large)
+    {
+        image.transform.parent.gameObject.SetActive(true);
+        image.sprite = shape.spriterenderer.sprite;
+        image.color = shape.spriterenderer.color;
+        image.rectTransform.sizeDelta = shape.UISize(large);
+    }
+    public (float, float) XSpawnRange()
+    {
+        return (leftWall.position.x + 0.5f, rightWall.position.x - 0.5f);
+    }
+    public (float, float) YSpawnRange()
+    {
+        return (floor.position.y + 0.5f, ceiling.position.y - 0.5f);
     }
 #endregion
 

@@ -13,7 +13,6 @@ public class LevelButton
     public TMP_Text highScoreText;
     public GameMode mode;
 }
-
 public enum GameMode { Combine_Crown, Endless };
 
 public class TitleScreen : MonoBehaviour
@@ -46,16 +45,27 @@ public class TitleScreen : MonoBehaviour
         tutorial.text = AutoTranslate.Tutorial_Text();
         extrasButton.GetComponentInChildren<TMP_Text>().text = AutoTranslate.Extras();
 
-        clearData.onClick.AddListener(ResetData);
-        sfxButton.onClick.AddListener(Credits);
-        sfxCredits.SetActive(false);
-        extrasButton.onClick.AddListener(OpenExtras);
+        clearData.onClick.AddListener(() =>
+        {
+            foreach (LevelButton thing in allLevelButtons)
+                PlayerPrefs.DeleteKey(thing.mode.ToString());
+            AudioManager.instance.Menu();
+            PlayerPrefs.Save();
+            DisplayScores();
+        });
 
-        void OpenExtras()
+        sfxButton.onClick.AddListener(() =>
+        {
+            AudioManager.instance.Menu();
+            sfxCredits.SetActive(!sfxCredits.activeSelf);            
+        });
+        sfxCredits.SetActive(false);
+
+        extrasButton.onClick.AddListener(() =>
         {
             extrasButton.gameObject.SetActive(false);
-            extrasScreen.gameObject.SetActive(true);
-        }
+            extrasScreen.gameObject.SetActive(true);            
+        });
 
         foreach (LevelButton thing in allLevelButtons)
         {
@@ -79,21 +89,5 @@ public class TitleScreen : MonoBehaviour
             else
                 thing.highScoreText.text = Translator.inst.Translate($"{mode}_Score", new(){("Num", PrefManager.GetScore(mode).ToString())});
         }
-    }
-    void ResetData()
-    {
-        foreach (LevelButton thing in allLevelButtons)
-            PlayerPrefs.DeleteKey(thing.mode.ToString());
-        AudioManager.instance.Menu();
-        PlayerPrefs.Save();
-        DisplayScores();
-    }
-    void Credits()
-    {
-        AudioManager.instance.Menu();
-        if (sfxCredits.activeSelf)
-            sfxCredits.SetActive(false);
-        else
-            sfxCredits.SetActive(true);
     }
 }

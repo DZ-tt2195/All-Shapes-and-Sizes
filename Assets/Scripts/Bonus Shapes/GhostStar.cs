@@ -3,21 +3,30 @@ using UnityEngine;
 public class GhostStar : Star
 {
     int disappearOn;
-    [SerializeField] int increment;
+    [SerializeField] int starting;
     [SerializeField] AudioClip vanishSound;
     public override void Setup(Vector2 start, bool cursed)
     {
-        disappearOn = ShapeManager.inst.DropCount + increment;
         base.Setup(start, cursed);
+        disappearOn = starting;
+        this.textBox.text = $"{disappearOn}";
     }
-    void Update()
+    public override bool TrackNewShapes() => true;
+    public override void OnNewShape(Shape newShape, CreationType creationType)
     {
-        int currentCount = disappearOn-ShapeManager.inst.DropCount;
-        this.textBox.text = $"{currentCount}";
-        if (HasAbility() && currentCount == 0)
+        if (creationType == CreationType.Drop)
         {
-            AudioManager.instance.PlaySound(vanishSound, 0.3f);
-            ShapeManager.inst.ReturnShape(this);
+            disappearOn--;
+            this.textBox.text = $"{disappearOn}";
+            if (disappearOn == 0)
+            {
+                AudioManager.instance.PlaySound(vanishSound, 0.3f);
+                ShapeManager.inst.ReturnShape(this);    
+            }
         }
+    }
+    public override Vector2 UISize(bool larger)
+    {
+        return larger ? new(100, 100) : new(60, 60);
     }
 }
