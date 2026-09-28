@@ -22,14 +22,14 @@ public class Egg : Shape
             this.textBox.text = $"{disappearOn}";
             if (disappearOn == 0 && this.HasAbility())
             {
-                ShapeManager.inst.ReturnShape(this);
-                ShapeManager.inst.GenerateShape(typeof(Star).Name, this.transform.position, CreationType.Other);
+                ShapeManager.inst.ReturnShape(this, ReturnType.Done);
+                ShapeManager.inst.GenerateShape(typeof(Star).Name, this.transform.position, CreationType.Special);
             }
         }
         else if (creationType == CreationType.Combine)
         {
             AudioManager.instance.PlaySound(breakSound, 0.3f);
-            ShapeManager.inst.ReturnShape(this);            
+            ShapeManager.inst.ReturnShape(this, ReturnType.Destroy);            
         }
     }
     public override Vector2 UISize(bool larger)

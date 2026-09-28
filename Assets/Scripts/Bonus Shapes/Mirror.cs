@@ -11,8 +11,8 @@ public class Mirror : Shape
         if (otherShape.IsMainShape())
         {
             otherShape.CursedStatus(true);
-            ShapeManager.inst.ReturnShape(this);
-            ShapeManager.inst.GenerateShape(otherShape.GetType().Name, this.transform.position, CreationType.Other, true);
+            ShapeManager.inst.ReturnShape(this, ReturnType.Done);
+            ShapeManager.inst.GenerateShape(otherShape.GetType().Name, this.transform.position, CreationType.Special, true);
         }
     }
 }

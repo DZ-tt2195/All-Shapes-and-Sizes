@@ -100,7 +100,7 @@ public class Shape : MonoBehaviour
             if (collision.CompareTag("Out of Bounds"))
             {
                 Debug.Log($"{this.name} went out of bounds");
-                ShapeManager.inst.ReturnShape(this);
+                ShapeManager.inst.ReturnShape(this, ReturnType.Done);
             }
             else if (IsMainShape() && collision.CompareTag("Death Line"))
             {
@@ -134,7 +134,7 @@ public class Shape : MonoBehaviour
         if (otherShape != null)
         {
             CreateShape(Vector2.Lerp(this.transform.position, otherShape.transform.position, 0.5f));
-            ShapeManager.inst.ReturnShape(otherShape);
+            ShapeManager.inst.ReturnShape(otherShape, ReturnType.Combine);
         }
         else
         {
@@ -145,10 +145,13 @@ public class Shape : MonoBehaviour
             if (newShape != "")
                 ShapeManager.inst.GenerateShape(newShape, spawn, CreationType.Combine, cursed);
         }
-        ShapeManager.inst.ReturnShape(this);
+        ShapeManager.inst.ReturnShape(this, ReturnType.Combine);
     }
     public virtual bool TrackNewShapes() => false;
     public virtual void OnNewShape(Shape newShape, CreationType creationType)
+    {
+    }
+    public virtual void OnReturn(ReturnType returnType)
     {
     }
 #endregion

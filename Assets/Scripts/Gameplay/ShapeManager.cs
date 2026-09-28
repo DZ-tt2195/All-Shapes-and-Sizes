@@ -8,7 +8,8 @@ using TMPro;
 using System.Diagnostics;
 using System.Linq;
 public enum ColumnDrop {Top, Bottom}
-public enum CreationType {Drop, Combine, Other}
+public enum CreationType {Drop, Combine, Special}
+public enum ReturnType {Combine, Destroy, Done}
 public enum GameState {SettingUp, GameOn, GameOver}
 [Serializable]
 public class SpawnColumn
@@ -185,7 +186,9 @@ public class ShapeManager : MonoBehaviour
         for (int i = 0; i<selectedShapes.Count; i++)
             displaysOnScreen[i].AssignShape(selectedShapes[i]);
 
-        StartCoroutine(DropRandomly(typeof(Circle), 75, false));
+        List<Type> toDrop = Enumerable.Repeat(typeof(Circle), 75).ToList();
+        StartCoroutine(DropRandomly(toDrop, new Vector2(0, YSpawnRange().highest), XSpawnRange().right, 0, false));
+        
         StartCoroutine(BeginGame());
         IEnumerator BeginGame()
         {
@@ -323,7 +326,7 @@ public class ShapeManager : MonoBehaviour
             case CreationType.Drop:
                 AudioManager.instance.Menu(); 
                 break;
-            case CreationType.Other:
+            case CreationType.Special:
                 AudioManager.instance.Menu(); 
                 break;
             case CreationType.Combine:
@@ -340,28 +343,28 @@ public class ShapeManager : MonoBehaviour
         if (toCreate.TrackNewShapes())
             willReact.Add(toCreate);
     }
-    public void ReturnShape(Shape shape)
+    public void ReturnShape(Shape shape, ReturnType returnType)
     {
-        shape.canInteract = false;
         shapeStorage[shape.GetType().Name].Enqueue(shape);
         allShapesInLevel[shape.GetType().Name].Remove(shape);
         willReact.Remove(shape);
+
+        shape.canInteract = false;
         shape.gameObject.SetActive(false);
+        shape.OnReturn(returnType);
     }
-    public IEnumerator DropRandomly(Type shapeToSpawn, int numDrop, bool cursed)
+    public IEnumerator DropRandomly(List<Type> shapesToSpawn, Vector2 spawn, float xVariance, float yVariance, bool cursed)
     {
-        for (int i = 0; i < numDrop; i++)
+        for (int i = 0; i < shapesToSpawn.Count; i++)
         {
             yield return new WaitForSeconds(0.05f);
-            GenerateShape(shapeToSpawn.Name, new Vector2(RandomX(), YSpawn()), CreationType.Drop, cursed);
+            GenerateShape(shapesToSpawn[i].Name, CreateAt(), CreationType.Special, cursed);
 
-            float RandomX()
+            Vector2 CreateAt()
             {
-                return UnityEngine.Random.Range(XSpawnRange().Item1, XSpawnRange().Item2);
-            }
-            float YSpawn()
-            {
-                return dropState == ColumnDrop.Top ? YSpawnRange().Item2 : YSpawnRange().Item1;
+                float xPosition = spawn.x + UnityEngine.Random.Range(-xVariance, xVariance);
+                float yPosition = spawn.y + UnityEngine.Random.Range(-yVariance, yVariance);
+                return new Vector2(xPosition, yPosition);
             }
         }
     }
@@ -489,11 +492,11 @@ public class ShapeManager : MonoBehaviour
         image.color = shape.spriterenderer.color;
         image.rectTransform.sizeDelta = shape.UISize(large);
     }
-    public (float, float) XSpawnRange()
+    public (float left, float right) XSpawnRange()
     {
         return (leftWall.position.x + 0.5f, rightWall.position.x - 0.5f);
     }
-    public (float, float) YSpawnRange()
+    public (float lowest, float highest) YSpawnRange()
     {
         return (floor.position.y + 0.5f, ceiling.position.y - 0.5f);
     }

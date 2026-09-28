@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 5481230810617606783}
   - component: {fileID: 7034152042839866485}
   m_Layer: 0
-  m_Name: New2
+  m_Name: BadWarp
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

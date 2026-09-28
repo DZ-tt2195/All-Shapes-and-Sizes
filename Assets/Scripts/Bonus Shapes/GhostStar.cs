@@ -22,7 +22,7 @@ public class GhostStar : Star
             if (disappearOn == 0)
             {
                 AudioManager.instance.PlaySound(vanishSound, 0.3f);
-                ShapeManager.inst.ReturnShape(this);    
+                ShapeManager.inst.ReturnShape(this, ReturnType.Destroy);    
             }
         }
     }

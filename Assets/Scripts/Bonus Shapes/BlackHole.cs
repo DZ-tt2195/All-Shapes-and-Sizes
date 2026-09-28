@@ -25,7 +25,7 @@ public class BlackHole : Shape
             textBox.text = currentCount.ToString();
             otherShape.ScoreShapes(null, typeof(Square).Name, true);
             if (currentCount == 0)
-                ShapeManager.inst.ReturnShape(this);
+                ShapeManager.inst.ReturnShape(this, ReturnType.Done);
         }
     }
 }

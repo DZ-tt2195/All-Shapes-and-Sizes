@@ -1,7 +1,7 @@
 using UnityEngine;
 using TMPro;
 
-public class New2 : Shape
+public class BadWarp : Shape
 {
     int disappearOn;
     [SerializeField] int starting;
@@ -22,8 +22,8 @@ public class New2 : Shape
             if (disappearOn == 0 && this.HasAbility())
             {
                 Vector2 thisSpawn = this.transform.position;
-                ShapeManager.inst.ReturnShape(this);
-                ShapeManager.inst.ReturnShape(newShape);
+                ShapeManager.inst.ReturnShape(this, ReturnType.Done);
+                ShapeManager.inst.ReturnShape(newShape, ReturnType.Done);
                 ShapeManager.inst.GenerateShape(newShape.GetType().Name, thisSpawn, CreationType.Drop);
             }
         }

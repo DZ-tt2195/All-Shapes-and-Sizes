@@ -13,9 +13,9 @@ public class TrainTrack : Shape
 
         (float leftSpawn, float rightSpawn) = ShapeManager.inst.XSpawnRange();
         float newXPosition = otherShape.transform.position.x > 0 ? leftSpawn : rightSpawn;
-        ShapeManager.inst.GenerateShape(otherShape.GetType().Name, new(newXPosition, otherShape.transform.position.y), CreationType.Other);
+        ShapeManager.inst.GenerateShape(otherShape.GetType().Name, new(newXPosition, otherShape.transform.position.y), CreationType.Special);
         
-        ShapeManager.inst.ReturnShape(otherShape);
-        ShapeManager.inst.ReturnShape(this);
+        ShapeManager.inst.ReturnShape(otherShape, ReturnType.Done);
+        ShapeManager.inst.ReturnShape(this, ReturnType.Done);
     }
 }

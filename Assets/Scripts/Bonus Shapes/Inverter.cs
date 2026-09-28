@@ -14,7 +14,7 @@ public class Inverter : Shape
         AudioManager.instance.PlaySound(gravitySound, 0.5f);
         ShapeManager.inst.SwitchGravity();
         ShapeManager.inst.StartCoroutine(ArrowAnimation());
-        ShapeManager.inst.ReturnShape(this);
+        ShapeManager.inst.ReturnShape(this, ReturnType.Done);
     }
     IEnumerator ArrowAnimation()
     {

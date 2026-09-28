@@ -26,7 +26,7 @@ public class Snowflake : Shape
             this.textBox.text = $"{disappearOn}";
             if (disappearOn == 0)
             {
-                ShapeManager.inst.ReturnShape(this);
+                ShapeManager.inst.ReturnShape(this, ReturnType.Done);
                 AudioManager.instance.PlaySound(dingSound, 0.3f);                
             }
         }

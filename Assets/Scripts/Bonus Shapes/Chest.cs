@@ -25,11 +25,11 @@ public class Chest : Shape
             textBox.text = currentCount.ToString();
             otherShape.ScoreShapes(null, typeof(Arrow).Name);
             if (currentCount == 0)
-                ShapeManager.inst.ReturnShape(this);
+                ShapeManager.inst.ReturnShape(this, ReturnType.Done);
         }
         else if (otherShape is Circle)
         {
-            ShapeManager.inst.ReturnShape(otherShape);
+            ShapeManager.inst.ReturnShape(otherShape, ReturnType.Destroy);
         }
     }
 }

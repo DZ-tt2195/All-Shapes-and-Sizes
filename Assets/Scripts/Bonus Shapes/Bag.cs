@@ -1,4 +1,7 @@
 using UnityEngine;
+using System.Collections.Generic;
+using System.Linq;
+using System;
 
 public class Bag : Shape
 {
@@ -10,8 +13,8 @@ public class Bag : Shape
     }
     protected override void HitOtherShape(Shape otherShape)
     {
-        for (int i = 0; i<spawnAmount; i++)
-            ShapeManager.inst.GenerateShape(typeof(Circle).Name, this.transform.position, CreationType.Other, true);
-        ShapeManager.inst.ReturnShape(this);
+        List<Type> toDrop = Enumerable.Repeat(typeof(Square), 4).ToList();
+        ShapeManager.inst.StartCoroutine(ShapeManager.inst.DropRandomly(toDrop, this.transform.position, 0.1f, 0.1f, true));
+        ShapeManager.inst.ReturnShape(this, ReturnType.Done);
     }
 }

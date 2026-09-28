@@ -14,7 +14,7 @@ public class New1 : Shape
         foreach (Shape arrow in new HashSet<Shape>(currentArrows))
         {
             arrowPositions.Add(arrow.transform.position);
-            ShapeManager.inst.ReturnShape(arrow);
+            ShapeManager.inst.ReturnShape(arrow, ReturnType.Done);
         }
 
         HashSet<Shape> currentDiamonds = ShapeManager.inst.GetExistingShapes()[typeof(Diamond).Name];
@@ -22,14 +22,14 @@ public class New1 : Shape
         foreach (Shape diamond in new HashSet<Shape>(currentDiamonds))
         {
             diamondPositions.Add(diamond.transform.position);
-            ShapeManager.inst.ReturnShape(diamond);
+            ShapeManager.inst.ReturnShape(diamond, ReturnType.Done);
         }
 
         foreach (Vector2 newDiamond in arrowPositions)
-            ShapeManager.inst.GenerateShape(typeof(Diamond).Name, newDiamond, CreationType.Other);
+            ShapeManager.inst.GenerateShape(typeof(Diamond).Name, newDiamond, CreationType.Special);
         foreach (Vector2 newArrow in diamondPositions)
-            ShapeManager.inst.GenerateShape(typeof(Arrow).Name, newArrow, CreationType.Other);
+            ShapeManager.inst.GenerateShape(typeof(Arrow).Name, newArrow, CreationType.Special);
 
-        ShapeManager.inst.ReturnShape(this);
+        ShapeManager.inst.ReturnShape(this, ReturnType.Done);
     }
 }

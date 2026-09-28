@@ -36,21 +36,22 @@ Endless	Endless Mode
 Endless_Tutorial	Play for as long as you are able to until you lose.
 Endless_Score	High score of $Num$ points
 No_Score	No score found.
-Wall	Gets in the way; can only be destroyed with a Bomb.
-GhostStar	Combines with another Star, but disappears after you drop $Num$ more shapes.
-Multiply	Combines with itself to create a Star.
-Inverter	Changes the gravity of all shapes.
-TrainTrack	Moves a shape to the very left or right of the level and resets it.
 Bag	Creates $Num$ Cursed Circles. (Cursed shapes can't combine with each other.)
-Egg	Transforms into a Star after you drop $Num$ more shapes, but disappears if you combine any shapes.
-Snowflake	Disappears when you combine $Num$ shapes; shapes around this cannot be combined or destroyed.
-Mirror	Curses a shape, then this becomes a Cursed copy of that shape. (Cursed shapes can't combine with each other.)
-Chest	Transforms $Num$ Squares around this into Arrows, and destroys Circles around this.
 BlackHole	Transforms $Num$ Circles around this into Cursed Squares. (Cursed shapes can't combine with each other.)
-Cage	When $Num$ shapes combine at once, this transforms into a Circle, Square, and Arrow.
-Tube	Moves a shape to the very top or bottom of the level and resets it.
+Cage	When this is destroyed by a Bomb, create a Circle, Square, and Arrow.
+Chest	Transforms $Num$ Squares around this into Arrows, and destroys all Circles around this.
+Egg	Transforms into a Star after you drop $Num$ more shapes, but disappears if you combine any shapes.
 Flashlight	When there are $Num$ shapes in the range, this transforms into a Star.
+GhostStar	Combines with another Star, but disappears after you drop $Num$ more shapes.
+Inverter	Changes the gravity of all shapes.
+Mirror	Curses a shape, then this becomes a Cursed copy of that shape. (Cursed shapes can't combine with each other.)
+Multiply	Combines with itself to create a Star.
 New1	Transform all Arrows into Diamonds, and vice versa.
+New2	When $Num$ shapes combine at once, create 2 Cursed Arrows. (Cursed shapes can't combine with each other.)
+Snowflake	Disappears when you combine $Num$ shapes; shapes around this cannot be combined or destroyed.
+TrainTrack	Moves a shape to the very left or right of the level and resets it.
+Tube	Moves a shape to the very top or bottom of the level and resets it.
+Wall	Gets in the way; can only be destroyed with a Bomb.
 Update_History	Update History
 Update_0	Dec 23, 2025
 Update_0_Text	New item: Warp - Moves a shape to the other side of the screen \nBoth drop-shape modes have a higher points threshold \nShapes have a new spawning animation \nMinor physics changes
