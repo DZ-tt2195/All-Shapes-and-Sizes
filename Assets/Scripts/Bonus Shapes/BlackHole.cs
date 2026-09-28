@@ -6,6 +6,7 @@ public class BlackHole : Shape
 {
     [SerializeField] int maxUpgrade;
     int currentCount;
+    public override string MyText() => AutoTranslate.BlackHole(maxUpgrade.ToString());
     public override void Setup(Vector2 start, bool cursed)
     {
         base.Setup(start, cursed);

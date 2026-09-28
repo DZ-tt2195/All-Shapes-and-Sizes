@@ -62,6 +62,7 @@ public class Shape : MonoBehaviour
             canInteract = true;
         }
     }
+    public virtual string MyText() => Translator.inst.Translate(this.name);
 #endregion
 
 #region Gameplay
@@ -93,12 +94,12 @@ public class Shape : MonoBehaviour
             if (this.IsMainShape() && otherShape.IsMainShape() && this.transform.position.y > otherShape.transform.position.y) return;
             if (this.cursed && otherShape.cursed) return;
             HitOtherShape(otherShape);
-        }   
+        }
         else
         {
             if (collision.CompareTag("Out of Bounds"))
             {
-                Debug.Log("went out of bounds");
+                Debug.Log($"{this.name} went out of bounds");
                 ShapeManager.inst.ReturnShape(this);
             }
             else if (IsMainShape() && collision.CompareTag("Death Line"))

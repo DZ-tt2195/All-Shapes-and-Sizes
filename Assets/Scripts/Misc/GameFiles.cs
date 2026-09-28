@@ -6,6 +6,7 @@ public class GameFiles : MonoBehaviour
     public static GameFiles inst;
     [SerializeField] List<Shape> mainShapes;
     [SerializeField] List<Shape> bonusShapes;
+    [SerializeField] List<Shape> otherShapes;
     Dictionary<string, Shape> shapeDictionary = new Dictionary<string, Shape>();
     void Awake()
     {
@@ -13,6 +14,8 @@ public class GameFiles : MonoBehaviour
         foreach (Shape shape in mainShapes)
             shapeDictionary.Add(shape.name, shape);
         foreach (Shape shape in bonusShapes)
+            shapeDictionary.Add(shape.name, shape);
+        foreach (Shape shape in otherShapes)
             shapeDictionary.Add(shape.name, shape);
     }
     public List<Shape> AllMains() => mainShapes;

@@ -5,6 +5,7 @@ public class GhostStar : Star
     int disappearOn;
     [SerializeField] int starting;
     [SerializeField] AudioClip vanishSound;
+    public override string MyText() => AutoTranslate.GhostStar(starting.ToString());
     public override void Setup(Vector2 start, bool cursed)
     {
         base.Setup(start, cursed);

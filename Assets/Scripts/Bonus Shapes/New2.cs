@@ -1,11 +1,10 @@
 using UnityEngine;
 using TMPro;
 
-public class Egg : Shape
+public class New2 : Shape
 {
     int disappearOn;
     [SerializeField] int starting;
-    [SerializeField] AudioClip breakSound;
     public override string MyText() => AutoTranslate.Egg(starting.ToString());
     public override void Setup(Vector2 start, bool cursed)
     {
@@ -22,14 +21,11 @@ public class Egg : Shape
             this.textBox.text = $"{disappearOn}";
             if (disappearOn == 0 && this.HasAbility())
             {
+                Vector2 thisSpawn = this.transform.position;
                 ShapeManager.inst.ReturnShape(this);
-                ShapeManager.inst.GenerateShape(typeof(Star).Name, this.transform.position, CreationType.Other);
+                ShapeManager.inst.ReturnShape(newShape);
+                ShapeManager.inst.GenerateShape(newShape.GetType().Name, thisSpawn, CreationType.Drop);
             }
-        }
-        else if (creationType == CreationType.Combine)
-        {
-            AudioManager.instance.PlaySound(breakSound, 0.3f);
-            ShapeManager.inst.ReturnShape(this);            
         }
     }
     public override Vector2 UISize(bool larger)

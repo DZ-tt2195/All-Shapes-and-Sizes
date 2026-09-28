@@ -4,12 +4,13 @@ using UnityEngine;
 public class Snowflake : Shape
 {
     int disappearOn;
-    [SerializeField] int increment;
+    [SerializeField] int starting;
     [SerializeField] AudioClip dingSound;
+    public override string MyText() => AutoTranslate.Snowflake(starting.ToString());
     public override void Setup(Vector2 start, bool cursed)
     {
         base.Setup(start, cursed);
-        disappearOn = increment;
+        disappearOn = starting;
         this.textBox.text = $"{disappearOn}";
     }
     public override Vector2 UISize(bool larger)

@@ -5,6 +5,7 @@ public class Cage : Shape
 {
     int currentCount;
     [SerializeField] int requirement;
+    public override string MyText() => AutoTranslate.Cage(requirement.ToString());
     public override void Setup(Vector2 start, bool cursed)
     {
         base.Setup(start, cursed);

@@ -190,11 +190,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7243567048738599868}
+  - component: {fileID: 1330146813818855295}
   - component: {fileID: 4141029062799107452}
   - component: {fileID: 4785970370031022419}
   - component: {fileID: 5030541511234142554}
   - component: {fileID: 7454133391151478663}
-  - component: {fileID: 1330146813818855295}
   m_Layer: 0
   m_Name: Snowflake
   m_TagString: Untagged
@@ -219,6 +219,25 @@ Transform:
   - {fileID: 9049887920376520823}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1330146813818855295
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3137751424589348354}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9d1b9fe43c8e4efcae9352c4d77b569, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BlackHole
+  spriterenderer: {fileID: 4141029062799107452}
+  dropChance: 1
+  value: 0
+  textBox: {fileID: 4295134816466291399}
+  canInteract: 0
+  starting: 4
+  dingSound: {fileID: 8300000, guid: 5fbc0fa3c24a94e68abcc0124b73430d, type: 3}
 --- !u!212 &4141029062799107452
 SpriteRenderer:
   serializedVersion: 2
@@ -377,25 +396,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &1330146813818855295
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3137751424589348354}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a9d1b9fe43c8e4efcae9352c4d77b569, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BlackHole
-  spriterenderer: {fileID: 4141029062799107452}
-  dropChance: 1
-  value: 0
-  textBox: {fileID: 4295134816466291399}
-  canInteract: 0
-  increment: 4
-  dingSound: {fileID: 8300000, guid: 5fbc0fa3c24a94e68abcc0124b73430d, type: 3}
 --- !u!1 &5891327286325668976
 GameObject:
   m_ObjectHideFlags: 0

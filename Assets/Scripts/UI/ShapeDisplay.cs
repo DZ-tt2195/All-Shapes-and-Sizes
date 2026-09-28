@@ -11,7 +11,7 @@ public class ShapeDisplay : MonoBehaviour
     public void AssignShape(Shape shape)
     {
         this.gameObject.SetActive(true);
-        ShapeManager.ApplySprite(image, shape, false);
-        descriptionText.text = Translator.inst.Translate($"{shape.name}");
+        ShapeManager.ApplySprite(image, shape, true);
+        descriptionText.text = shape.MyText();
     }
 }

@@ -80,7 +80,7 @@ public class ShapeManager : MonoBehaviour
         HashSet<Shape> selectedBonusShapes;
         HashSet<Shape> willReact = new();
         Dictionary<string, Queue<Shape>> shapeStorage = new();
-        Dictionary<string, HashSet<Shape>> allShapesInLevel = new(); public Dictionary<string, HashSet<Shape>> GetExistingShapes => allShapesInLevel;
+        Dictionary<string, HashSet<Shape>> allShapesInLevel = new(); public Dictionary<string, HashSet<Shape>> GetExistingShapes() => allShapesInLevel;
 
     [Foldout("Score", true)]
         [ReadOnly] public bool mergedCrowns = false;
@@ -313,16 +313,10 @@ public class ShapeManager : MonoBehaviour
         if (state == GameState.GameOver) 
             return;
 
-        Shape toCreate = null;
         if (!shapeStorage.ContainsKey(shape))
             shapeStorage.Add(shape, new Queue<Shape>());
         if (!allShapesInLevel.ContainsKey(shape))
             allShapesInLevel.Add(shape, new HashSet<Shape>());
-
-        if (shapeStorage[shape].Count > 0)
-            toCreate = shapeStorage[shape].Dequeue();
-        else
-            toCreate = Instantiate(GameFiles.inst.GetShape(shape));
 
         switch (creationType)
         {
@@ -336,15 +330,15 @@ public class ShapeManager : MonoBehaviour
                 AudioManager.instance.PlaySound(createSound, 0.25f); 
                 break;
         }
+
+        Shape toCreate = shapeStorage[shape].Count > 0 ? shapeStorage[shape].Dequeue() : Instantiate(GameFiles.inst.GetShape(shape));
         allShapesInLevel[shape].Add(toCreate);
+        toCreate.Setup(spawn, cursed);
+
         foreach (Shape reacting in new HashSet<Shape>(willReact))
-        {
-            if (reacting.gameObject.activeSelf)
-                reacting.OnNewShape(toCreate, creationType);
-        }
+            if (reacting.gameObject.activeSelf) reacting.OnNewShape(toCreate, creationType);
         if (toCreate.TrackNewShapes())
             willReact.Add(toCreate);
-        toCreate.Setup(spawn, cursed);
     }
     public void ReturnShape(Shape shape)
     {

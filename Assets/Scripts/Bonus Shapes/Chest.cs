@@ -6,6 +6,7 @@ public class Chest : Shape
 {
     [SerializeField] int maxUpgrade;
     int currentCount;
+    public override string MyText() => AutoTranslate.Chest(maxUpgrade.ToString());
     public override void Setup(Vector2 start, bool cursed)
     {
         base.Setup(start, cursed);
@@ -25,6 +26,10 @@ public class Chest : Shape
             otherShape.ScoreShapes(null, typeof(Arrow).Name);
             if (currentCount == 0)
                 ShapeManager.inst.ReturnShape(this);
+        }
+        else if (otherShape is Circle)
+        {
+            ShapeManager.inst.ReturnShape(otherShape);
         }
     }
 }
