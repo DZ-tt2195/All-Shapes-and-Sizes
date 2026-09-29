@@ -7,9 +7,9 @@ using MyBox;
 public class Chains : Shape
 {
     int currentCount;
-    [SerializeField] int requirement;
     [SerializeField] List<SpriteRenderer> miniCircles = new();
-    public override string MyText() => AutoTranslate.New2(requirement.ToString());
+    [SerializeField] int arrowCount;
+    public override string MyText() => AutoTranslate.Chains(miniCircles.Count.ToString(), arrowCount.ToString());
     public override void Setup(Vector2 start, bool cursed)
     {
         base.Setup(start, cursed);
@@ -26,10 +26,10 @@ public class Chains : Shape
         if (creationType == CreationType.Combine)
         {
             currentCount++;
-            if (currentCount >= requirement && this.HasAbility())
+            if (currentCount >= miniCircles.Count && this.HasAbility())
             {
                 ShapeManager.inst.ReturnShape(this, ReturnType.Done);
-                List<Type> toDrop = Enumerable.Repeat(typeof(Arrow), 2).ToList();
+                List<Type> toDrop = Enumerable.Repeat(typeof(Arrow), arrowCount).ToList();
                 ShapeManager.inst.StartCoroutine(ShapeManager.inst.DropRandomly(toDrop, this.transform.position, 0.1f, 0.1f, true));
                 return;
             }
@@ -44,7 +44,7 @@ public class Chains : Shape
     {
         for (int i = 0; i<currentCount; i++)
             miniCircles[i].gameObject.SetActive(true);
-        for (int i = currentCount; i<requirement; i++)
+        for (int i = currentCount; i<miniCircles.Count; i++)
             miniCircles[i].gameObject.SetActive(false);
     }
 }

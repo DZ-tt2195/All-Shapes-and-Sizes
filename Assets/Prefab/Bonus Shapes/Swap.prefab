@@ -9,13 +9,13 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8175225654866136609}
+  - component: {fileID: 6064452348828694928}
   - component: {fileID: 8509357645769402992}
   - component: {fileID: 7967165321730474128}
-  - component: {fileID: 4082780757609941880}
-  - component: {fileID: 6279952882794667883}
-  - component: {fileID: 3379667239661227037}
+  - component: {fileID: 8974907624827953174}
+  - component: {fileID: 8925514296551998099}
   m_Layer: 0
-  m_Name: New1
+  m_Name: Swap
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -30,12 +30,29 @@ Transform:
   m_GameObject: {fileID: 8004206750047189553}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -4.56, y: -1.97, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6064452348828694928
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8004206750047189553}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b60eef711511e4b1796d7e98e22afc2d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Swap
+  spriterenderer: {fileID: 8509357645769402992}
+  dropChance: 1
+  value: 0
+  textBox: {fileID: 0}
+  canInteract: 0
 --- !u!212 &8509357645769402992
 SpriteRenderer:
   serializedVersion: 2
@@ -85,12 +102,12 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 21300000, guid: d501f2de02a4b4be1bb1036baa6cd1f5, type: 3}
-  m_Color: {r: 0.9713187, g: 1, b: 0, a: 1}
+  m_Sprite: {fileID: 21300000, guid: 625df833ddcc64c17a82564411373883, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 0.5}
+  m_Size: {x: 3.9749286, y: 1.8166666}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -107,7 +124,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 1
-  m_Mass: 1.2030001
+  m_Mass: 0.47416502
   m_LinearDamping: 0
   m_AngularDamping: 0.05
   m_GravityScale: 1
@@ -122,7 +139,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!60 &4082780757609941880
+--- !u!60 &8974907624827953174
 PolygonCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -160,28 +177,26 @@ PolygonCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1.3045479, y: 1.302}
-    newSize: {x: 1, y: 0.5}
+    oldSize: {x: 1.4454286, y: 0.6606061}
+    newSize: {x: 3.9749286, y: 1.8166666}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
   m_Points:
     m_Paths:
-    - - {x: 0, y: 0.75}
-      - {x: -0.3, y: 0.6}
-      - {x: -0.48, y: 0.2}
-      - {x: -0.53, y: 0}
-      - {x: -0.53, y: -0.2}
-      - {x: -0.4, y: -0.6}
-      - {x: 0, y: -0.75}
-      - {x: 0.4, y: -0.6}
-      - {x: 0.53, y: -0.2}
-      - {x: 0.53, y: 0}
-      - {x: 0.48, y: 0.2}
-      - {x: 0.3, y: 0.6}
-  m_UseDelaunayMesh: 0
---- !u!60 &6279952882794667883
+    - - {x: -0.34, y: -0.158125}
+      - {x: 0.34, y: -0.158125}
+      - {x: 0.34, y: -0.32}
+      - {x: 0.74, y: 0}
+      - {x: 0.34, y: 0.32}
+      - {x: 0.34, y: 0.158}
+      - {x: -0.34, y: 0.158}
+      - {x: -0.34, y: 0.32}
+      - {x: -0.75, y: 0}
+      - {x: -0.34, y: -0.32}
+  m_UseDelaunayMesh: 1
+--- !u!60 &8925514296551998099
 PolygonCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -219,41 +234,22 @@ PolygonCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1.3045479, y: 1.302}
-    newSize: {x: 1, y: 0.5}
+    oldSize: {x: 1.4454286, y: 0.6606061}
+    newSize: {x: 3.9749286, y: 1.8166666}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
   m_Points:
     m_Paths:
-    - - {x: 0, y: 0.8}
-      - {x: -0.35, y: 0.6}
-      - {x: -0.5, y: 0.35}
-      - {x: -0.55, y: 0}
-      - {x: -0.55, y: -0.35}
-      - {x: -0.44, y: -0.6}
-      - {x: 0, y: -0.8}
-      - {x: 0.44, y: -0.6}
-      - {x: 0.55, y: -0.35}
-      - {x: 0.55, y: 0}
-      - {x: 0.5, y: 0.35}
-      - {x: 0.35, y: 0.6}
-  m_UseDelaunayMesh: 0
---- !u!114 &3379667239661227037
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8004206750047189553}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b60eef711511e4b1796d7e98e22afc2d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::New1
-  spriterenderer: {fileID: 8509357645769402992}
-  dropChance: 1
-  value: 0
-  textBox: {fileID: 0}
-  canInteract: 0
+    - - {x: -0.32, y: -0.18}
+      - {x: 0.32, y: -0.18}
+      - {x: 0.32, y: -0.37}
+      - {x: 0.8, y: 0}
+      - {x: 0.32, y: 0.37}
+      - {x: 0.32, y: 0.18}
+      - {x: -0.32, y: 0.18}
+      - {x: -0.32, y: 0.37}
+      - {x: -0.8, y: 0}
+      - {x: -0.32, y: -0.37}
+  m_UseDelaunayMesh: 1

@@ -375,7 +375,7 @@ MonoBehaviour:
   - {fileID: 5526965048637243303, guid: c278aada2fd0f4251a61a88f7762b045, type: 3}
   - {fileID: 3593202905202532862, guid: 93ba6f37a332b49328a97d1b5a274709, type: 3}
   - {fileID: 1788656061170675136, guid: 8ecc4f0637eb641d4be38100c03ef09e, type: 3}
-  - {fileID: 3379667239661227037, guid: eb4a4d876c7114406a082b55a8c13469, type: 3}
+  - {fileID: 6064452348828694928, guid: eb4a4d876c7114406a082b55a8c13469, type: 3}
   - {fileID: 7034152042839866485, guid: f1c00c2d4ad7044c49fd84e86f7c991c, type: 3}
   - {fileID: 5179567056976320236, guid: 24857909be77b43028070d126768cd08, type: 3}
   otherShapes: []
@@ -1803,7 +1803,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 8004206750047189553, guid: eb4a4d876c7114406a082b55a8c13469, type: 3}
       propertyPath: m_Name
-      value: New1
+      value: Swap
       objectReference: {fileID: 0}
     - target: {fileID: 8175225654866136609, guid: eb4a4d876c7114406a082b55a8c13469, type: 3}
       propertyPath: m_LocalPosition.x
