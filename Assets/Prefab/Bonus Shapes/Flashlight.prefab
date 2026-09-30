@@ -373,7 +373,7 @@ MonoBehaviour:
   value: 0
   textBox: {fileID: 3486468399140213883}
   canInteract: 0
-  requirement: 10
+  requirement: 8
 --- !u!212 &7343122696783008674
 SpriteRenderer:
   serializedVersion: 2
@@ -477,7 +477,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 2.4, y: 0.65}
+  m_Size: {x: 2.85, y: 0.65}
   m_EdgeRadius: 0
 --- !u!50 &8399868203804139411
 Rigidbody2D:
@@ -491,7 +491,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 1
-  m_Mass: 1.5600001
+  m_Mass: 1.8524998
   m_LinearDamping: 0
   m_AngularDamping: 0.05
   m_GravityScale: 1
@@ -505,4 +505,4 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 4
+  m_Constraints: 0

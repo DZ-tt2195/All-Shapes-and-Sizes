@@ -10,7 +10,7 @@ public class Shape : MonoBehaviour
 #region Setup
     public SpriteRenderer spriterenderer;
     [SerializeField] int dropChance; public int DropChance => dropChance;
-    Rigidbody2D rb;
+    Rigidbody2D rb; public Rigidbody2D GetRB => rb;
     [SerializeField] protected int value;
     [SerializeField] protected TMP_Text textBox;
     [ReadOnly] public bool canInteract;
@@ -41,6 +41,7 @@ public class Shape : MonoBehaviour
     {
         canInteract = false;
         shapesTouchingThis = new();
+        rb.constraints = RigidbodyConstraints2D.None;
         this.transform.position = start;
         this.transform.localEulerAngles = Vector3.zero;
         this.transform.localScale = Vector3.zero;
@@ -133,14 +134,14 @@ public class Shape : MonoBehaviour
         ShapeManager.inst.AddScore(value, this.transform.position, spriterenderer.color);
         if (otherShape != null)
         {
-            CreateShape(Vector2.Lerp(this.transform.position, otherShape.transform.position, 0.5f));
+            CreateNext(Vector2.Lerp(this.transform.position, otherShape.transform.position, 0.5f));
             ShapeManager.inst.ReturnShape(otherShape, ReturnType.Combine);
         }
         else
         {
-            CreateShape(this.transform.position);
+            CreateNext(this.transform.position);
         }
-        void CreateShape(Vector2 spawn)
+        void CreateNext(Vector2 spawn)
         {
             if (newShape != "")
                 ShapeManager.inst.GenerateShape(newShape, spawn, CreationType.Combine, cursed);
