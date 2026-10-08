@@ -7,6 +7,7 @@ using UnityEngine.UI;
 using TMPro;
 using System.Diagnostics;
 using System.Linq;
+public enum ColumnDrop {Top, Bottom}
 public enum CreationType {Drop, Combine, Special}
 public enum ReturnType {Combine, Destroy, Done}
 public enum GameState {SettingUp, GameOn, GameOver}
@@ -37,22 +38,18 @@ public class SpawnColumn
     public SpawnButton First() => listOfButtons[0];
     public SpawnButton Last() => listOfButtons[MaxCount()];
 }
-
 public class ShapeManager : MonoBehaviour
 {
-
 #region Variables
-
     public static ShapeManager inst;
     Camera mainCam;
-    public GameState state {get; private set;}
+    public GameState gameState {get; private set;}
 
     [Foldout("Audio", true)]
         [SerializeField] AudioClip createSound;
         [SerializeField] AudioClip timerSound;
         [SerializeField] AudioClip winSound;
         [SerializeField] AudioClip loseSound;
-
     [Foldout("Text", true)]
         [SerializeField] TMP_Text dataText;
         [SerializeField] TMP_Text headerText;
@@ -63,24 +60,21 @@ public class ShapeManager : MonoBehaviour
         [SerializeField] TMP_Text replay;
         [SerializeField] TMP_Text titleScreen;
         [SerializeField] Button resign;
-
     [Foldout("Guide", true)]
         [SerializeField] Image tutorialBackground;
         [SerializeField] Button guideButton;
         Vector3 guideOriginal;
         [SerializeField] TMP_Text guideText;
         [SerializeField] List<ShapeDisplay> displaysOnScreen;
-
     [Foldout("Shapes", true)]
+        public static ColumnDrop dropState {get; private set;}
         [SerializeField] List<SpawnColumn> listOfSpawnColumns = new();
         [SerializeField] List<Image> nextImages = new();
         List<Shape> nextShapesToDrop = new();
         float waitForDrop = 0f;
         HashSet<Shape> selectedBonusShapes;
-        HashSet<Shape> willReact = new();
         Dictionary<string, Queue<Shape>> shapeStorage = new();
         Dictionary<string, HashSet<Shape>> allShapesInLevel = new(); public Dictionary<string, HashSet<Shape>> GetExistingShapes() => allShapesInLevel;
-
     [Foldout("Score", true)]
         [ReadOnly] public bool mergedCrowns = false;
         [SerializeField] int combineCrownGameOver;
@@ -88,32 +82,29 @@ public class ShapeManager : MonoBehaviour
         int dropped;
         [SerializeField] PointsVisual pv;
         Queue<PointsVisual> visualStorage = new();
-
     [Foldout("FPS", true)]
         int lastframe = 0;
         int lastupdate = 60;
         float[] framearray = new float[60];
         Stopwatch gameTimer;
-
     [Foldout("Level geometry", true)]
         [SerializeField] Transform deathLine;
         [SerializeField] Transform floor;
         [SerializeField] Transform ceiling;
         [SerializeField] Transform leftWall;
         [SerializeField] Transform rightWall;
-
+        [SerializeField] Transform gravityArrow;
     #endregion
-
 #region Setup
-
     private void Awake()
     {
         inst = this;
         mainCam = Camera.main;
 
-        Physics2D.gravity = new(0, -10);
+        gravityArrow.transform.localScale = new Vector2(0, 0);
+        gravityArrow.transform.localEulerAngles = new Vector3(0, 0, 270);
         warningText.transform.localScale = new Vector2(0, 0);
-        //InputManager.instance.enabled = false;
+        ChangeGravity(ColumnDrop.Top);
 
         next.text = AutoTranslate.Next();
         giveUp.text = AutoTranslate.Give_Up();
@@ -189,10 +180,10 @@ public class ShapeManager : MonoBehaviour
             yield return new WaitForSeconds(6f);
             while (tutorialBackground.gameObject.activeSelf)
                 yield return null;
-            if (state == GameState.GameOver)
+            if (gameState == GameState.GameOver)
                 yield break;
             
-            state = GameState.GameOn;
+            gameState = GameState.GameOn;
             NewVisual(AutoTranslate.Begin(), 3, Vector3.zero, Color.white);
             AudioManager.instance.PlaySound(winSound, 0.2f);
             //InputManager.instance.enabled = true;
@@ -205,11 +196,8 @@ public class ShapeManager : MonoBehaviour
             gameTimer.Start();
         }
     }
-
 #endregion
-
 #region New Shapes
-
     private void Update()
     {
         waitForDrop -= Time.deltaTime;
@@ -249,7 +237,7 @@ public class ShapeManager : MonoBehaviour
     }
     public Shape DropNewShape(Vector2 screenPosition, int columnNumber)
     {
-        if (waitForDrop <= 0f && state == GameState.GameOn && !tutorialBackground.gameObject.activeSelf)
+        if (waitForDrop <= 0f && gameState == GameState.GameOn && !tutorialBackground.gameObject.activeSelf)
         {
             dropped++;
             waitForDrop = 0.15f;
@@ -261,7 +249,16 @@ public class ShapeManager : MonoBehaviour
                 if (combineCrownGameOver - dropped <= 0)
                     StartCoroutine(WaitForEnd(AutoTranslate.Game_Over()));
             }
-            Vector2 spawn = listOfSpawnColumns[columnNumber].First().transform.position;
+            Vector2 spawn = screenPosition;
+            switch (dropState)
+            {
+                case ColumnDrop.Top:
+                    spawn = listOfSpawnColumns[columnNumber].First().transform.position;
+                    break;
+                case ColumnDrop.Bottom:
+                    spawn = listOfSpawnColumns[columnNumber].Last().transform.position;
+                    break;
+            }
 
             Vector3 UIToWorld(Vector3 position)
             {
@@ -278,6 +275,16 @@ public class ShapeManager : MonoBehaviour
         else
         {
             return null;
+        }
+        IEnumerator WaitForEnd(string message)
+        {
+            foreach (Image image in nextImages)
+                image.transform.parent.gameObject.SetActive(false);
+            foreach (SpawnColumn column in listOfSpawnColumns)
+                column.DisableAll();
+            //InputManager.instance.enabled = false;
+            yield return new WaitForSeconds(2.5f);
+            GameOver(message);
         }
     }
     void FutureShapes()
@@ -304,7 +311,7 @@ public class ShapeManager : MonoBehaviour
     }
     public Shape GenerateShape(string shape, Vector2 spawn, CreationType creationType, bool cursed = false)
     {
-        if (state == GameState.GameOver) 
+        if (gameState == GameState.GameOver) 
             return null;
 
         if (!shapeStorage.ContainsKey(shape))
@@ -329,17 +336,13 @@ public class ShapeManager : MonoBehaviour
         allShapesInLevel[shape].Add(toCreate);
         toCreate.Setup(spawn, cursed);
 
-        foreach (Shape reacting in new HashSet<Shape>(willReact))
-            if (reacting.gameObject.activeSelf) reacting.OnNewShape(toCreate, creationType);
-        if (toCreate.TrackNewShapes())
-            willReact.Add(toCreate);
+        EventManager.inst.RunTriggers(new CreatedShape(toCreate, creationType));
         return toCreate;
     }
     public void ReturnShape(Shape shape, ReturnType returnType)
     {
         shapeStorage[shape.GetType().Name].Enqueue(shape);
         allShapesInLevel[shape.GetType().Name].Remove(shape);
-        willReact.Remove(shape);
 
         shape.canInteract = false;
         shape.gameObject.SetActive(false);
@@ -360,9 +363,7 @@ public class ShapeManager : MonoBehaviour
             }
         }
     }
-
 #endregion
-
 #region UI
     public void AddScore(int toAdd, Vector3 spawn, Color textColor)
     {
@@ -374,7 +375,7 @@ public class ShapeManager : MonoBehaviour
     }
     void NewVisual(string text, int size, Vector3 spawn, Color textColor)
     {
-        if (state == GameState.GameOn)
+        if (gameState == GameState.GameOn)
         {
             PointsVisual newVisual = (visualStorage.Count > 0) ? visualStorage.Dequeue() : Instantiate(pv);
             newVisual.Setup(text, spawn, 0.75f, size, textColor);
@@ -387,7 +388,7 @@ public class ShapeManager : MonoBehaviour
     }
     public void GameOver(string loseMessage)
     {
-        if (state != GameState.GameOver)
+        if (gameState != GameState.GameOver)
         {
             gameTimer?.Stop();
             //InputManager.instance.enabled = false;
@@ -395,7 +396,7 @@ public class ShapeManager : MonoBehaviour
             guideButton.gameObject.SetActive(false);
             replay.transform.parent.gameObject.SetActive(true);
             titleScreen.transform.parent.gameObject.SetActive(true);
-            state = GameState.GameOver;
+            gameState = GameState.GameOver;
 
             bool won = false;
             GameMode currentSetting = PrefManager.GetMode();
@@ -428,16 +429,6 @@ public class ShapeManager : MonoBehaviour
             }
         }
     }
-    IEnumerator WaitForEnd(string message)
-    {
-        foreach (Image image in nextImages)
-            image.transform.parent.gameObject.SetActive(false);
-        foreach (SpawnColumn column in listOfSpawnColumns)
-            column.DisableAll();
-        //InputManager.instance.enabled = false;
-        yield return new WaitForSeconds(2.5f);
-        GameOver(message);
-    }
     IEnumerator FlashWarning(int number)
     {
         AudioManager.instance.PlaySound(timerSound, 0.5f);
@@ -464,14 +455,82 @@ public class ShapeManager : MonoBehaviour
         image.color = shape.spriterenderer.color;
         image.rectTransform.sizeDelta = shape.UISize(large);
     }
-    public (float left, float right) XSpawnRange()
+    public (float left, float right) XSpawnRange() => (leftWall.position.x + 0.5f, rightWall.position.x - 0.5f);
+    public (float lowest, float highest) YSpawnRange() => (floor.position.y + 0.5f, ceiling.position.y - 0.5f);
+    public void ChangeGravity(ColumnDrop newState)
     {
-        return (leftWall.position.x + 0.5f, rightWall.position.x - 0.5f);
-    }
-    public (float lowest, float highest) YSpawnRange()
-    {
-        return (floor.position.y + 0.5f, ceiling.position.y - 0.5f);
+        dropState = newState;
+        if (dropState == ColumnDrop.Top)
+        {
+            deathLine.transform.localPosition = new Vector3(0, floor.transform.localPosition.y - 0.25f, 0);
+            ceiling.gameObject.SetActive(false);
+            floor.gameObject.SetActive(true);
+            Physics2D.gravity = new Vector2(0, -10);
+            StartCoroutine(ChangeArrow(270));
+        }
+        else
+        {
+            deathLine.transform.localPosition = new Vector3(0, ceiling.transform.localPosition.y + 0.25f, 0);
+            ceiling.gameObject.SetActive(true);
+            floor.gameObject.SetActive(false);
+            Physics2D.gravity = new Vector2(0, 10);            
+            StartCoroutine(ChangeArrow(90));
+        }
+
+        IEnumerator ChangeArrow(int newZPos)
+        {
+            if (gravityArrow.transform.localEulerAngles.z == newZPos)
+                yield break;
+            
+            Vector2 zeroSize = new(0, 0);
+            Vector2 maxSize = new(3, 3);
+
+            Vector3 currRot = gravityArrow.localEulerAngles;
+            if (currRot.z == newZPos)
+                yield break;
+            Vector3 newRot = new(0, 0, newZPos);
+
+            gravityArrow.localScale = zeroSize;
+
+            float elapsedTime = 0f;
+            float waitTime = 0.5f;
+            while (elapsedTime < waitTime)
+            {
+                gravityArrow.localScale = Vector3.Lerp(zeroSize, maxSize, elapsedTime / waitTime);
+                elapsedTime += Time.deltaTime;
+                yield return null;
+            }
+            gravityArrow.localScale = maxSize;
+
+            elapsedTime = 0f;
+            while (elapsedTime < waitTime)
+            {
+                gravityArrow.localEulerAngles = Vector3.Lerp(currRot, newRot, elapsedTime / waitTime);
+                elapsedTime += Time.deltaTime;
+                yield return null;
+            }
+            gravityArrow.localEulerAngles = newRot;
+
+            elapsedTime = 0f;
+            while (elapsedTime < waitTime)
+            {
+                gravityArrow.localScale = Vector3.Lerp(maxSize, zeroSize, elapsedTime / waitTime);
+                elapsedTime += Time.deltaTime;
+                yield return null;
+            }
+            gravityArrow.localScale = zeroSize;
+        }
     }
 #endregion
+}
+public class CreatedShape : CustomEvent
+{
+    public Shape newShape { get; private set; }
+    public CreationType type {get; private set;}
 
+    public CreatedShape(Shape newShape, CreationType type)
+    {
+        this.newShape = newShape;
+        this.type = type;
+    }
 }

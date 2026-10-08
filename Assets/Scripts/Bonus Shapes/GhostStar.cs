@@ -11,11 +11,11 @@ public class GhostStar : Star
         base.Setup(start, cursed);
         disappearOn = starting;
         this.textBox.text = $"{disappearOn}";
+        EventManager.inst.Subscribe<CreatedShape>(OnNewShape);
     }
-    public override bool TrackNewShapes() => true;
-    public override void OnNewShape(Shape newShape, CreationType creationType)
+    void OnNewShape(CreatedShape info)
     {
-        if (creationType == CreationType.Drop)
+        if (info.newShape != this && info.type == CreationType.Drop)
         {
             disappearOn--;
             this.textBox.text = $"{disappearOn}";
@@ -29,5 +29,9 @@ public class GhostStar : Star
     public override Vector2 UISize(bool larger)
     {
         return larger ? new(100, 100) : new(60, 60);
+    }
+    public override void OnReturn(ReturnType returnType)
+    {
+        EventManager.inst.Unsubscribe<CreatedShape>(OnNewShape);
     }
 }

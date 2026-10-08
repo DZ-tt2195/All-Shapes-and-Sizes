@@ -6,7 +6,6 @@ using TMPro;
 [RequireComponent(typeof(Rigidbody2D))]
 public class Shape : MonoBehaviour
 {
-
 #region Setup
     public SpriteRenderer spriterenderer;
     [SerializeField] int dropChance; public int DropChance => dropChance;
@@ -32,7 +31,11 @@ public class Shape : MonoBehaviour
         originalSize = transform.localScale;
         originalShapeColor = spriterenderer.color;
         if (textBox != null) originalFontColor = textBox.color;
-        if (IsMainShape()) value = (int)Mathf.Pow(value, 2);
+        if (IsMainShape()) 
+        {
+            value = (int)Mathf.Pow(value, 2);
+            if (textBox != null) textBox.text = value.ToString();
+        }
     }
     public virtual Vector2 UISize(bool larger) => new Vector2(50, 50);
     public bool IsMainShape() => value >= 1;
@@ -65,7 +68,6 @@ public class Shape : MonoBehaviour
     }
     public virtual string MyText() => Translator.inst.Translate(this.name);
 #endregion
-
 #region Gameplay
     public void CursedStatus(bool cursed)
     {
@@ -73,10 +75,7 @@ public class Shape : MonoBehaviour
         this.cursed = cursed;
         this.spriterenderer.color = cursed ? Color.black : originalShapeColor;
         if (textBox != null)
-        {
-            if (IsMainShape()) textBox.text = value.ToString();
             textBox.color = cursed ? Color.white : originalFontColor;
-        }
     }
     void OnTriggerEnter2D(Collider2D collision)
     {
@@ -148,13 +147,8 @@ public class Shape : MonoBehaviour
         }
         ShapeManager.inst.ReturnShape(this, ReturnType.Combine);
     }
-    public virtual bool TrackNewShapes() => false;
-    public virtual void OnNewShape(Shape newShape, CreationType creationType)
-    {
-    }
     public virtual void OnReturn(ReturnType returnType)
     {
     }
 #endregion
-
 }

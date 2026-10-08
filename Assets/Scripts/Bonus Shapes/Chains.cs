@@ -15,15 +15,15 @@ public class Chains : Shape
         base.Setup(start, cursed);
         currentCount = 0;
         UpdateCircles();
+        EventManager.inst.Subscribe<CreatedShape>(OnNewShape);
     }
     public override Vector2 UISize(bool larger)
     {
         return larger ? new(110, 50) : new(65, 30);
     }
-    public override bool TrackNewShapes() => true;
-    public override void OnNewShape(Shape newShape, CreationType creationType)
+    void OnNewShape(CreatedShape info)
     {
-        if (creationType == CreationType.Combine)
+        if (info.type == CreationType.Combine)
         {
             currentCount++;
             if (currentCount >= miniCircles.Count && this.HasAbility())
@@ -34,7 +34,7 @@ public class Chains : Shape
                 return;
             }
         }
-        else if (creationType == CreationType.Drop)
+        else if (info.type == CreationType.Drop)
         {
             currentCount = 0;
         }
@@ -46,5 +46,9 @@ public class Chains : Shape
             miniCircles[i].gameObject.SetActive(true);
         for (int i = currentCount; i<miniCircles.Count; i++)
             miniCircles[i].gameObject.SetActive(false);
+    }
+    public override void OnReturn(ReturnType returnType)
+    {
+        EventManager.inst.Unsubscribe<CreatedShape>(OnNewShape);
     }
 }

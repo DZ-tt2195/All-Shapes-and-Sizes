@@ -12,11 +12,12 @@ public class Egg : Shape
         base.Setup(start, cursed);
         disappearOn = starting;
         textBox.text = $"{disappearOn}";
+        EventManager.inst.Subscribe<CreatedShape>(OnNewShape);
     }
-    public override bool TrackNewShapes() => true;
-    public override void OnNewShape(Shape newShape, CreationType creationType)
+    void OnNewShape(CreatedShape info)
     {
-        if (creationType == CreationType.Drop)
+        if (info.newShape == this) return;
+        if (info.type == CreationType.Drop)
         {
             disappearOn = Mathf.Max(0, disappearOn-1);
             this.textBox.text = $"{disappearOn}";
@@ -26,11 +27,15 @@ public class Egg : Shape
                 ShapeManager.inst.GenerateShape(typeof(Star).Name, this.transform.position, CreationType.Special);
             }
         }
-        else if (creationType == CreationType.Combine)
+        else if (info.type == CreationType.Combine)
         {
             AudioManager.instance.PlaySound(breakSound, 0.3f);
             ShapeManager.inst.ReturnShape(this, ReturnType.Destroy);            
         }
+    }
+    public override void OnReturn(ReturnType returnType)
+    {
+        EventManager.inst.Unsubscribe<CreatedShape>(OnNewShape);
     }
     public override Vector2 UISize(bool larger)
     {

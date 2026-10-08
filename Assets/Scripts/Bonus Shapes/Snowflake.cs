@@ -12,15 +12,15 @@ public class Snowflake : Shape
         base.Setup(start, cursed);
         disappearOn = starting;
         this.textBox.text = $"{disappearOn}";
+        EventManager.inst.Subscribe<CreatedShape>(OnNewShape);
     }
     public override Vector2 UISize(bool larger)
     {
         return larger ? new(90, 90) : new(60, 60);
     }
-    public override bool TrackNewShapes() => true;
-    public override void OnNewShape(Shape newShape, CreationType creationType)
+    void OnNewShape(CreatedShape info)
     {
-        if (creationType == CreationType.Combine)
+        if (info.newShape != this && info.type == CreationType.Combine)
         {
             disappearOn--;
             this.textBox.text = $"{disappearOn}";
@@ -29,6 +29,10 @@ public class Snowflake : Shape
                 ShapeManager.inst.ReturnShape(this, ReturnType.Done);
                 AudioManager.instance.PlaySound(dingSound, 0.3f);                
             }
-        }
+        }        
+    }
+    public override void OnReturn(ReturnType returnType)
+    {
+        EventManager.inst.Unsubscribe<CreatedShape>(OnNewShape);
     }
 }
