@@ -319,23 +319,23 @@ public class ShapeManager : MonoBehaviour
         if (!allShapesInLevel.ContainsKey(shape))
             allShapesInLevel.Add(shape, new HashSet<Shape>());
 
-        switch (creationType)
-        {
-            case CreationType.Drop:
-                AudioManager.instance.Menu(); 
-                break;
-            case CreationType.Special:
-                AudioManager.instance.Menu(); 
-                break;
-            case CreationType.Combine:
-                AudioManager.instance.PlaySound(createSound, 0.25f); 
-                break;
-        }
-
         Shape toCreate = shapeStorage[shape].Count > 0 ? shapeStorage[shape].Dequeue() : Instantiate(GameFiles.inst.GetShape(shape));
         allShapesInLevel[shape].Add(toCreate);
-        toCreate.Setup(spawn, cursed);
 
+        if (cursed)
+        {
+            
+        }
+        else if (creationType == CreationType.Combine)
+        {
+            AudioManager.instance.PlaySound(createSound, 0.25f);
+        }
+        else
+        {
+            AudioManager.instance.Menu();
+        }
+
+        toCreate.PopUp(spawn, cursed, true);
         EventManager.inst.RunTriggers(new CreatedShape(toCreate, creationType));
         return toCreate;
     }
@@ -451,8 +451,8 @@ public class ShapeManager : MonoBehaviour
     public static void ApplySprite(Image image, Shape shape, bool large)
     {
         image.transform.parent.gameObject.SetActive(true);
-        image.sprite = shape.spriterenderer.sprite;
-        image.color = shape.spriterenderer.color;
+        image.sprite = shape.GetSpriteRenderer.sprite;
+        image.color = shape.GetSpriteRenderer.color;
         image.rectTransform.sizeDelta = shape.UISize(large);
     }
     public (float left, float right) XSpawnRange() => (leftWall.position.x + 0.5f, rightWall.position.x - 0.5f);

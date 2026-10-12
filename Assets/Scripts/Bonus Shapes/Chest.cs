@@ -7,9 +7,8 @@ public class Chest : Shape
     [SerializeField] int maxUpgrade;
     int currentCount;
     public override string MyText() => AutoTranslate.Chest(maxUpgrade.ToString());
-    public override void Setup(Vector2 start, bool cursed)
+    protected override void Setup()
     {
-        base.Setup(start, cursed);
         currentCount = maxUpgrade;
         textBox.text = currentCount.ToString();
     }

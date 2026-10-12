@@ -8,9 +8,6 @@ TagManager:
   - Left Wall
   - Right Wall
   - Out of Bounds
-  - Warp
-  - BlackHole
-  - Snowflake
   layers:
   - Default
   - TransparentFX

@@ -13,22 +13,16 @@ public class Swap : Shape
         List<Vector2> arrowPositions = new();
         foreach (Shape arrow in new HashSet<Shape>(currentArrows))
         {
-            if (arrow.HasAbility())
-            {
-                arrowPositions.Add(arrow.transform.position);
-                ShapeManager.inst.ReturnShape(arrow, ReturnType.Done);
-            }
+            arrowPositions.Add(arrow.transform.position);
+            ShapeManager.inst.ReturnShape(arrow, ReturnType.Done);
         }
 
         HashSet<Shape> currentDiamonds = ShapeManager.inst.GetExistingShapes()[typeof(Diamond).Name];
         List<Vector2> diamondPositions = new();
         foreach (Shape diamond in new HashSet<Shape>(currentDiamonds))
         {
-            if (diamond.HasAbility())
-            {
-                diamondPositions.Add(diamond.transform.position);
-                ShapeManager.inst.ReturnShape(diamond, ReturnType.Done);
-            }
+            diamondPositions.Add(diamond.transform.position);
+            ShapeManager.inst.ReturnShape(diamond, ReturnType.Done);
         }
 
         foreach (Vector2 newDiamond in arrowPositions)

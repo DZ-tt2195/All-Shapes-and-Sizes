@@ -6,9 +6,8 @@ public class GhostStar : Star
     [SerializeField] int starting;
     [SerializeField] AudioClip vanishSound;
     public override string MyText() => AutoTranslate.GhostStar(starting.ToString());
-    public override void Setup(Vector2 start, bool cursed)
+    protected override void Setup()
     {
-        base.Setup(start, cursed);
         disappearOn = starting;
         this.textBox.text = $"{disappearOn}";
         EventManager.inst.Subscribe<CreatedShape>(OnNewShape);

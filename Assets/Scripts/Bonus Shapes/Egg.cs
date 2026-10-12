@@ -7,9 +7,8 @@ public class Egg : Shape
     [SerializeField] int starting;
     [SerializeField] AudioClip breakSound;
     public override string MyText() => AutoTranslate.Egg(starting.ToString());
-    public override void Setup(Vector2 start, bool cursed)
+    protected override void Setup()
     {
-        base.Setup(start, cursed);
         disappearOn = starting;
         textBox.text = $"{disappearOn}";
         EventManager.inst.Subscribe<CreatedShape>(OnNewShape);
@@ -21,7 +20,7 @@ public class Egg : Shape
         {
             disappearOn = Mathf.Max(0, disappearOn-1);
             this.textBox.text = $"{disappearOn}";
-            if (disappearOn == 0 && this.HasAbility())
+            if (disappearOn == 0)
             {
                 ShapeManager.inst.ReturnShape(this, ReturnType.Done);
                 ShapeManager.inst.GenerateShape(typeof(Star).Name, this.transform.position, CreationType.Special);

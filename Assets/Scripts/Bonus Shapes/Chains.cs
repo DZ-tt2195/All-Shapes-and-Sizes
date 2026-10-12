@@ -10,9 +10,8 @@ public class Chains : Shape
     [SerializeField] List<SpriteRenderer> miniCircles = new();
     [SerializeField] int arrowCount;
     public override string MyText() => AutoTranslate.Chains(miniCircles.Count.ToString(), arrowCount.ToString());
-    public override void Setup(Vector2 start, bool cursed)
+    protected override void Setup()
     {
-        base.Setup(start, cursed);
         currentCount = 0;
         UpdateCircles();
         EventManager.inst.Subscribe<CreatedShape>(OnNewShape);
@@ -26,7 +25,7 @@ public class Chains : Shape
         if (info.type == CreationType.Combine)
         {
             currentCount++;
-            if (currentCount >= miniCircles.Count && this.HasAbility())
+            if (currentCount >= miniCircles.Count)
             {
                 ShapeManager.inst.ReturnShape(this, ReturnType.Done);
                 List<Type> toDrop = Enumerable.Repeat(typeof(Arrow), arrowCount).ToList();

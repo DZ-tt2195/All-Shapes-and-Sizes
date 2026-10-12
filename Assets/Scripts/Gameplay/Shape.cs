@@ -7,7 +7,7 @@ using TMPro;
 public class Shape : MonoBehaviour
 {
 #region Setup
-    public SpriteRenderer spriterenderer;
+    [SerializeField] SpriteRenderer spriterenderer; public SpriteRenderer GetSpriteRenderer => spriterenderer;
     [SerializeField] int dropChance; public int DropChance => dropChance;
     Rigidbody2D rb; public Rigidbody2D GetRB => rb;
     [SerializeField] protected int value;
@@ -18,7 +18,6 @@ public class Shape : MonoBehaviour
     Color originalShapeColor;
     Color originalFontColor;
     Vector3 originalSize;
-    HashSet<GameObject> disableColliders = new();
     protected Dictionary<GameObject, Shape> shapesTouchingThis = new();
     private void Awake()
     {
@@ -39,19 +38,18 @@ public class Shape : MonoBehaviour
     }
     public virtual Vector2 UISize(bool larger) => new Vector2(50, 50);
     public bool IsMainShape() => value >= 1;
-    public bool HasAbility() => disableColliders.Count == 0 && canInteract;
-    public virtual void Setup(Vector2 start, bool cursed)
+    public void PopUp(Vector2 start, bool cursed, bool doSetup)
     {
+        CursedStatus(cursed);
         canInteract = false;
-        shapesTouchingThis = new();
         rb.constraints = RigidbodyConstraints2D.None;
+        shapesTouchingThis = new();
         this.transform.position = start;
         this.transform.localEulerAngles = Vector3.zero;
-        this.transform.localScale = Vector3.zero;
-        CursedStatus(cursed);
+        this.transform.localScale = Vector3.zero;        
         this.gameObject.SetActive(true);
         rb.WakeUp();
-        
+
         StartCoroutine(BecomeActive());
         IEnumerator BecomeActive()
         {
@@ -65,6 +63,12 @@ public class Shape : MonoBehaviour
             }
             canInteract = true;
         }
+
+        if (doSetup)
+            Setup();
+    }
+    protected virtual void Setup()
+    {
     }
     public virtual string MyText() => Translator.inst.Translate(this.name);
 #endregion
@@ -81,16 +85,14 @@ public class Shape : MonoBehaviour
     {
         if (!shapesTouchingThis.ContainsKey(collision.gameObject) && collision.TryGetComponent(out Shape shape))
             shapesTouchingThis.Add(collision.gameObject, shape);
-        else if (!disableColliders.Contains(collision.gameObject) && collision.CompareTag("Disable"))
-            disableColliders.Add(collision.gameObject);
     }
     void OnTriggerStay2D(Collider2D collision)
     {
-        if (!this.HasAbility()) return;
+        if (!this.canInteract) return;
         if (shapesTouchingThis.ContainsKey(collision.gameObject))
         {
             Shape otherShape = shapesTouchingThis[collision.gameObject];
-            if (!otherShape.HasAbility()) return;
+            if (!otherShape.canInteract) return;
             if (this.IsMainShape() && otherShape.IsMainShape() && this.transform.position.y > otherShape.transform.position.y) return;
             if (this.cursed && otherShape.cursed) return;
             HitOtherShape(otherShape);
@@ -125,8 +127,6 @@ public class Shape : MonoBehaviour
             shapesTouchingThis.Remove(collision.gameObject);
         else if (collision.CompareTag("Death Line"))
             deathLineTouched = 0f;
-        else if (disableColliders.Contains(collision.gameObject))
-            disableColliders.Remove(collision.gameObject);
     }
     public void ScoreShapes(Shape otherShape, string newShape, bool cursed = false)
     {
