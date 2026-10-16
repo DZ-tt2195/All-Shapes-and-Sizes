@@ -52,7 +52,6 @@ public static string Swap () => Translator.inst.Translate("Swap", new() {});
 public static string Chains (string Num1,string Num2) => Translator.inst.Translate("Chains", new() {("Num1", Num1),("Num2", Num2)});
 public static string TrainTrack () => Translator.inst.Translate("TrainTrack", new() {});
 public static string Inverter () => Translator.inst.Translate("Inverter", new() {});
-public static string Wall () => Translator.inst.Translate("Wall", new() {});
 public static string Update_History () => Translator.inst.Translate("Update_History", new() {});
 public static string Update_0 () => Translator.inst.Translate("Update_0", new() {});
 public static string Update_0_Text () => Translator.inst.Translate("Update_0_Text", new() {});

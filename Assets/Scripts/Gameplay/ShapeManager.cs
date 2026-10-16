@@ -138,6 +138,7 @@ public class ShapeManager : MonoBehaviour
 
         void ClickGuide()
         {
+            AudioManager.instance.Menu();
             if (tutorialBackground.gameObject.activeSelf)
             {
                 tutorialBackground.gameObject.SetActive(false);
@@ -390,6 +391,7 @@ public class ShapeManager : MonoBehaviour
     {
         if (gameState != GameState.GameOver)
         {
+            resign.gameObject.SetActive(false);
             gameTimer?.Stop();
             //InputManager.instance.enabled = false;
             tutorialBackground.gameObject.SetActive(true);
@@ -462,7 +464,7 @@ public class ShapeManager : MonoBehaviour
         dropState = newState;
         if (dropState == ColumnDrop.Top)
         {
-            deathLine.transform.localPosition = new Vector3(0, floor.transform.localPosition.y - 0.25f, 0);
+            deathLine.transform.localPosition = new Vector3(0, ceiling.transform.localPosition.y - 0.25f, 0);
             ceiling.gameObject.SetActive(false);
             floor.gameObject.SetActive(true);
             Physics2D.gravity = new Vector2(0, -10);
@@ -470,7 +472,7 @@ public class ShapeManager : MonoBehaviour
         }
         else
         {
-            deathLine.transform.localPosition = new Vector3(0, ceiling.transform.localPosition.y + 0.25f, 0);
+            deathLine.transform.localPosition = new Vector3(0, floor.transform.localPosition.y + 0.25f, 0);
             ceiling.gameObject.SetActive(true);
             floor.gameObject.SetActive(false);
             Physics2D.gravity = new Vector2(0, 10);            

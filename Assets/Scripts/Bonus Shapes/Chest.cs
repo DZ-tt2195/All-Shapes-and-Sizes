@@ -22,7 +22,8 @@ public class Chest : Shape
         {
             currentCount--;
             textBox.text = currentCount.ToString();
-            otherShape.ScoreShapes(null, typeof(Arrow).Name);
+            ShapeManager.inst.ReturnShape(otherShape, ReturnType.Done);
+            ShapeManager.inst.GenerateShape(typeof(Arrow).Name, otherShape.transform.position, CreationType.Special);
             if (currentCount == 0)
                 ShapeManager.inst.ReturnShape(this, ReturnType.Done);
         }

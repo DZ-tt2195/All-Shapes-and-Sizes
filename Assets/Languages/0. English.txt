@@ -50,7 +50,6 @@ Swap	Transform all Arrows into Diamonds, and vice versa.
 Chains	When $Num1$ shapes combine at once, create $Num2$ Cursed Arrows. (Cursed shapes can't combine with each other.)
 TrainTrack	Moves a shape to the very left or right of the level.
 Inverter	Changes the gravity for shapes, and you drop from the other side.
-Wall	Gets in the way; can only be destroyed with a Bomb.
 Update_History	Update History
 Update_0	Dec 23, 2025
 Update_0_Text	New item: Warp - Moves a shape to the other side of the screen \nBoth drop-shape modes have a higher points threshold \nShapes have a new spawning animation \nMinor physics changes
@@ -65,4 +64,4 @@ Update_4_Text	Changed some sounds and sprites \nYou can choose your bonus shapes
 Update_5	Aug 27, 2026
 Update_5_Text	Hidden optional stuff on the title screen behind the extras button \nYou customize bonus shapes on title screen instead \nThe game will remember which shapes you chose \nChanged how high scores are saved/displayed
 Update_6	NEXT DATE
-Update_6_Text	Added 10 more bonus shapes \nTweaked the numbers, frequency, art, and hitboxes of some existing bonus shapes \nChest also destroys Circles that enter its radius \nBag makes 2 Cursed Circles and Squares instead \nAdded a few more sounds
+Update_6_Text	Added 10 more bonus shapes \nTweaked the numbers, frequency, art, and hitboxes of some existing bonus shapes \nChest also destroys Circles that enter its radius \nBag makes 2 Cursed Circles and Squares instead \nDropped Snowflake and Wall \nAdded a few more sounds
