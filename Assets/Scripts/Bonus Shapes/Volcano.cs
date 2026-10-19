@@ -3,20 +3,29 @@ using UnityEngine;
 
 public class Volcano : Shape
 {
+    int currentCount = 4;
+    Shape target;
+    [SerializeField] LineRenderer lineRenderer;
     protected override void Setup()
     {
-        EventManager.inst.Subscribe<CreatedShape>(OnNewShape);
+        target = null;
+        currentCount = 4;
+        lineRenderer.startWidth = 0.1f;
+        lineRenderer.endWidth = 0.1f;
+        lineRenderer.positionCount = 2;
+        lineRenderer.sortingOrder = 10;    
     }
-    void OnNewShape(CreatedShape info)
+    void Update()
     {
-        if (info.newShape is Star)
+        if (target == null || !target.gameObject.activeSelf)
         {
-            float ySpawn = ShapeManager.dropState == ColumnDrop.Top ? ShapeManager.inst.YSpawnRange().highest : ShapeManager.inst.YSpawnRange().lowest; 
-            ShapeManager.inst.GenerateShape(typeof(Circle).Name, new(this.transform.position.x, ySpawn), CreationType.Special);
-        }        
-    }
-    public override void OnReturn(ReturnType returnType)
-    {
-        EventManager.inst.Unsubscribe<CreatedShape>(OnNewShape);
+            currentCount--;
+            target = ShapeManager.inst.GenerateShape(typeof(Square).Name, this.transform.position, CreationType.Special);
+            if (currentCount == 0)
+                ShapeManager.inst.ReturnShape(this, ReturnType.Done);
+        }
+        lineRenderer.SetPosition(0, this.transform.position);
+        lineRenderer.SetPosition(1, target.transform.position);
+        this.textBox.text = currentCount.ToString();
     }
 }

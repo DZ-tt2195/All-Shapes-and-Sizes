@@ -101,6 +101,9 @@ public class ShapeManager : MonoBehaviour
         inst = this;
         mainCam = Camera.main;
 
+        UnityEngine.Debug.Log($"X: {XSpawnRange()}");
+        UnityEngine.Debug.Log($"Y: {YSpawnRange()}");
+
         gravityArrow.transform.localScale = new Vector2(0, 0);
         gravityArrow.transform.localEulerAngles = new Vector3(0, 0, 270);
         warningText.transform.localScale = new Vector2(0, 0);
@@ -178,7 +181,7 @@ public class ShapeManager : MonoBehaviour
         StartCoroutine(BeginGame());
         IEnumerator BeginGame()
         {
-            yield return new WaitForSeconds(6f);
+            yield return new WaitForSeconds(7f);
             while (tutorialBackground.gameObject.activeSelf)
                 yield return null;
             if (gameState == GameState.GameOver)
@@ -457,8 +460,8 @@ public class ShapeManager : MonoBehaviour
         image.color = shape.GetSpriteRenderer.color;
         image.rectTransform.sizeDelta = shape.UISize(large);
     }
-    public (float left, float right) XSpawnRange() => (leftWall.position.x + 0.5f, rightWall.position.x - 0.5f);
-    public (float lowest, float highest) YSpawnRange() => (floor.position.y + 0.5f, ceiling.position.y - 0.5f);
+    public (float left, float right) XSpawnRange() => (leftWall.position.x + 0.25f, rightWall.position.x - 0.25f);
+    public (float lowest, float highest) YSpawnRange() => (floor.position.y + 0.25f, ceiling.position.y - 0.25f);
     public void ChangeGravity(ColumnDrop newState)
     {
         dropState = newState;

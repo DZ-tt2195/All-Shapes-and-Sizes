@@ -14,7 +14,12 @@ public class Flashlight : Shape
         if (shapesTouchingThis.Count >= requirement)
         {
             ShapeManager.inst.ReturnShape(this, ReturnType.Done);
-            ShapeManager.inst.GenerateShape(typeof(Star).Name, this.transform.position, CreationType.Special);
+            var (left, right) = ShapeManager.inst.XSpawnRange();
+            float gap = 0.5f;
+            for (float i = left+gap; i<=right-gap; i+=(gap*2))
+            {
+                ShapeManager.inst.GenerateShape(typeof(Circle).Name, new Vector2(i, this.transform.position.y), CreationType.Special);
+            }
         }
     }
 }

@@ -27,12 +27,11 @@ public class NewCustomizer : MonoBehaviour
         confirmText.text = AutoTranslate.Confirm();
         customizerText.text = AutoTranslate.Open_Customizer();
         customizerScreen.gameObject.SetActive(false);
-        openCustomizer.onClick.AddListener(OpenCustomizer);
-        void OpenCustomizer()
+        openCustomizer.onClick.AddListener(() =>
         {
             AudioManager.instance.Menu();
-            customizerScreen.gameObject.SetActive(true);
-        }
+            customizerScreen.gameObject.SetActive(true);            
+        });
 
         List<Shape> allBonuses = GameFiles.inst.AllBonuses();
         for (int i = 0; i<allBonuses.Count; i++)

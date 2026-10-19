@@ -93,7 +93,6 @@ public class Shape : MonoBehaviour
         {
             Shape otherShape = shapesTouchingThis[collision.gameObject];
             if (!otherShape.canInteract) return;
-            if (this.IsMainShape() && otherShape.IsMainShape() && this.transform.position.y > otherShape.transform.position.y) return;
             if (this.cursed && otherShape.cursed) return;
             HitOtherShape(otherShape);
         }
@@ -104,9 +103,9 @@ public class Shape : MonoBehaviour
                 Debug.Log($"{this.name} went out of bounds");
                 ShapeManager.inst.ReturnShape(this, ReturnType.Done);
             }
-            else if (IsMainShape() && collision.CompareTag("Death Line"))
+            else if (collision.CompareTag("Death Line"))
             {
-                if (deathLineTouched < 3f)
+                if (deathLineTouched < 5f)
                 {
                     deathLineTouched += Time.deltaTime;
                 }
