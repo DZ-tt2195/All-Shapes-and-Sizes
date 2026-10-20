@@ -18,7 +18,7 @@ public class Chains : Shape
     }
     public override Vector2 UISize(bool larger)
     {
-        return larger ? new(110, 50) : new(65, 30);
+        return larger ? new(115, 40) : new(65, 30);
     }
     void OnNewShape(CreatedShape info)
     {

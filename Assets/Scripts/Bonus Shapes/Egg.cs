@@ -5,7 +5,6 @@ public class Egg : Shape
 {
     int disappearOn;
     [SerializeField] int starting;
-    [SerializeField] AudioClip breakSound;
     public override string MyText() => AutoTranslate.Egg(starting.ToString());
     protected override void Setup()
     {
@@ -28,7 +27,6 @@ public class Egg : Shape
         }
         else if (info.type == CreationType.Combine)
         {
-            AudioManager.instance.PlaySound(breakSound, 0.3f);
             ShapeManager.inst.ReturnShape(this, ReturnType.Penalty);            
         }
     }

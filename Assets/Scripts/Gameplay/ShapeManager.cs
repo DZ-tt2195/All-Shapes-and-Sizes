@@ -50,6 +50,7 @@ public class ShapeManager : MonoBehaviour
         [SerializeField] AudioClip timerSound;
         [SerializeField] AudioClip winSound;
         [SerializeField] AudioClip loseSound;
+        [SerializeField] AudioClip penalty;
     [Foldout("Text", true)]
         [SerializeField] TMP_Text dataText;
         [SerializeField] TMP_Text headerText;
@@ -328,15 +329,15 @@ public class ShapeManager : MonoBehaviour
 
         if (cursed)
         {
-            
+            AudioManager.instance.Curse();      
         }
         else if (creationType == CreationType.Combine)
         {
-            AudioManager.instance.PlaySound(createSound, 0.25f);
+            AudioManager.instance.PlaySound(createSound, 0.2f);
         }
         else
         {
-            AudioManager.instance.Menu();
+            AudioManager.instance.Menu(0.2f);
         }
 
         toCreate.PopUp(spawn, cursed, true);
@@ -347,6 +348,8 @@ public class ShapeManager : MonoBehaviour
     {
         shapeStorage[shape.GetType().Name].Enqueue(shape);
         allShapesInLevel[shape.GetType().Name].Remove(shape);
+        if (returnType == ReturnType.Penalty)
+            AudioManager.instance.PlaySound(penalty, 0.3f);
 
         shape.canInteract = false;
         shape.gameObject.SetActive(false);

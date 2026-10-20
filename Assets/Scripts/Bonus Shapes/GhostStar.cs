@@ -4,7 +4,6 @@ public class GhostStar : Star
 {
     int disappearOn;
     [SerializeField] int starting;
-    [SerializeField] AudioClip vanishSound;
     public override string MyText() => AutoTranslate.GhostStar(starting.ToString());
     protected override void Setup()
     {
@@ -20,7 +19,6 @@ public class GhostStar : Star
             this.textBox.text = $"{disappearOn}";
             if (disappearOn == 0)
             {
-                AudioManager.instance.PlaySound(vanishSound, 0.3f);
                 ShapeManager.inst.ReturnShape(this, ReturnType.Penalty);    
             }
         }

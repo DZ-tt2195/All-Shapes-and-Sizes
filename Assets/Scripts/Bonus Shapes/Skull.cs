@@ -1,12 +1,10 @@
 using UnityEngine;
 
-public class NewCurse : Shape
+public class Skull : Shape
 {
     int current;
     [SerializeField] int starting;
-    [SerializeField] AudioClip dingSound;
-    [SerializeField] AudioClip poisonSound;
-    public override string MyText() => AutoTranslate.NewCurse(starting.ToString());
+    public override string MyText() => AutoTranslate.Skull(starting.ToString());
     protected override void Setup()
     {
         current = starting;
@@ -21,15 +19,12 @@ public class NewCurse : Shape
     {
         if (info.newShape != this && info.type == CreationType.Combine && info.newShape.IsMainShape() && !info.newShape.cursed)
         {
-            AudioManager.instance.PlaySound(poisonSound, 0.3f);
+            AudioManager.instance.Curse();
             info.newShape.CursedStatus(true);
             current--;
             this.textBox.text = $"{current}";
             if (current == 0)
-            {
-                AudioManager.instance.PlaySound(dingSound, 0.3f);
                 ShapeManager.inst.ReturnShape(this, ReturnType.Done);
-            }
         }        
     }
     public override void OnReturn(ReturnType returnType)

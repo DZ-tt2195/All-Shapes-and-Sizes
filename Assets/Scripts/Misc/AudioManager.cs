@@ -10,6 +10,7 @@ public class AudioManager : MonoBehaviour
     AudioSource audioPlayer;
     public AudioMixer mixer;
     [SerializeField] AudioClip menu; public void Menu(float volume = 0.3f) => PlaySound(menu, 0.3f);
+    [SerializeField] AudioClip curse; public void Curse(float volume = 0.3f) => PlaySound(curse, 0.3f);
 
     private void Awake()
     {

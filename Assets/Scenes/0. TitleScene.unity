@@ -625,7 +625,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 613.5, y: -312.50003}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 1050, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &79888308
 MonoBehaviour:
@@ -923,7 +923,7 @@ RectTransform:
   m_Father: {fileID: 818622585}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: -0.5842285}
   m_SizeDelta: {x: 20, y: 21.1686}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -2051,7 +2051,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &595340596
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3246,7 +3246,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &872861949
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5684,19 +5684,16 @@ MonoBehaviour:
 
     Bomb: "Cannon1" - Isaac200000 (freesounds.org)
 
-    Ghost
-    Star vanishing: "Ghost Kid sigh, less verb" - HorrorAudio (freesounds.org)
+    Train
+    Track: "Time Warp effect" - chinomaker (freesounds.org)
 
-    Snowflake
-    vanishing: "ding" - Daphne in Wonderland (freesounds.org)
+    Remove shape: "Error"
+    - Autistic Lucario (freesounds.org)
 
-    Portal: "Time
-    Warp effect" - chinomaker (freesounds.org)
+    Low on shapes: "Ticking timer" - tiennotg
+    (freesounds.org)
 
-    Egg breaking: "Ice Shatter SFX"
-    - ImATaco (freesounds.org)
-
-    Low on shapes: "Ticking timer" - tiennotg (freesounds.org)
+    Cursed shape: "punch" - 400 Sounds Pack (ci.itch.io)
 
 '
   m_isRightToLeft: 0
