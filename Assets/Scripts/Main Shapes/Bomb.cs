@@ -10,7 +10,7 @@ public class Bomb : Shape
     protected override void HitOtherShape(Shape otherShape)
     {
         AudioManager.instance.PlaySound(bombSound, 0.3f);
-        ShapeManager.inst.ReturnShape(otherShape, ReturnType.Destroy);
+        ShapeManager.inst.ReturnShape(otherShape, ReturnType.Bomb);
         ShapeManager.inst.ReturnShape(this, ReturnType.Done);
     }
 }

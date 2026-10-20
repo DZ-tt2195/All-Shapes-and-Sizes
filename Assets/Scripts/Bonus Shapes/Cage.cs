@@ -10,7 +10,7 @@ public class Cage : Shape
     }
     public override void OnReturn(ReturnType returnType)
     {
-        if (returnType == ReturnType.Destroy)
+        if (returnType == ReturnType.Bomb)
         {
             List<Type> toDrop = new() {typeof(Circle), typeof(Square), typeof(Arrow)};
             ShapeManager.inst.StartCoroutine(ShapeManager.inst.DropRandomly(toDrop, this.transform.position, 0.1f, 0.1f, false));

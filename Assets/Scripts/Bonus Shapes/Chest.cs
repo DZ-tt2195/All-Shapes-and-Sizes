@@ -29,7 +29,7 @@ public class Chest : Shape
         }
         else if (otherShape is Circle)
         {
-            ShapeManager.inst.ReturnShape(otherShape, ReturnType.Destroy);
+            ShapeManager.inst.ReturnShape(otherShape, ReturnType.Penalty);
         }
     }
 }

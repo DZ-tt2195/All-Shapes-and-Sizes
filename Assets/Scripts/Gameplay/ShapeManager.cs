@@ -9,7 +9,7 @@ using System.Diagnostics;
 using System.Linq;
 public enum ColumnDrop {Top, Bottom}
 public enum CreationType {Drop, Combine, Special}
-public enum ReturnType {Combine, Destroy, Done}
+public enum ReturnType {Combine, Bomb, Penalty, Done}
 public enum GameState {SettingUp, GameOn, GameOver}
 [Serializable]
 public class SpawnColumn

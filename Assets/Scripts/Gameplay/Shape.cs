@@ -103,7 +103,7 @@ public class Shape : MonoBehaviour
                 Debug.Log($"{this.name} went out of bounds");
                 ShapeManager.inst.ReturnShape(this, ReturnType.Done);
             }
-            else if (collision.CompareTag("Death Line"))
+            else if (IsMainShape() && collision.CompareTag("Death Line"))
             {
                 if (deathLineTouched < 5f)
                 {

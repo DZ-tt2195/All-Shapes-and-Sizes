@@ -3,29 +3,37 @@ using UnityEngine;
 
 public class Volcano : Shape
 {
-    int currentCount = 4;
-    Shape target;
-    [SerializeField] LineRenderer lineRenderer;
+    protected override void HitOtherShape(Shape otherShape)
+    {
+        HashSet<Shape> allCopies = ShapeManager.inst.GetExistingShapes()[otherShape.GetType().Name];
+        foreach (Shape next in new HashSet<Shape>(allCopies))
+            ShapeManager.inst.ReturnShape(next, ReturnType.Penalty);
+        ShapeManager.inst.ReturnShape(this, ReturnType.Done);
+        ShapeManager.inst.GenerateShape(typeof(Star).Name, this.transform.position, CreationType.Special);
+    }
+    /*
+    [SerializeField] int starting;
+    int currentCount;
     protected override void Setup()
     {
-        target = null;
-        currentCount = 4;
-        lineRenderer.startWidth = 0.1f;
-        lineRenderer.endWidth = 0.1f;
-        lineRenderer.positionCount = 2;
-        lineRenderer.sortingOrder = 10;    
+        currentCount = starting;
+        this.textBox.text = $"{currentCount}";
+        EventManager.inst.Subscribe<CreatedShape>(OnNewShape);
     }
-    void Update()
+    void OnNewShape(CreatedShape info)
     {
-        if (target == null || !target.gameObject.activeSelf)
+        if (info.type == CreationType.Combine && info.newShape is Diamond)
         {
+            ShapeManager.inst.GenerateShape(typeof(Square).Name, this.transform.position, CreationType.Special);
             currentCount--;
-            target = ShapeManager.inst.GenerateShape(typeof(Square).Name, this.transform.position, CreationType.Special);
+            this.textBox.text = $"{currentCount}";
             if (currentCount == 0)
                 ShapeManager.inst.ReturnShape(this, ReturnType.Done);
-        }
-        lineRenderer.SetPosition(0, this.transform.position);
-        lineRenderer.SetPosition(1, target.transform.position);
-        this.textBox.text = currentCount.ToString();
+        }        
     }
+    public override void OnReturn(ReturnType returnType)
+    {
+        EventManager.inst.Unsubscribe<CreatedShape>(OnNewShape);
+    }
+    */
 }
