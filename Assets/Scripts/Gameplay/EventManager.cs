@@ -46,15 +46,15 @@ public class EventManager : MonoBehaviour
     public void Unsubscribe<T, TResult>(Func<T, TResult> function) where T : CustomEvent<TResult>
     {
         Type type = typeof(T);
-        triggers[type].Remove(function);
+        modifiers[type].Remove(function);
     }
     public List<TResult> GetModifiers<T, TResult>(T info) where T : CustomEvent<TResult>
     {
         Type type = typeof(T);
         List<TResult> allModifiers = new();
-        if (triggers.ContainsKey(type))
+        if (modifiers.ContainsKey(type))
         {
-            List<Delegate> copiedList = new(triggers[type]);
+            List<Delegate> copiedList = new(modifiers[type]);
             foreach (Delegate function in copiedList)
                 allModifiers.Add(((Func<T, TResult>)function).Invoke(info));
         }

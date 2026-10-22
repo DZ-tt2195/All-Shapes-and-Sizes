@@ -5,7 +5,7 @@ public class TrainTrack : Shape
     [SerializeField] AudioClip warpSound;
     public override Vector2 UISize(bool larger)
     {
-        return larger ? new(110, 80) : new(65, 50);
+        return larger ? new(110, 60) : new(70, 40);
     }
     protected override void HitOtherShape(Shape otherShape)
     {

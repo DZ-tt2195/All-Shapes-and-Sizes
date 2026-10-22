@@ -1,7 +1,7 @@
 Blank	
 Designer	by Thomas Tang (DZ)
 Inspiration	Inspired by Aladdin X's Suika Game
-Last_Update	Last Updated: NEXT DATE
+Last_Update	Last Updated: Oct 22 2026
 Extras	Extras
 Open_Customizer	Open Customizer
 Choose_Bonuses	Choose up to $Num$ bonus shapes.
@@ -64,5 +64,5 @@ Update_4	June 14, 2026
 Update_4_Text	Changed some sounds and sprites \nYou can choose your bonus shapes before the game starts \nCan change volume mid-game
 Update_5	Aug 27, 2026
 Update_5_Text	Hidden optional stuff on the title screen behind the extras button \nYou customize bonus shapes on title screen instead \nThe game will remember which shapes you chose \nChanged how high scores are saved/displayed
-Update_6	NEXT DATE
+Update_6	Oct 22 2026
 Update_6_Text	Added 5 more bonus shapes, and you play with 4 per game \nTweaked the numbers, frequency, art, and hitboxes of some existing shapes \nChest also destroys Circles around it \nBag makes 2 Cursed Circles and Squares instead \nDropped Snowflake and Wall \nAdded a few more sounds
